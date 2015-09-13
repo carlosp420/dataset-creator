@@ -1,0 +1,34 @@
+# This file exists so you can easily regenerate your project.
+#
+# Unfortunatelly cookiecutter can't use this right away so
+# you have to copy this file to ~/.cookiecutterrc
+
+default_context:
+
+    appveyor:                  'no'
+    c_extension_optional:      'no'
+    c_extension_support:       'no'
+    codacy:                    'no'
+    codeclimate:               'no'
+    codecov:                   'no'
+    command_line_interface:    'plain'
+    coveralls:                 'yes'
+    distribution_name:         'dataset_creator'
+    email:                     'mycalesis@gmail.com'
+    full_name:                 'Carlos Peña'
+    github_username:           'carlosp420'
+    landscape:                 'no'
+    package_name:              'dataset-creator'
+    project_name:              'Dataset creator for phylogenetic software'
+    project_short_description: 'Takes SeqRecordExpanded objects and creates datasets for phylogenetic software'
+    release_date:              '2015-06-10'
+    repo_name:                 'dataset-creator'
+    requiresio:                'yes'
+    scrutinizer:               'yes'
+    sphinx_theme:              'readthedocs'
+    test_matrix_configurator:  'no'
+    test_runner:               'nose'
+    travis:                    'yes'
+    version:                   '0.0.0'
+    website:                   'http://mycalesis.me'
+    year:                      '2015'
