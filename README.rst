@@ -9,7 +9,7 @@ Dataset creator for phylogenetic software
       - | |travis| |requires| |coveralls|
         | |quantified-code|
     * - package
-      - |version| |downloads| |wheel| |supported-versions| |supported-implementations|
+      - |version| |wheel| |supported-versions| |supported-implementations|
 
 .. |travis| image:: https://travis-ci.org/carlosp420/dataset-creator.svg?branch=master
     :alt: Travis-CI Build Status
@@ -25,10 +25,6 @@ Dataset creator for phylogenetic software
 
 .. |version| image:: https://img.shields.io/pypi/v/dataset_creator.svg?style=flat
     :alt: PyPI Package latest release
-    :target: https://pypi.python.org/pypi/dataset_creator
-
-.. |downloads| image:: https://img.shields.io/pypi/dm/dataset_creator.svg?style=flat
-    :alt: PyPI Package monthly downloads
     :target: https://pypi.python.org/pypi/dataset_creator
 
 .. |wheel| image:: https://img.shields.io/pypi/wheel/dataset_creator.svg?style=flat
