@@ -1,5 +1,4 @@
-
-from dataset-creator.__main__ import main
+from dataset_creator.__main__ import main
 
 
 def test_main():
