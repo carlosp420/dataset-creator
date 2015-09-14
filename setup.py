@@ -67,4 +67,5 @@ setup(
             'dataset_creator = dataset_creator.__main__:main',
         ]
     },
+    test_suite='tests',
 )

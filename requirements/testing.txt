@@ -2,3 +2,5 @@
 
 detox
 tox
+nose
+coverage

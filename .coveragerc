@@ -4,7 +4,7 @@ source = src
 [run]
 branch = True
 source = src
-parallel = true
+parallel = false
 
 [report]
 show_missing = true
