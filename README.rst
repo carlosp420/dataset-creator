@@ -5,18 +5,11 @@ Dataset creator for phylogenetic software
 .. list-table::
     :stub-columns: 1
 
-    * - docs
-      - |docs|
     * - tests
-      - | |travis| |requires|
-        | |coveralls|
-        | |scrutinizer|
+      - | |travis| |requires| |coveralls|
+        | |quantified-code|
     * - package
       - |version| |downloads| |wheel| |supported-versions| |supported-implementations|
-
-.. |docs| image:: https://readthedocs.org/projects/dataset-creator/badge/?style=flat
-    :target: https://readthedocs.org/projects/dataset-creator
-    :alt: Documentation Status
 
 .. |travis| image:: https://travis-ci.org/carlosp420/dataset-creator.svg?branch=master
     :alt: Travis-CI Build Status
@@ -29,6 +22,7 @@ Dataset creator for phylogenetic software
 .. |coveralls| image:: https://coveralls.io/repos/carlosp420/dataset-creator/badge.svg?branch=master&service=github
     :alt: Coverage Status
     :target: https://coveralls.io/r/carlosp420/dataset-creator
+
 .. |version| image:: https://img.shields.io/pypi/v/dataset_creator.svg?style=flat
     :alt: PyPI Package latest release
     :target: https://pypi.python.org/pypi/dataset_creator
@@ -49,9 +43,9 @@ Dataset creator for phylogenetic software
     :alt: Supported implementations
     :target: https://pypi.python.org/pypi/dataset_creator
 
-.. |scrutinizer| image:: https://img.shields.io/scrutinizer/g/carlosp420/dataset-creator/master.svg?style=flat
-    :alt: Scrutinizer Status
-    :target: https://scrutinizer-ci.com/g/carlosp420/dataset-creator/
+.. |quantified-code| image:: https://www.quantifiedcode.com/api/v1/project/f059ab475f2547758722b80ea528c457/badge.svg
+  :target: https://www.quantifiedcode.com/app/project/f059ab475f2547758722b80ea528c457
+  :alt: Code issues
 
 Takes SeqRecordExpanded objects and creates datasets for phylogenetic software
 
