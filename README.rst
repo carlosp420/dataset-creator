@@ -64,10 +64,26 @@ Installation
 
     pip install dataset_creator
 
-Documentation
-=============
+Usage
+=====
+.. code-block:: python
 
-https://dataset-creator.readthedocs.org/
+    >>> from seqrecord_expanded import SeqRecord
+    >>> from dataset_creator import Dataset
+    >>>
+    >>> seq_record1 = SeqRecord('ACTACCTA')
+    >>> seq_record2 = SeqRecord('ACTACCTA')
+    >>>
+    >>> seq_records = [
+    ...    seq_record1, seq_record2,
+    ... ]
+    >>> dataset = Dataset(seq_records, format='NEXUS', partitioning='by gene')
+    >>> print(dataset.str)
+    """#NEXUS
+    blah blah
+    """
+
+
 
 Development
 ===========
