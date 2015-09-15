@@ -1,3 +1,5 @@
+from collections import namedtuple
+
 from .creator import Creator
 
 
@@ -20,9 +22,9 @@ class Dataset(object):
     """
     def __init__(self, seq_records, format=None, partitioning=None):
         self.seq_records = seq_records
-        self.genes = None
-        self.number_chars = None
+        self.gene_codes = None
         self.number_taxa = None
+        self.number_chars = None
         self.data = None
         self._gene_codes_and_lengths = dict()
         self._prepare_data()
@@ -38,11 +40,16 @@ class Dataset(object):
         self._extract_total_number_of_chars()
         self._extract_number_of_taxa()
 
+        Data = namedtuple('Data', ['gene_codes', 'number_taxa', 'number_chars',
+                                   'seq_records'])
+        self.data = Data(self.gene_codes, self.number_taxa, self.number_chars,
+                         self.seq_records)
+
     def _extract_genes(self):
         gene_codes = [i.gene_code for i in self.seq_records]
         unique_gene_codes = list(set(gene_codes))
         unique_gene_codes.sort(key=str.lower)
-        self.genes = unique_gene_codes
+        self.gene_codes = unique_gene_codes
 
     def _extract_total_number_of_chars(self):
         """
