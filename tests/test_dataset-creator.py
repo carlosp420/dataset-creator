@@ -19,3 +19,9 @@ class TestApi(unittest.TestCase):
         expected = '4739'
         result = dataset.number_chars
         self.assertEqual(expected, result)
+
+    def test_extract_number_of_taxa(self):
+        dataset = Dataset(test_data, format='NEXUS', partitioning='by gene')
+        expected = '10'
+        result = dataset.number_taxa
+        self.assertEqual(expected, result)

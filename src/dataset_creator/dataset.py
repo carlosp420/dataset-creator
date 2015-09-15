@@ -22,6 +22,7 @@ class Dataset(object):
         self.seq_records = seq_records
         self.genes = None
         self.number_chars = None
+        self.number_taxa = None
         self.data = None
         self._gene_codes_and_lengths = dict()
         self._prepare_data()
@@ -35,12 +36,7 @@ class Dataset(object):
         """
         self._extract_genes()
         self._extract_total_number_of_chars()
-        return None
-
-    def create_dataset(self):
-        creator = Creator(self.data)
-        dataset_str = creator.dataset_str
-        return dataset_str
+        self._extract_number_of_taxa()
 
     def _extract_genes(self):
         gene_codes = [i.gene_code for i in self.seq_records]
@@ -50,7 +46,7 @@ class Dataset(object):
 
     def _extract_total_number_of_chars(self):
         """
-        :return: number of characters as string
+        sets `self.number_chars` to the number of characters as string.
         """
         self._get_gene_codes_and_seq_lengths()
 
@@ -65,5 +61,19 @@ class Dataset(object):
                 self._gene_codes_and_lengths[i.gene_code] = []
             self._gene_codes_and_lengths[i.gene_code].append(len(i.seq))
 
-    def extract_number_of_taxa(self):
-        pass
+    def _extract_number_of_taxa(self):
+        """
+        sets `self.number_taxa` to the number of taxa as string
+        """
+        n_taxa = dict()
+        for i in self.seq_records:
+            if i.gene_code not in n_taxa:
+                n_taxa[i.gene_code] = 0
+            n_taxa[i.gene_code] += 1
+        number_taxa = sorted([i for i in n_taxa.values()], reverse=True)[0]
+        self.number_taxa = str(number_taxa)
+
+    def create_dataset(self):
+        creator = Creator(self.data)
+        dataset_str = creator.dataset_str
+        return dataset_str
