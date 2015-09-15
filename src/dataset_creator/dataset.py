@@ -48,8 +48,8 @@ class Dataset(object):
         gene_codes_and_lengths = self._get_gene_codes_and_seq_lengths()
 
         sum = 0
-        for k, v in gene_codes_and_lengths.items():
-            sum += sorted(v, reverse=True)[0]
+        for seq_length in gene_codes_and_lengths.values():
+            sum += sorted(seq_length, reverse=True)[0]
         self.number_chars = str(sum)
 
     def _get_gene_codes_and_seq_lengths(self):
