@@ -11,12 +11,19 @@ class Dataset(object):
         * translation tables
         * taxonomy
         * sequences
+
+    Attributes:
+        - _gene_codes_and_lengths     - a dictionary of the form gene_code: list
+                                        The list contains sequence lengths for its
+                                        sequences. We assume the longest to be the
+                                        real gene_code sequence length.
     """
     def __init__(self, seq_records, format=None, partitioning=None):
         self.seq_records = seq_records
         self.genes = None
         self.number_chars = None
         self.data = None
+        self._gene_codes_and_lengths = dict()
         self._prepare_data()
         self.dataset_str = self.create_dataset()
 
@@ -45,20 +52,18 @@ class Dataset(object):
         """
         :return: number of characters as string
         """
-        gene_codes_and_lengths = self._get_gene_codes_and_seq_lengths()
+        self._get_gene_codes_and_seq_lengths()
 
         sum = 0
-        for seq_length in gene_codes_and_lengths.values():
+        for seq_length in self._gene_codes_and_lengths.values():
             sum += sorted(seq_length, reverse=True)[0]
         self.number_chars = str(sum)
 
     def _get_gene_codes_and_seq_lengths(self):
-        gene_codes_and_lengths = dict()
         for i in self.seq_records:
-            if i.gene_code not in gene_codes_and_lengths:
-                gene_codes_and_lengths[i.gene_code] = []
-            gene_codes_and_lengths[i.gene_code].append(len(i.seq))
-        return gene_codes_and_lengths
+            if i.gene_code not in self._gene_codes_and_lengths:
+                self._gene_codes_and_lengths[i.gene_code] = []
+            self._gene_codes_and_lengths[i.gene_code].append(len(i.seq))
 
     def extract_number_of_taxa(self):
         pass
