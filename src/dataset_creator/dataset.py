@@ -20,15 +20,19 @@ class Dataset(object):
                                         sequences. We assume the longest to be the
                                         real gene_code sequence length.
     """
-    def __init__(self, seq_records, format=None, partitioning=None):
+    def __init__(self, seq_records, file_format=None, partitioning=None):
         self.seq_records = seq_records
         self.gene_codes = None
         self.number_taxa = None
         self.number_chars = None
+
+        self.file_format = file_format
+        self.partitioning = partitioning
+
         self.data = None
         self._gene_codes_and_lengths = dict()
         self._prepare_data()
-        self.dataset_str = self.create_dataset()
+        self.dataset_str = self._create_dataset()
 
     def _prepare_data(self):
         """
@@ -80,7 +84,8 @@ class Dataset(object):
         number_taxa = sorted([i for i in n_taxa.values()], reverse=True)[0]
         self.number_taxa = str(number_taxa)
 
-    def create_dataset(self):
-        creator = Creator(self.data)
+    def _create_dataset(self):
+        creator = Creator(self.data, file_format=self.file_format,
+                          partitioning=self.partitioning)
         dataset_str = creator.dataset_str
         return dataset_str
