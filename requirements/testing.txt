@@ -6,3 +6,4 @@ nose
 coverage
 wheel
 flake8
+coveralls
