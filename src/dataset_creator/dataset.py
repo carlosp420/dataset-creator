@@ -27,6 +27,7 @@ class Dataset(object):
         :return: named tuple
         """
         self._extract_genes()
+        self._extract_total_number_of_chars()
         return None
 
     def create_dataset(self):
@@ -40,9 +41,21 @@ class Dataset(object):
         unique_gene_codes.sort(key=str.lower)
         self.genes = unique_gene_codes
 
-    def extract_total_number_of_chars(self):
-        pass
+    def _extract_total_number_of_chars(self):
+        """
+        :return: number of characters as string
+        """
+        gene_codes_and_lengths = dict()
+
+        for i in self.seq_records:
+            if i.gene_code not in gene_codes_and_lengths:
+                gene_codes_and_lengths[i.gene_code] = []
+            gene_codes_and_lengths[i.gene_code].append(len(i.seq))
+
+        sum = 0
+        for k, v in gene_codes_and_lengths.items():
+            sum += sorted(v, reverse=True)[0]
+        self.number_chars = str(sum)
 
     def extract_number_of_taxa(self):
         pass
-
