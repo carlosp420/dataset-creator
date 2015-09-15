@@ -4,3 +4,5 @@ detox
 tox
 nose
 coverage
+wheel
+flake8
