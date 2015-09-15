@@ -45,17 +45,20 @@ class Dataset(object):
         """
         :return: number of characters as string
         """
-        gene_codes_and_lengths = dict()
-
-        for i in self.seq_records:
-            if i.gene_code not in gene_codes_and_lengths:
-                gene_codes_and_lengths[i.gene_code] = []
-            gene_codes_and_lengths[i.gene_code].append(len(i.seq))
+        gene_codes_and_lengths = self._get_gene_codes_and_seq_lengths()
 
         sum = 0
         for k, v in gene_codes_and_lengths.items():
             sum += sorted(v, reverse=True)[0]
         self.number_chars = str(sum)
+
+    def _get_gene_codes_and_seq_lengths(self):
+        gene_codes_and_lengths = dict()
+        for i in self.seq_records:
+            if i.gene_code not in gene_codes_and_lengths:
+                gene_codes_and_lengths[i.gene_code] = []
+            gene_codes_and_lengths[i.gene_code].append(len(i.seq))
+        return gene_codes_and_lengths
 
     def extract_number_of_taxa(self):
         pass
