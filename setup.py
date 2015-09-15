@@ -13,6 +13,7 @@ from os.path import splitext
 from setuptools import find_packages
 from setuptools import setup
 
+
 def read(*names, **kwargs):
     return io.open(
         join(dirname(__file__), *names),
@@ -21,7 +22,7 @@ def read(*names, **kwargs):
 
 
 setup(
-    name='dataset_creator',
+    name='dataset-creator',
     version='0.0.0',
     license='BSD',
     description='Takes SeqRecordExpanded objects and creates datasets for phylogenetic software',
