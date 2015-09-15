@@ -1,5 +1,6 @@
 class Creator(object):
     def __init__(self, data):
+        self.data = None
         self.dataset_str = None
 
     def create_dataset_blocks(self):
