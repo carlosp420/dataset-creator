@@ -67,7 +67,10 @@ Usage
     >>> seq_records = [
     ...    seq_record1, seq_record2,
     ... ]
-    >>> dataset = Dataset(seq_records, format='NEXUS', partitioning='by gene')
+    >>> # codon positions can be 1st, 2nd, 3rd, 1st-2nd, ALL (default)
+    >>> dataset = Dataset(seq_records, format='NEXUS', partitioning='by gene',
+    ...                   codon_positions='1st',
+    ...                   )
     >>> print(dataset.str)
     """#NEXUS
     blah blah
