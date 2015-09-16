@@ -32,7 +32,7 @@ class DatasetBlock(object):
         out = []
         for block in self._blocks:
             out.append(self.convert_to_string(block))
-        return '\n'.join(out)
+        return '\n'.join(out).strip() + '\n;\nEND;'
 
     def split_data(self):
         """
@@ -68,11 +68,13 @@ class DatasetBlock(object):
         :param block:
         :return: str.
         """
-        out = ''
+        out = None
         for seq_record in block:
-            out += '{0}_{1}_{2}'.format(seq_record.voucher_code,
-                                        seq_record.taxonomy['genus'],
-                                        seq_record.taxonomy['species'],
-                                        )
-            out += '{0}{1}'.format(' ' * 55, seq_record.seq)
+            if not out:
+                out = '[{}]\n'.format(seq_record.gene_code)
+            taxon_id = '{0}_{1}_{2}'.format(seq_record.voucher_code,
+                                            seq_record.taxonomy['genus'],
+                                            seq_record.taxonomy['species'],
+                                            )
+            out += '{0}{1}\n'.format(taxon_id.ljust(55), seq_record.seq)
         return out
