@@ -1,10 +1,11 @@
 import unittest
 
 from dataset_creator import Dataset
+from dataset_creator.exceptions import WrongParameterFormat
 from .data import test_data
 
 
-class TestApi(unittest.TestCase):
+class TestDataset(unittest.TestCase):
     def setUp(self):
         pass
 
@@ -16,6 +17,18 @@ class TestApi(unittest.TestCase):
 
     def test_extract_number_of_chars(self):
         dataset = Dataset(test_data, format='NEXUS', partitioning='by gene')
+        expected = '4739'
+        result = dataset.number_chars
+        self.assertEqual(expected, result)
+
+    def test_extract_number_of_chars_wrong_argument(self):
+        self.assertRaises(WrongParameterFormat,
+                          Dataset, test_data, format='NEXUS', partitioning='by gene',
+                          codon_positions='5th position')
+
+    def test_extract_number_of_chars_first_codon_positions(self):
+        dataset = Dataset(test_data, format='NEXUS', partitioning='by gene',
+                          codon_positions='1st')
         expected = '4739'
         result = dataset.number_chars
         self.assertEqual(expected, result)

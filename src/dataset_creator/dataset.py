@@ -1,5 +1,6 @@
 from collections import namedtuple
 
+from .exceptions import WrongParameterFormat
 from .creator import Creator
 
 
@@ -7,6 +8,13 @@ class Dataset(object):
     """
     User's class for making datasets of several formats. It needs as input a
     list of SeqRecord-expanded objects with as much info as possible:
+
+    Arguments:
+        - seq_records        - list. SeqRecordExpanded objects.
+        - format             - str. NEXUS, PHYLIP, TNT, MEGA
+        - partitioning       - str. Partitioning scheme: 'by gene' (default),
+                               'by codon position', '1st-2nd, 3rd'
+        - codon_positions    - str. Can be 1st, 2nd, 3rd, 1st-2nd, ALL (default).
 
         * reading_frames
         * gene_codes
@@ -20,14 +28,16 @@ class Dataset(object):
                                         sequences. We assume the longest to be the
                                         real gene_code sequence length.
     """
-    def __init__(self, seq_records, file_format=None, partitioning=None):
+    def __init__(self, seq_records, format=None, partitioning=None,
+                 codon_positions=None):
         self.seq_records = seq_records
         self.gene_codes = None
         self.number_taxa = None
         self.number_chars = None
 
-        self.file_format = file_format
+        self.format = format
         self.partitioning = partitioning
+        self.codon_positions = codon_positions
 
         self.data = None
         self._gene_codes_and_lengths = dict()
@@ -67,6 +77,10 @@ class Dataset(object):
         self.number_chars = str(sum)
 
     def _get_gene_codes_and_seq_lengths(self):
+        if self.codon_positions not in [None, '1st', '2nd', '3rd', '1st-2nd', 'ALL']:
+            raise WrongParameterFormat("`codon_positions` argument should be any of the following"
+                                       ": 1st, 2nd, 3rd, 1st-2nd or ALL")
+
         for i in self.seq_records:
             if i.gene_code not in self._gene_codes_and_lengths:
                 self._gene_codes_and_lengths[i.gene_code] = []
@@ -85,7 +99,7 @@ class Dataset(object):
         self.number_taxa = str(number_taxa)
 
     def _create_dataset(self):
-        creator = Creator(self.data, file_format=self.file_format,
+        creator = Creator(self.data, file_format=self.format,
                           partitioning=self.partitioning)
         dataset_str = creator.dataset_str
         return dataset_str

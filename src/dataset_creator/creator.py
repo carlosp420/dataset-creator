@@ -14,7 +14,7 @@ class Creator(object):
 
     Example:
 
-        >>> dataset_creator = Creator(data, file_format='NEXUS',
+        >>> dataset_creator = Creator(data, format='NEXUS',
         ...                           partitioning='by gene')
     """
     def __init__(self, data, file_format=None, partitioning=None):
