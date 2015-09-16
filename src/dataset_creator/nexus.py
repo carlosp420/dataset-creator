@@ -71,7 +71,8 @@ class DatasetBlock(object):
         out = None
         for seq_record in block:
             if not out:
-                out = '[{}]\n'.format(seq_record.gene_code)
+                print(seq_record.gene_code)
+                out = '[{0}]\n'.format(seq_record.gene_code)
             taxon_id = '{0}_{1}_{2}'.format(seq_record.voucher_code,
                                             seq_record.taxonomy['genus'],
                                             seq_record.taxonomy['species'],
