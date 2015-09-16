@@ -77,14 +77,33 @@ class Dataset(object):
         self.number_chars = str(sum)
 
     def _get_gene_codes_and_seq_lengths(self):
+        for seq_record in self.seq_records:
+            if seq_record.gene_code not in self._gene_codes_and_lengths:
+                self._gene_codes_and_lengths[seq_record.gene_code] = []
+            seq = self._get_seq(seq_record)
+            self._gene_codes_and_lengths[seq_record.gene_code].append(len(seq))
+
+    def _get_seq(self, seq_record):
+        """
+        Checks parameters such as codon_positions, ... to return the required
+        sequence as string
+
+        :param seq_record: SeqRecordExpanded object.
+        :return: str.
+        """
         if self.codon_positions not in [None, '1st', '2nd', '3rd', '1st-2nd', 'ALL']:
             raise WrongParameterFormat("`codon_positions` argument should be any of the following"
                                        ": 1st, 2nd, 3rd, 1st-2nd or ALL")
-
-        for i in self.seq_records:
-            if i.gene_code not in self._gene_codes_and_lengths:
-                self._gene_codes_and_lengths[i.gene_code] = []
-            self._gene_codes_and_lengths[i.gene_code].append(len(i.seq))
+        if self.codon_positions == '1st':
+            return seq_record.first_codon_position()
+        elif self.codon_positions == '2nd':
+            return seq_record.second_codon_position()
+        elif self.codon_positions == '3rd':
+            return seq_record.third_codon_position()
+        elif self.codon_positions == '1st-2nd':
+            return seq_record.first_and_second_positions()
+        else:  # None and ALL
+            return seq_record.seq
 
     def _extract_number_of_taxa(self):
         """

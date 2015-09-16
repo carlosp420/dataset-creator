@@ -29,7 +29,7 @@ class TestDataset(unittest.TestCase):
     def test_extract_number_of_chars_first_codon_positions(self):
         dataset = Dataset(test_data, format='NEXUS', partitioning='by gene',
                           codon_positions='1st')
-        expected = '4739'
+        expected = '1580'
         result = dataset.number_chars
         self.assertEqual(expected, result)
 
