@@ -20,6 +20,5 @@ DIMENSIONS NTAX=10 NCHAR=4739;
 FORMAT INTERLEAVE DATATYPE=DNA MISSING=? GAP=-;
 MATRIX
 """
-        creator.create_dataset_header()
         result = creator.dataset_header
         self.assertEqual(expected.strip(), result)

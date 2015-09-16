@@ -23,12 +23,12 @@ class Creator(object):
         self.format = format
         self.partitioning = partitioning
         self.dataset_str = None
-        self.dataset_header = None
+        self.dataset_header = self.create_dataset_header()
         self.dataset_block = None
 
     def create_dataset_header(self):
         if self.format == 'NEXUS':
-            self.dataset_header = nexus.dataset_header(self.data)
+            return nexus.dataset_header(self.data)
 
     def create_dataset_blocks(self):
         if self.format == 'NEXUS':
