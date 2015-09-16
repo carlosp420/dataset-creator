@@ -101,7 +101,7 @@ class Dataset(object):
         elif self.codon_positions == '3rd':
             return seq_record.third_codon_position()
         elif self.codon_positions == '1st-2nd':
-            return seq_record.first_and_second_positions()
+            return seq_record.first_and_second_codon_positions()
         else:  # None and ALL
             return seq_record.seq
 
