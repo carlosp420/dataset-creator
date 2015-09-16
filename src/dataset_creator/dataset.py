@@ -118,7 +118,7 @@ class Dataset(object):
         self.number_taxa = str(number_taxa)
 
     def _create_dataset(self):
-        creator = Creator(self.data, file_format=self.format,
+        creator = Creator(self.data, format=self.format,
                           partitioning=self.partitioning)
         dataset_str = creator.dataset_str
         return dataset_str
