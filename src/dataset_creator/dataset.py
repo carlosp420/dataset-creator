@@ -10,7 +10,8 @@ class Dataset(object):
     list of SeqRecord-expanded objects with as much info as possible:
 
     Arguments:
-        - seq_records        - list. SeqRecordExpanded objects.
+        - seq_records        - list. SeqRecordExpanded objects. The list should
+                               be sorted by gene_code and then voucher code.
         - format             - str. NEXUS, PHYLIP, TNT, MEGA
         - partitioning       - str. Partitioning scheme: 'by gene' (default),
                                'by codon position', '1st-2nd, 3rd'

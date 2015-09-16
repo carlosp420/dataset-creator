@@ -7,11 +7,11 @@ class Creator(object):
 
     Parameters:
         - data      - named tuple containing:
-        - format    - str. NEXUS, PHYLIP, TNT, MEGA
                         * gene_codes: list
                         * number_chars: string
                         * number_taxa: string
                         * seq_recods: list of SeqRecordExpanded objetcs
+        - format    - str. NEXUS, PHYLIP, TNT, MEGA
 
     Example:
 
@@ -24,15 +24,15 @@ class Creator(object):
         self.partitioning = partitioning
         self.dataset_str = None
         self.dataset_header = self.create_dataset_header()
-        self.dataset_block = None
+        self.dataset_block = self.create_dataset_block()
 
     def create_dataset_header(self):
         if self.format == 'NEXUS':
             return nexus.dataset_header(self.data)
 
-    def create_dataset_blocks(self):
+    def create_dataset_block(self):
         if self.format == 'NEXUS':
-            self.dataset_block = nexus.dataset_block()
+            return nexus.DatasetBlock(self.data, self.partitioning).dataset_block()
 
     def create_dataset_footer(self):
         pass

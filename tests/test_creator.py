@@ -22,3 +22,17 @@ MATRIX
 """
         result = creator.dataset_header
         self.assertEqual(expected.strip(), result)
+
+    def test_nexus_dataset_block(self):
+        dataset = Dataset(test_data, format='NEXUS', partitioning='by gene')
+        creator = Creator(dataset.data, format='NEXUS')
+        expected = """
+#NEXUS
+
+BEGIN DATA;
+DIMENSIONS NTAX=10 NCHAR=4739;
+FORMAT INTERLEAVE DATATYPE=DNA MISSING=? GAP=-;
+MATRIX
+"""
+        result = creator.dataset_block
+        self.assertEqual(expected.strip(), result)
