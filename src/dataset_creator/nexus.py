@@ -117,12 +117,13 @@ class DatasetFooter(object):
             '3rd': '_pos3',
             '1st-2nd': '_pos12',
             'ALL': '',
+            None: '',
         }
         return '{0}{1}'.format(gene_code, sufixes[self.codon_positions])
 
     def make_partition_line(self):
         out = 'partition GENES = {0}: '.format(len(self.data.gene_codes))
-        out += ', '.join(self.data.gene_codes)
+        out += ', '.join([self.format_with_codon_positions(gene_code) for gene_code in self.data.gene_codes])
         out += ';'
         out += '\n\nset partition = GENES;'
         return out
