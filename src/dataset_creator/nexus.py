@@ -102,16 +102,8 @@ class DatasetFooter(object):
         return out.strip()
 
     def make_footer(self):
-        footer = """
-begin mrbayes;
-    charset ArgKin = 1-596;
-    charset COI-begin = 597-1265;
-    charset COI_end = 1266-2071;
-    charset ef1a = 2072-3311;
-    charset RpS2 = 3312-3722;
-    charset RpS5 = 3723-4339;
-    charset wingless = 4340-4739;
-partition GENES = 7: ArgKin, COI-begin, COI_end, ef1a, RpS2, RpS5, wingless;
+        footer = """{0}
+--partition GENES = 7: ArgKin, COI-begin, COI_end, ef1a, RpS2, RpS5, wingless;
 
 set partition = GENES;
 
@@ -124,5 +116,5 @@ mcmc ngen=10000000 printfreq=1000 samplefreq=1000 nchains=4 nruns=2 savebrlens=y
  sump relburnin=yes [no] burninfrac=0.25 [2500];
  sumt relburnin=yes [no] burninfrac=0.25 [2500] contype=halfcompat [allcompat];
 END;
-    """.format(self.data.number_taxa, self.data.number_chars)
+    """.format(self.charset_block, self.data.number_chars)
         return footer.strip()

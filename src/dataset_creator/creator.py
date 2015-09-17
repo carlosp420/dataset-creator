@@ -25,10 +25,10 @@ class Creator(object):
         self.data = data
         self.format = format
         self.partitioning = partitioning
-        self.dataset_str = None
         self.dataset_header = self.create_dataset_header()
         self.dataset_block = self.create_dataset_block()
         self.dataset_footer = self.create_dataset_footer()
+        self.dataset_str = self.put_everything_together()
 
     def create_dataset_header(self):
         if self.format == 'NEXUS':
@@ -44,3 +44,7 @@ class Creator(object):
 
     def create_extra_dataset_file(self):
         pass
+
+    def put_everything_together(self):
+        return '{0}\n\n{1}\n\n{2}'.format(self.dataset_header, self.dataset_block,
+                                          self.dataset_footer)
