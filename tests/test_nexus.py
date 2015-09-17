@@ -23,7 +23,7 @@ class TestDatasetFooter(unittest.TestCase):
 
     def test_make_charset_block(self):
         dataset = Dataset(test_data, format='NEXUS', partitioning='by gene')
-        footer = DatasetFooter(dataset.data, dataset._gene_codes_and_lengths)
+        footer = DatasetFooter(dataset.data)
         expected = """
 begin mrbayes;
     charset ArgKin = 1-596;

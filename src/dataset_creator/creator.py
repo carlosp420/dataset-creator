@@ -11,6 +11,7 @@ class Creator(object):
                         * number_chars: string
                         * number_taxa: string
                         * seq_recods: list of SeqRecordExpanded objetcs
+                        * gene_codes_and_lengths
         - format    - str. NEXUS, PHYLIP, TNT, MEGA
         - gene_codes_and_lengths      - dict of gene_code and length of sequence
                                         as inferred from the longest DNA seq for
@@ -20,11 +21,10 @@ class Creator(object):
 
         >>> dataset_creator = Creator(data, format='NEXUS', partitioning='by gene')
     """
-    def __init__(self, data, format=None, partitioning=None, gene_codes_and_lengths=None):
+    def __init__(self, data, format=None, partitioning=None):
         self.data = data
         self.format = format
         self.partitioning = partitioning
-        self.gene_codes_and_lengths = gene_codes_and_lengths
         self.dataset_str = None
         self.dataset_header = self.create_dataset_header()
         self.dataset_block = self.create_dataset_block()
@@ -40,7 +40,7 @@ class Creator(object):
 
     def create_dataset_footer(self):
         if self.format == 'NEXUS':
-            return nexus.DatasetFooter(self.data, self.gene_codes_and_lengths).dataset_footer()
+            return nexus.DatasetFooter(self.data).dataset_footer()
 
     def create_extra_dataset_file(self):
         pass

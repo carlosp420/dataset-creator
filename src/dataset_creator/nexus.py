@@ -21,6 +21,7 @@ class DatasetBlock(object):
                     * number_chars: string
                     * number_taxa: string
                     * seq_recods: list of SeqRecordExpanded objetcs
+                    * gene_codes_and_lengths: OrderedDict
     """
     def __init__(self, data, partitioning):
         self.data = data
@@ -84,9 +85,8 @@ class DatasetFooter(object):
     """
     :param data: named tuple with necessary info for dataset creation.
     """
-    def __init__(self, data, gene_codes_and_lengths):
+    def __init__(self, data):
         self.data = data
-        self.gene_codes_and_lengths = gene_codes_and_lengths
         self.charset_block = self.make_charset_block()
 
     def dataset_footer(self):
@@ -95,7 +95,7 @@ class DatasetFooter(object):
     def make_charset_block(self):
         out = 'begin mrbayes;\n'
         count = 1
-        for gene_code, lengths in self.gene_codes_and_lengths.items():
+        for gene_code, lengths in self.data.gene_codes_and_lengths.items():
             gene_length = lengths[0] + count - 1
             out += '    charset {0} = {1}-{2};\n'.format(gene_code, count, gene_length)
             count = gene_length + 1

@@ -67,9 +67,9 @@ class Dataset(object):
         self._extract_number_of_taxa()
 
         Data = namedtuple('Data', ['gene_codes', 'number_taxa', 'number_chars',
-                                   'seq_records'])
+                                   'seq_records', 'gene_codes_and_lengths'])
         self.data = Data(self.gene_codes, self.number_taxa, self.number_chars,
-                         self.seq_records)
+                         self.seq_records, self._gene_codes_and_lengths)
 
     def _extract_genes(self):
         gene_codes = [i.gene_code for i in self.seq_records]
@@ -132,6 +132,6 @@ class Dataset(object):
     def _create_dataset(self):
         creator = Creator(self.data, format=self.format,
                           partitioning=self.partitioning,
-                          gene_codes_and_lengths=self._gene_codes_and_lengths)
+                          )
         dataset_str = creator.dataset_str
         return dataset_str
