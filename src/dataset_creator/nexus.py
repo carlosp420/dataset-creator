@@ -104,9 +104,21 @@ class DatasetFooter(object):
         count = 1
         for gene_code, lengths in self.data.gene_codes_and_lengths.items():
             gene_length = lengths[0] + count - 1
-            out += '    charset {0} = {1}-{2};\n'.format(gene_code, count, gene_length)
+            formatted_gene_code = self.format_with_codon_positions(gene_code)
+            out += '    charset {0} = {1}-{2};\n'.format(formatted_gene_code, count, gene_length)
             count = gene_length + 1
         return out.strip()
+
+    def format_with_codon_positions(self, gene_code):
+        """Appends pos1, pos2, etc to the gene_code if needed."""
+        sufixes = {
+            '1st': '_pos1',
+            '2nd': '_pos2',
+            '3rd': '_pos3',
+            '1st-2nd': '_pos12',
+            'ALL': '',
+        }
+        return '{0}{1}'.format(gene_code, sufixes[self.codon_positions])
 
     def make_partition_line(self):
         out = 'partition GENES = {0}: '.format(len(self.data.gene_codes))

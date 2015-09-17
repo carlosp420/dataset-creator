@@ -43,7 +43,7 @@ class Creator(object):
 
     def create_dataset_footer(self):
         if self.format == 'NEXUS':
-            return nexus.DatasetFooter(self.data).dataset_footer()
+            return nexus.DatasetFooter(self.data, self.codon_positions).dataset_footer()
 
     def create_extra_dataset_file(self):
         pass
