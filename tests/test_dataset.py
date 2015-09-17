@@ -1,3 +1,4 @@
+import os
 import unittest
 
 from dataset_creator import Dataset
@@ -7,7 +8,7 @@ from .data import test_data
 
 class TestDataset(unittest.TestCase):
     def setUp(self):
-        pass
+        self.maxDiff = None
 
     def test_extract_genes(self):
         dataset = Dataset(test_data, format='NEXUS', partitioning='by gene')
@@ -64,4 +65,11 @@ class TestDataset(unittest.TestCase):
         dataset = Dataset(test_data, format='NEXUS', partitioning='by gene')
         expected = ['ArgKin', 'COI-begin', 'COI_end', 'ef1a', 'RpS2', 'RpS5', 'wingless']
         result = dataset.data.gene_codes
+        self.assertEqual(expected, result)
+
+    def test_dataset_nexus(self):
+        dataset = Dataset(test_data, format='NEXUS', partitioning='by gene')
+        test_data_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'dataset.nex')
+        expected = open(test_data_file, 'r').read()
+        result = dataset.dataset_str
         self.assertEqual(expected, result)

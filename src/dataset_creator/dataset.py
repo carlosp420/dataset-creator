@@ -1,4 +1,8 @@
 from collections import namedtuple
+try:
+    from collections import OrderedDict
+except ImportError:
+    from ordereddict import OrderedDict
 
 from .exceptions import WrongParameterFormat
 from .creator import Creator
@@ -28,6 +32,16 @@ class Dataset(object):
                                         The list contains sequence lengths for its
                                         sequences. We assume the longest to be the
                                         real gene_code sequence length.
+
+    Example:
+
+        >>> dataset = Dataset(seq_records, format='NEXUS', partitioning='by gene',
+        ...                   codon_positions='1st',
+        ...                   )
+        >>> print(dataset.dataset_str)
+        '#NEXUS
+        blah blah
+        '
     """
     def __init__(self, seq_records, format=None, partitioning=None,
                  codon_positions=None):
@@ -41,7 +55,7 @@ class Dataset(object):
         self.codon_positions = codon_positions
 
         self.data = None
-        self._gene_codes_and_lengths = dict()
+        self._gene_codes_and_lengths = OrderedDict()
         self._prepare_data()
         self.dataset_str = self._create_dataset()
 
@@ -56,9 +70,9 @@ class Dataset(object):
         self._extract_number_of_taxa()
 
         Data = namedtuple('Data', ['gene_codes', 'number_taxa', 'number_chars',
-                                   'seq_records'])
+                                   'seq_records', 'gene_codes_and_lengths'])
         self.data = Data(self.gene_codes, self.number_taxa, self.number_chars,
-                         self.seq_records)
+                         self.seq_records, self._gene_codes_and_lengths)
 
     def _extract_genes(self):
         gene_codes = [i.gene_code for i in self.seq_records]
@@ -120,6 +134,7 @@ class Dataset(object):
 
     def _create_dataset(self):
         creator = Creator(self.data, format=self.format,
-                          partitioning=self.partitioning)
+                          partitioning=self.partitioning,
+                          )
         dataset_str = creator.dataset_str
         return dataset_str

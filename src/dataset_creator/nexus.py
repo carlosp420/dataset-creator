@@ -21,6 +21,7 @@ class DatasetBlock(object):
                     * number_chars: string
                     * number_taxa: string
                     * seq_recods: list of SeqRecordExpanded objetcs
+                    * gene_codes_and_lengths: OrderedDict
     """
     def __init__(self, data, partitioning):
         self.data = data
@@ -71,7 +72,6 @@ class DatasetBlock(object):
         out = None
         for seq_record in block:
             if not out:
-                print(seq_record.gene_code)
                 out = '[{0}]\n'.format(seq_record.gene_code)
             taxon_id = '{0}_{1}_{2}'.format(seq_record.voucher_code,
                                             seq_record.taxonomy['genus'],
@@ -79,3 +79,47 @@ class DatasetBlock(object):
                                             )
             out += '{0}{1}\n'.format(taxon_id.ljust(55), seq_record.seq)
         return out
+
+
+class DatasetFooter(object):
+    """
+    :param data: named tuple with necessary info for dataset creation.
+    """
+    def __init__(self, data):
+        self.data = data
+        self.charset_block = self.make_charset_block()
+        self.partition_line = self.make_partition_line()
+
+    def dataset_footer(self):
+        return self.make_footer()
+
+    def make_charset_block(self):
+        out = 'begin mrbayes;\n'
+        count = 1
+        for gene_code, lengths in self.data.gene_codes_and_lengths.items():
+            gene_length = lengths[0] + count - 1
+            out += '    charset {0} = {1}-{2};\n'.format(gene_code, count, gene_length)
+            count = gene_length + 1
+        return out.strip()
+
+    def make_partition_line(self):
+        out = 'partition GENES = {0}: '.format(len(self.data.gene_codes))
+        out += ', '.join(self.data.gene_codes)
+        out += ';'
+        out += '\n\nset partition = GENES;'
+        return out
+
+    def make_footer(self):
+        footer = """{0}\n{1}
+
+set autoclose=yes;
+prset applyto=(all) ratepr=variable brlensp=unconstrained:Exp(100.0) shapepr=exp(1.0) tratiopr=beta(2.0,1.0);
+lset applyto=(all) nst=mixed rates=gamma [invgamma];
+unlink statefreq=(all);
+unlink shape=(all) revmat=(all) tratio=(all) [pinvar=(all)];
+mcmc ngen=10000000 printfreq=1000 samplefreq=1000 nchains=4 nruns=2 savebrlens=yes [temp=0.11];
+ sump relburnin=yes [no] burninfrac=0.25 [2500];
+ sumt relburnin=yes [no] burninfrac=0.25 [2500] contype=halfcompat [allcompat];
+END;
+    """.format(self.charset_block, self.partition_line)
+        return footer.strip()
