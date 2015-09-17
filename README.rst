@@ -71,7 +71,7 @@ Usage
     >>> dataset = Dataset(seq_records, format='NEXUS', partitioning='by gene',
     ...                   codon_positions='1st',
     ...                   )
-    >>> print(dataset.str)
+    >>> print(dataset.dataset_str)
     """#NEXUS
     blah blah
     """

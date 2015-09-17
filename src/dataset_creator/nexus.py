@@ -79,3 +79,42 @@ class DatasetBlock(object):
                                             )
             out += '{0}{1}\n'.format(taxon_id.ljust(55), seq_record.seq)
         return out
+
+
+class DatasetFooter(object):
+    """
+    :param data: named tuple with necessary info for dataset creation.
+    """
+    def __init__(self, data, gene_codes_and_lengths):
+        self.data = data
+        self.gene_codes_and_lengths = gene_codes_and_lengths
+        print(">>>>", gene_codes_and_lengths)
+
+    def make_charset_block(self):
+        out = ''
+
+    def make_footer(self):
+        footer = """
+begin mrbayes;
+    charset ArgKin = 1-596;
+    charset COI-begin = 597-1265;
+    charset COI_end = 1266-2071;
+    charset ef1a = 2072-3311;
+    charset RpS2 = 3312-3722;
+    charset RpS5 = 3723-4339;
+    charset wingless = 4340-4739;
+partition GENES = 7: ArgKin, COI-begin, COI_end, ef1a, RpS2, RpS5, wingless;
+
+set partition = GENES;
+
+set autoclose=yes;
+prset applyto=(all) ratepr=variable brlensp=unconstrained:Exp(100.0) shapepr=exp(1.0) tratiopr=beta(2.0,1.0);
+lset applyto=(all) nst=mixed rates=gamma [invgamma];
+unlink statefreq=(all);
+unlink shape=(all) revmat=(all) tratio=(all) [pinvar=(all)];
+mcmc ngen=10000000 printfreq=1000 samplefreq=1000 nchains=4 nruns=2 savebrlens=yes [temp=0.11];
+ sump relburnin=yes [no] burninfrac=0.25 [2500];
+ sumt relburnin=yes [no] burninfrac=0.25 [2500] contype=halfcompat [allcompat];
+END;
+    """.format(self.data.number_taxa, self.data.number_chars)
+        return footer.strip()
