@@ -19,11 +19,13 @@ class Creator(object):
 
     Example:
 
-        >>> dataset_creator = Creator(data, format='NEXUS', partitioning='by gene')
+        >>> dataset_creator = Creator(data, format='NEXUS', codon_positions='ALL',
+        ...                           partitioning='by gene')
     """
-    def __init__(self, data, format=None, partitioning=None):
+    def __init__(self, data, format=None, codon_positions=None, partitioning=None):
         self.data = data
         self.format = format
+        self.codon_positions = codon_positions
         self.partitioning = partitioning
         self.dataset_header = self.create_dataset_header()
         self.dataset_block = self.create_dataset_block()
@@ -36,7 +38,8 @@ class Creator(object):
 
     def create_dataset_block(self):
         if self.format == 'NEXUS':
-            return nexus.DatasetBlock(self.data, self.partitioning).dataset_block()
+            return nexus.DatasetBlock(self.data, self.codon_positions,
+                                      self.partitioning).dataset_block()
 
     def create_dataset_footer(self):
         if self.format == 'NEXUS':
