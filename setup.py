@@ -4,6 +4,7 @@ from __future__ import absolute_import, print_function
 
 import io
 import re
+import sys
 from glob import glob
 from os.path import basename
 from os.path import dirname
@@ -20,6 +21,10 @@ def read(*names, **kwargs):
         encoding=kwargs.get('encoding', 'utf8')
     ).read()
 
+
+required_libs = ['seqrecord-expanded==0.1.2']
+if sys.version_info < (2, 7,):
+    required_libs.append('ordereddict==1.1')
 
 setup(
     name='dataset-creator',
@@ -55,9 +60,7 @@ setup(
     keywords=[
         # eg: 'keyword1', 'keyword2', 'keyword3',
     ],
-    install_requires=[
-        'seqrecord-expanded==0.1.2',
-    ],
+    install_requires=required_libs,
     extras_require={
         # eg:
         #   'rst': ['docutils>=0.11'],

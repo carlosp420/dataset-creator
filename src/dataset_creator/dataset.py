@@ -1,5 +1,8 @@
 from collections import namedtuple
-from collections import OrderedDict
+try:
+    from collections import OrderedDict
+except ImportError:
+    from ordereddict import OrderedDict
 
 from .exceptions import WrongParameterFormat
 from .creator import Creator
