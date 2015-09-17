@@ -1,3 +1,4 @@
+import os
 import unittest
 
 from dataset_creator import Dataset
@@ -68,6 +69,7 @@ class TestDataset(unittest.TestCase):
 
     def test_dataset_nexus(self):
         dataset = Dataset(test_data, format='NEXUS', partitioning='by gene')
-        expected = open('dataset.nex', 'r').read()
+        test_data_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'dataset.nex')
+        expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
         self.assertEqual(expected, result)
