@@ -88,6 +88,7 @@ class DatasetFooter(object):
     def __init__(self, data):
         self.data = data
         self.charset_block = self.make_charset_block()
+        self.partition_line = self.make_partition_line()
 
     def dataset_footer(self):
         return self.make_footer()
@@ -101,11 +102,15 @@ class DatasetFooter(object):
             count = gene_length + 1
         return out.strip()
 
-    def make_footer(self):
-        footer = """{0}
---partition GENES = 7: ArgKin, COI-begin, COI_end, ef1a, RpS2, RpS5, wingless;
+    def make_partition_line(self):
+        out = 'partition GENES = {0}: '.format(len(self.data.gene_codes))
+        out += ', '.join(self.data.gene_codes)
+        out += ';'
+        out += '\n\nset partition = GENES;'
+        return out
 
-set partition = GENES;
+    def make_footer(self):
+        footer = """{0}\n{1}
 
 set autoclose=yes;
 prset applyto=(all) ratepr=variable brlensp=unconstrained:Exp(100.0) shapepr=exp(1.0) tratiopr=beta(2.0,1.0);
@@ -116,5 +121,5 @@ mcmc ngen=10000000 printfreq=1000 samplefreq=1000 nchains=4 nruns=2 savebrlens=y
  sump relburnin=yes [no] burninfrac=0.25 [2500];
  sumt relburnin=yes [no] burninfrac=0.25 [2500] contype=halfcompat [allcompat];
 END;
-    """.format(self.charset_block, self.data.number_chars)
+    """.format(self.charset_block, self.partition_line)
         return footer.strip()

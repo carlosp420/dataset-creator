@@ -36,3 +36,14 @@ begin mrbayes;
         """
         result = footer.charset_block
         self.assertEqual(expected.strip(), result)
+
+    def test_make_partition_line(self):
+        dataset = Dataset(test_data, format='NEXUS', partitioning='by gene')
+        footer = DatasetFooter(dataset.data)
+        expected = """
+partition GENES = 7: ArgKin, COI-begin, COI_end, ef1a, RpS2, RpS5, wingless;
+
+set partition = GENES;
+"""
+        result = footer.make_partition_line()
+        self.assertEqual(expected.strip(), result)
