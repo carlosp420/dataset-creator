@@ -4,8 +4,8 @@ try:
 except ImportError:
     from ordereddict import OrderedDict
 
-from .exceptions import WrongParameterFormat
 from .creator import Creator
+from .utils import get_seq
 
 
 class Dataset(object):
@@ -35,8 +35,8 @@ class Dataset(object):
 
     Example:
 
-        >>> dataset = Dataset(seq_records, format='NEXUS', partitioning='by gene',
-        ...                   codon_positions='1st',
+        >>> dataset = Dataset(seq_records, format='NEXUS', codon_positions='1st',
+        ...                   partitioning='by gene',
         ...                   )
         >>> print(dataset.dataset_str)
         '#NEXUS
@@ -95,30 +95,8 @@ class Dataset(object):
         for seq_record in self.seq_records:
             if seq_record.gene_code not in self._gene_codes_and_lengths:
                 self._gene_codes_and_lengths[seq_record.gene_code] = []
-            seq = self._get_seq(seq_record)
+            seq = get_seq(seq_record, self.codon_positions)
             self._gene_codes_and_lengths[seq_record.gene_code].append(len(seq))
-
-    def _get_seq(self, seq_record):
-        """
-        Checks parameters such as codon_positions, ... to return the required
-        sequence as string
-
-        :param seq_record: SeqRecordExpanded object.
-        :return: str.
-        """
-        if self.codon_positions not in [None, '1st', '2nd', '3rd', '1st-2nd', 'ALL']:
-            raise WrongParameterFormat("`codon_positions` argument should be any of the following"
-                                       ": 1st, 2nd, 3rd, 1st-2nd or ALL")
-        if self.codon_positions == '1st':
-            return seq_record.first_codon_position()
-        elif self.codon_positions == '2nd':
-            return seq_record.second_codon_position()
-        elif self.codon_positions == '3rd':
-            return seq_record.third_codon_position()
-        elif self.codon_positions == '1st-2nd':
-            return seq_record.first_and_second_codon_positions()
-        else:  # None and ALL
-            return seq_record.seq
 
     def _extract_number_of_taxa(self):
         """
@@ -134,6 +112,7 @@ class Dataset(object):
 
     def _create_dataset(self):
         creator = Creator(self.data, format=self.format,
+                          codon_positions=self.codon_positions,
                           partitioning=self.partitioning,
                           )
         dataset_str = creator.dataset_str

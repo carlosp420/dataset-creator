@@ -1,3 +1,6 @@
+from .utils import get_seq
+
+
 def dataset_header(data):
     """
     :param data: named tuple with necessary info for dataset creation.
@@ -22,9 +25,12 @@ class DatasetBlock(object):
                     * number_taxa: string
                     * seq_recods: list of SeqRecordExpanded objetcs
                     * gene_codes_and_lengths: OrderedDict
+    - codon_positions
+    - partitioning
     """
-    def __init__(self, data, partitioning):
+    def __init__(self, data, codon_positions, partitioning):
         self.data = data
+        self.codon_positions = codon_positions
         self.partitioning = partitioning
         self._blocks = []
 
@@ -77,37 +83,53 @@ class DatasetBlock(object):
                                             seq_record.taxonomy['genus'],
                                             seq_record.taxonomy['species'],
                                             )
-            out += '{0}{1}\n'.format(taxon_id.ljust(55), seq_record.seq)
+            seq = get_seq(seq_record, self.codon_positions)
+            out += '{0}{1}\n'.format(taxon_id.ljust(55), seq)
         return out
 
 
 class DatasetFooter(object):
     """
     :param data: named tuple with necessary info for dataset creation.
+    :param codon_positions: 1st, 2nd, 3rd, 1st-2nd, ALL
     """
-    def __init__(self, data):
+    def __init__(self, data, codon_positions=None):
         self.data = data
+        self.codon_positions = codon_positions
         self.charset_block = self.make_charset_block()
         self.partition_line = self.make_partition_line()
-
-    def dataset_footer(self):
-        return self.make_footer()
 
     def make_charset_block(self):
         out = 'begin mrbayes;\n'
         count = 1
         for gene_code, lengths in self.data.gene_codes_and_lengths.items():
             gene_length = lengths[0] + count - 1
-            out += '    charset {0} = {1}-{2};\n'.format(gene_code, count, gene_length)
+            formatted_gene_code = self.format_with_codon_positions(gene_code)
+            out += '    charset {0} = {1}-{2};\n'.format(formatted_gene_code, count, gene_length)
             count = gene_length + 1
         return out.strip()
 
+    def format_with_codon_positions(self, gene_code):
+        """Appends pos1, pos2, etc to the gene_code if needed."""
+        sufixes = {
+            '1st': '_pos1',
+            '2nd': '_pos2',
+            '3rd': '_pos3',
+            '1st-2nd': '_pos12',
+            'ALL': '',
+            None: '',
+        }
+        return '{0}{1}'.format(gene_code, sufixes[self.codon_positions])
+
     def make_partition_line(self):
         out = 'partition GENES = {0}: '.format(len(self.data.gene_codes))
-        out += ', '.join(self.data.gene_codes)
+        out += ', '.join([self.format_with_codon_positions(gene_code) for gene_code in self.data.gene_codes])
         out += ';'
         out += '\n\nset partition = GENES;'
         return out
+
+    def dataset_footer(self):
+        return self.make_footer()
 
     def make_footer(self):
         footer = """{0}\n{1}
