@@ -1,4 +1,5 @@
 from collections import namedtuple
+from collections import OrderedDict
 
 from .exceptions import WrongParameterFormat
 from .creator import Creator
@@ -51,7 +52,7 @@ class Dataset(object):
         self.codon_positions = codon_positions
 
         self.data = None
-        self._gene_codes_and_lengths = dict()
+        self._gene_codes_and_lengths = OrderedDict()
         self._prepare_data()
         self.dataset_str = self._create_dataset()
 

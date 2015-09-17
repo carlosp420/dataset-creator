@@ -71,7 +71,6 @@ class DatasetBlock(object):
         out = None
         for seq_record in block:
             if not out:
-                print(seq_record.gene_code)
                 out = '[{0}]\n'.format(seq_record.gene_code)
             taxon_id = '{0}_{1}_{2}'.format(seq_record.voucher_code,
                                             seq_record.taxonomy['genus'],
@@ -88,10 +87,19 @@ class DatasetFooter(object):
     def __init__(self, data, gene_codes_and_lengths):
         self.data = data
         self.gene_codes_and_lengths = gene_codes_and_lengths
-        print(">>>>", gene_codes_and_lengths)
+        self.charset_block = self.make_charset_block()
+
+    def dataset_footer(self):
+        return self.make_footer()
 
     def make_charset_block(self):
-        out = ''
+        out = 'begin mrbayes;\n'
+        count = 1
+        for gene_code, lengths in self.gene_codes_and_lengths.items():
+            gene_length = lengths[0] + count - 1
+            out += '    charset {0} = {1}-{2};\n'.format(gene_code, count, gene_length)
+            count = gene_length + 1
+        return out.strip()
 
     def make_footer(self):
         footer = """
