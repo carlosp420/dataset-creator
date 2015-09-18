@@ -23,7 +23,7 @@ class TestDatasetFooter(unittest.TestCase):
 
     def test_make_charset_block(self):
         dataset = Dataset(test_data, format='NEXUS', partitioning='by gene')
-        footer = DatasetFooter(dataset.data)
+        footer = DatasetFooter(data=dataset.data, codon_positions='ALL', partitioning='by gene')
         expected = """
 begin mrbayes;
     charset ArgKin = 1-596;
@@ -39,7 +39,7 @@ begin mrbayes;
 
     def test_make_partition_line(self):
         dataset = Dataset(test_data, format='NEXUS', partitioning='by gene')
-        footer = DatasetFooter(dataset.data)
+        footer = DatasetFooter(data=dataset.data, codon_positions='ALL', partitioning='by gene')
         expected = """
 partition GENES = 7: ArgKin, COI-begin, COI_end, ef1a, RpS2, RpS5, wingless;
 

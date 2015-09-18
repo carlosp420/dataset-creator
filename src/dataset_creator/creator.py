@@ -17,6 +17,7 @@ class Creator(object):
                                         as inferred from the longest DNA seq for
                                         each gene.
         - codon_positions    - str. Can be 1st, 2nd, 3rd, 1st-2nd, ALL (default).
+        - partitioniong:     - 'by gene', 'by codon position', '1st-2nd, 3rd'
 
     Example:
 
@@ -44,8 +45,8 @@ class Creator(object):
 
     def create_dataset_footer(self):
         if self.format == 'NEXUS':
-            return nexus.DatasetFooter(self.data, self.codon_positions,
-                                       self.partitioning).dataset_footer()
+            return nexus.DatasetFooter(self.data, codon_positions=self.codon_positions,
+                                       partitioning=self.partitioning).dataset_footer()
 
     def create_extra_dataset_file(self):
         pass

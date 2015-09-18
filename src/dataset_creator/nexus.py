@@ -92,65 +92,105 @@ class DatasetFooter(object):
     """
     :param data: named tuple with necessary info for dataset creation.
     :param codon_positions: 1st, 2nd, 3rd, 1st-2nd, ALL
-    :param partitioning: 'by gene', 'by codon position', '1st-2nd, 3rd
+    :param partitioning: 'by gene', 'by codon position', '1st-2nd, 3rd'
     """
     def __init__(self, data, codon_positions=None, partitioning=None):
         self.data = data
         self.codon_positions = codon_positions
         self.partitioning = partitioning
+        self._validate_partitioning(partitioning)
+        self._validate_codon_positions(codon_positions)
+        self.slash_number = None  # \2, \3 of end of charset line
         self.charset_block = self.make_charset_block()
         self.partition_line = self.make_partition_line()
 
+        self.make_slash_number()
+
+    def _validate_partitioning(self, partitioning):
+        if partitioning is None:
+            self.partitioning = 'by gene'
+        elif partitioning not in ['by gene', 'by codon position', '1st-2nd, 3rd']:
+            raise AttributeError("Partitioning parameter should be one of these: "
+                                 "None, 'by gene', 'by codon position', '1st-2nd, 3rd")
+
+    def _validate_codon_positions(self, codon_positions):
+        if codon_positions is None:
+            self.codon_positions = 'ALL'
+        elif codon_positions not in ['1st', '2nd', '3rd', '1st-2nd', 'ALL']:
+            raise AttributeError("Codon positions parameter should be one of these: "
+                                 "None, '1st', '2nd', '3rd', '1st-2nd', 'ALL'")
+
+    def make_slash_number(self):
+        """
+        Charset lines have \2 or \3 depending on type of partitioning and codon
+        positions requested for our dataset.
+
+        :return:
+        """
+        if self.partitioning == 'by codon position' and self.codon_positions == '1st-2nd':
+            self.slash_number = '\\2'
+        elif self.partitioning in ['by codon position', '1st-2nd, 3rd'] and self.codon_positions in ['ALL', None]:
+            self.slash_number = '\\3'
+        else:
+            self.slash_number = ''
+
     def make_charset_block(self):
         out = 'begin mrbayes;\n'
+        out += self.make_charsets()
+        return out.strip()
+
+    def make_charsets(self):
         count = 1
+        out = ''
         for gene_code, lengths in self.data.gene_codes_and_lengths.items():
             gene_length = lengths[0] + count - 1
             out += self.format_charset_line(count, gene_code, gene_length)
             count = gene_length + 1
-        return out.strip()
+        return out
 
     def format_charset_line(self, count, gene_code, gene_length):
         out = ''
-        for suffix in self.make_gene_code_suffix(gene_code):
-            out += '    charset {0}{1} = {2}-{3};\n'.format(gene_code, suffix, count, gene_length)
-        return out
-        """
-        formatted_gene_code = self.format_with_codon_positions(gene_code)
-        out = '    charset {0} = {1}-{2};\n'.format(formatted_gene_code,
-                                                    count, gene_length)
-        return out
-        """
-
-    def format_with_codon_positions(self, gene_code):
-        """Appends pos1, pos2, etc to the gene_code if needed."""
-        out = ''
-        for sufix in self.make_gene_code_suffix(gene_code):
-            out += '{0}{1}'.format(gene_code, sufix)
+        for suffix in self.make_gene_code_suffix():
+            out += '    charset {0}{1} = {2}-{3}{4};\n'.format(gene_code, suffix, count, gene_length, self.slash_number)
         return out
 
-    def make_gene_code_suffix(self, gene_code):
+    def make_gene_code_suffix(self):
+        try:
+            return self.suffix_for_one_codon_position()
+        except KeyError:
+            return self.suffix_for_several_codon_positions()
+
+    def suffix_for_one_codon_position(self):
         sufixes = {
             '1st': '_pos1',
             '2nd': '_pos2',
             '3rd': '_pos3',
         }
-        try:
-            return [sufixes[self.codon_positions]]
-        except KeyError:
-            pass
+        return [sufixes[self.codon_positions]]
 
-        if self.codon_positions == '1st-2nd' and self.partitioning in [None, 'by gene', '1st-2nd, 3rd']:
+    def suffix_for_several_codon_positions(self):
+        if self.partitioning == 'by gene':
+            return ['']
+        if self.codon_positions == '1st-2nd' and self.partitioning in ['by gene', '1st-2nd, 3rd']:
             return '_pos12'
         elif self.codon_positions == '1st-2nd' and self.partitioning == 'by codon position':
             return 'ArgKing_pos1 \\2   \n  Argkin_pos2'
-        elif self.codon_positions in [None, 'ALL']:
-            if self.partitioning in [None, 'by gene']:
-                return ['']
-            elif self.partitioning == 'by codon position':
-                return ['_pos1', '_pos2', '_pos3']
-            elif self.partitioning == '1st-2nd, 3rd':
-                return 'ArgKing_pos12 \\3   \n  Argking-pos3 \\3'
+        elif self.codon_positions in [None, 'ALL'] and self.partitioning == 'by gene':
+            return ['']
+
+        if self.partitioning == 'by codon position':
+            return ['_pos1', '_pos2', '_pos3']
+        elif self.partitioning == '1st-2nd, 3rd':
+            return 'ArgKing_pos12 \\3   \n  Argking-pos3 \\3'
+        else:
+            return ['']
+
+    def format_with_codon_positions(self, gene_code):
+        """Appends pos1, pos2, etc to the gene_code if needed."""
+        out = ''
+        for sufix in self.make_gene_code_suffix():
+            out += '{0}{1}'.format(gene_code, sufix)
+        return out
 
     def make_partition_line(self):
         out = 'partition GENES = {0}: '.format(len(self.data.gene_codes))

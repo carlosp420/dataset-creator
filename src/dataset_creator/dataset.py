@@ -51,13 +51,29 @@ class Dataset(object):
         self.number_chars = None
 
         self.format = format
-        self.partitioning = partitioning
-        self.codon_positions = codon_positions
+        self.partitioning = None
+        self.codon_positions = None
+        self._validate_codon_positions(codon_positions)
+        self._validate_partitioning(partitioning)
 
         self.data = None
         self._gene_codes_and_lengths = OrderedDict()
         self._prepare_data()
         self.dataset_str = self._create_dataset()
+
+    def _validate_partitioning(self, partitioning):
+        if partitioning is None:
+            self.partitioning = 'by gene'
+        elif partitioning not in ['by gene', 'by codon position', '1st-2nd, 3rd']:
+            raise AttributeError("Partitioning parameter should be one of these: "
+                                 "None, 'by gene', 'by codon position', '1st-2nd, 3rd")
+
+    def _validate_codon_positions(self, codon_positions):
+        if codon_positions is None:
+            self.codon_positions = 'ALL'
+        elif codon_positions not in ['1st', '2nd', '3rd', '1st-2nd', 'ALL']:
+            raise AttributeError("Codon positions parameter should be one of these: "
+                                 "None, '1st', '2nd', '3rd', '1st-2nd', 'ALL'")
 
     def _prepare_data(self):
         """
