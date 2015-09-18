@@ -80,3 +80,10 @@ class TestDataset(unittest.TestCase):
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
         self.assertEqual(expected, result)
+
+    def test_dataset_nexus_all_partitioned_each_codon_positions(self):
+        dataset = Dataset(test_data, format='NEXUS', codon_positions='ALL', partitioning='each')
+        test_data_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'dataset_partitioned_as_each.nex')
+        expected = open(test_data_file, 'r').read()
+        result = dataset.dataset_str
+        self.assertEqual(expected, result)

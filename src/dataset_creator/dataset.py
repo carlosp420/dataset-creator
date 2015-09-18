@@ -18,7 +18,7 @@ class Dataset(object):
                                be sorted by gene_code and then voucher code.
         - format             - str. NEXUS, PHYLIP, TNT, MEGA
         - partitioning       - str. Partitioning scheme: 'by gene' (default),
-                               'by codon position', '1st-2nd, 3rd'
+                               'by codon position' (each), '1st-2nd, 3rd'
         - codon_positions    - str. Can be 1st, 2nd, 3rd, 1st-2nd, ALL (default).
 
         * reading_frames

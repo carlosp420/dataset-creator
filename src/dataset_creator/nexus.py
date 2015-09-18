@@ -19,14 +19,14 @@ MATRIX
 class DatasetBlock(object):
     """
     Parameters:
-    - data      - named tuple containing:
-                    * gene_codes: list
-                    * number_chars: string
-                    * number_taxa: string
-                    * seq_recods: list of SeqRecordExpanded objetcs
-                    * gene_codes_and_lengths: OrderedDict
-    - codon_positions
-    - partitioning
+        - data      - named tuple containing:
+                        * gene_codes: list
+                        * number_chars: string
+                        * number_taxa: string
+                        * seq_recods: list of SeqRecordExpanded objetcs
+                        * gene_codes_and_lengths: OrderedDict
+        - codon_positions    - str. Can be 1st, 2nd, 3rd, 1st-2nd, ALL (default).
+        - partitioning
     """
     def __init__(self, data, codon_positions, partitioning):
         self.data = data
@@ -92,10 +92,12 @@ class DatasetFooter(object):
     """
     :param data: named tuple with necessary info for dataset creation.
     :param codon_positions: 1st, 2nd, 3rd, 1st-2nd, ALL
+    :param partitioning: 'by gene', 'by codon position', '1st-2nd, 3rd
     """
-    def __init__(self, data, codon_positions=None):
+    def __init__(self, data, codon_positions=None, partitioning=None):
         self.data = data
         self.codon_positions = codon_positions
+        self.partitioning = partitioning
         self.charset_block = self.make_charset_block()
         self.partition_line = self.make_partition_line()
 
@@ -111,15 +113,31 @@ class DatasetFooter(object):
 
     def format_with_codon_positions(self, gene_code):
         """Appends pos1, pos2, etc to the gene_code if needed."""
+        sufix = self.make_gene_code_suffix(gene_code)
+        return '{0}{1}'.format(gene_code, sufix)
+
+    def make_gene_code_suffix(self, gene_code):
         sufixes = {
             '1st': '_pos1',
             '2nd': '_pos2',
             '3rd': '_pos3',
-            '1st-2nd': '_pos12',
-            'ALL': '',
-            None: '',
         }
-        return '{0}{1}'.format(gene_code, sufixes[self.codon_positions])
+        try:
+            return sufixes[self.codon_positions]
+        except KeyError:
+            pass
+
+        if self.codon_positions == '1st-2nd' and self.partitioning in [None, 'by gene', '1st-2nd, 3rd']:
+            return '_pos12'
+        elif self.codon_positions == '1st-2nd' and self.partitioning == 'by codon position':
+            return 'ArgKing_pos1 \\2   \n  Argkin_pos2'
+        elif self.codon_positions in [None, 'ALL']:
+            if self.partitioning in [None, 'by gene']:
+                return ''
+            elif self.partitioning == 'by codon position':
+                return 'ArgKing_pos1 \\3   \n  Argkin_pos2 \\3 \n Argking-pos3 \\3'
+            elif self.partitioning == '1st-2nd, 3rd':
+                return 'ArgKing_pos12 \\3   \n  Argking-pos3 \\3'
 
     def make_partition_line(self):
         out = 'partition GENES = {0}: '.format(len(self.data.gene_codes))
