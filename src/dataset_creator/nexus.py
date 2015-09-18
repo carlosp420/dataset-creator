@@ -104,8 +104,6 @@ class DatasetFooter(object):
         self.charset_block = self.make_charset_block()
         self.partition_line = self.make_partition_line()
 
-        self.make_slash_number()
-
     def _validate_partitioning(self, partitioning):
         if partitioning is None:
             self.partitioning = 'by gene'
@@ -150,7 +148,9 @@ class DatasetFooter(object):
 
     def format_charset_line(self, count, gene_code, gene_length):
         out = ''
-        for suffix in self.make_gene_code_suffix():
+        suffixes = self.make_gene_code_suffix()
+        self.make_slash_number()
+        for suffix in suffixes:
             out += '    charset {0}{1} = {2}-{3}{4};\n'.format(gene_code, suffix, count, gene_length, self.slash_number)
         return out
 
