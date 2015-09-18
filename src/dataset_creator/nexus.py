@@ -162,6 +162,31 @@ class DatasetFooter(object):
         except KeyError:
             return self.suffix_for_several_codon_positions()
 
+    def suffix_for_one_codon_position(self):
+        sufixes = {
+            '1st': '_pos1',
+            '2nd': '_pos2',
+            '3rd': '_pos3',
+        }
+        return [sufixes[self.codon_positions]]
+
+    def suffix_for_several_codon_positions(self):
+        if self.partitioning == 'by gene':
+            return ['']
+        if self.codon_positions == '1st-2nd' and self.partitioning in ['by gene', '1st-2nd, 3rd']:
+            return '_pos12'
+        elif self.codon_positions == '1st-2nd' and self.partitioning == 'by codon position':
+            return 'ArgKing_pos1 \\2   \n  Argkin_pos2'
+        elif self.codon_positions in [None, 'ALL'] and self.partitioning == 'by gene':
+            return ['']
+
+        if self.partitioning == 'by codon position':
+            return ['_pos1', '_pos2', '_pos3']
+        elif self.partitioning == '1st-2nd, 3rd':
+            return 'ArgKing_pos12 \\3   \n  Argking-pos3 \\3'
+        else:
+            return ['']
+
     def correct_count_using_reading_frames(self, gene_code, count_start, count_end):
         reading_frame = self.data.reading_frames[gene_code]
         if self.codon_positions == 'ALL' and self.partitioning == 'by codon position':
@@ -193,43 +218,19 @@ class DatasetFooter(object):
             '{0}-{1}'.format(count_start + 1, count_end),
         ]
 
-    def suffix_for_one_codon_position(self):
-        sufixes = {
-            '1st': '_pos1',
-            '2nd': '_pos2',
-            '3rd': '_pos3',
-        }
-        return [sufixes[self.codon_positions]]
-
-    def suffix_for_several_codon_positions(self):
-        if self.partitioning == 'by gene':
-            return ['']
-        if self.codon_positions == '1st-2nd' and self.partitioning in ['by gene', '1st-2nd, 3rd']:
-            return '_pos12'
-        elif self.codon_positions == '1st-2nd' and self.partitioning == 'by codon position':
-            return 'ArgKing_pos1 \\2   \n  Argkin_pos2'
-        elif self.codon_positions in [None, 'ALL'] and self.partitioning == 'by gene':
-            return ['']
-
-        if self.partitioning == 'by codon position':
-            return ['_pos1', '_pos2', '_pos3']
-        elif self.partitioning == '1st-2nd, 3rd':
-            return 'ArgKing_pos12 \\3   \n  Argking-pos3 \\3'
-        else:
-            return ['']
-
-    def format_with_codon_positions(self, gene_code):
-        """Appends pos1, pos2, etc to the gene_code if needed."""
-        out = ''
-        for sufix in self.make_gene_code_suffix():
-            out += '{0}{1}'.format(gene_code, sufix)
-        return out
-
     def make_partition_line(self):
-        out = 'partition GENES = {0}: '.format(len(self.data.gene_codes))
-        out += ', '.join([self.format_with_codon_positions(gene_code) for gene_code in self.data.gene_codes])
+        out = 'partition GENES = {0}: '.format(len(self.data.gene_codes) * len(self.make_gene_code_suffix()))
+        out += ', '.join(self.add_suffixes_to_gene_codes())
         out += ';'
         out += '\n\nset partition = GENES;'
+        return out
+
+    def add_suffixes_to_gene_codes(self):
+        """Appends pos1, pos2, etc to the gene_code if needed."""
+        out = []
+        for gene_code in self.data.gene_codes:
+            for sufix in self.make_gene_code_suffix():
+                out.append('{0}{1}'.format(gene_code, sufix))
         return out
 
     def dataset_footer(self):
