@@ -23,7 +23,7 @@ class TestDataset(unittest.TestCase):
         self.assertEqual(expected, result)
 
     def test_extract_number_of_chars_wrong_argument(self):
-        self.assertRaises(WrongParameterFormat,
+        self.assertRaises(AttributeError,
                           Dataset, test_data, format='NEXUS', partitioning='by gene',
                           codon_positions='5th position')
 
