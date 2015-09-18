@@ -117,6 +117,31 @@ class DatasetFooter(object):
             raise AttributeError("Codon positions parameter should be one of these: "
                                  "None, '1st', '2nd', '3rd', '1st-2nd', 'ALL'")
 
+    def make_charset_block(self):
+        out = 'begin mrbayes;\n'
+        out += self.make_charsets()
+        return out.strip()
+
+    def make_charsets(self):
+        count_start = 1
+        out = ''
+        for gene_code, lengths in self.data.gene_codes_and_lengths.items():
+            count_end = lengths[0] + count_start - 1
+            out += self.format_charset_line(gene_code, count_start, count_end)
+            count_start = count_end + 1
+        return out
+
+    def format_charset_line(self, gene_code, count_start, count_end):
+        slash_number = self.make_slash_number()
+        suffixes = self.make_gene_code_suffix()
+        corrected_count = self.correct_count_using_reading_frames(gene_code, count_start, count_end)
+
+        out = ''
+        for index, val in enumerate(suffixes):
+            out += '    charset {0}{1} = {2}{3};\n'.format(gene_code, suffixes[index],
+                                                           corrected_count[index], slash_number)
+        return out
+
     def make_slash_number(self):
         """
         Charset lines have \2 or \3 depending on type of partitioning and codon
@@ -131,34 +156,42 @@ class DatasetFooter(object):
         else:
             return ''
 
-    def make_charset_block(self):
-        out = 'begin mrbayes;\n'
-        out += self.make_charsets()
-        return out.strip()
-
-    def make_charsets(self):
-        count = 1
-        out = ''
-        for gene_code, lengths in self.data.gene_codes_and_lengths.items():
-            gene_length = lengths[0] + count - 1
-            out += self.format_charset_line(count, gene_code, gene_length)
-            count = gene_length + 1
-        return out
-
-    def format_charset_line(self, count, gene_code, gene_length):
-        slash_number = self.make_slash_number()
-        suffixes = self.make_gene_code_suffix()
-
-        out = ''
-        for index, val in enumerate(suffixes):
-            out += '    charset {0}{1} = {2}-{3}{4};\n'.format(gene_code, suffixes[index], count, gene_length, slash_number)
-        return out
-
     def make_gene_code_suffix(self):
         try:
             return self.suffix_for_one_codon_position()
         except KeyError:
             return self.suffix_for_several_codon_positions()
+
+    def correct_count_using_reading_frames(self, gene_code, count_start, count_end):
+        reading_frame = self.data.reading_frames[gene_code]
+        if self.codon_positions == 'ALL' and self.partitioning == 'by codon position':
+            if reading_frame == 1:
+                return self.fix_count_for_reading_frame1(count_start, count_end)
+            elif reading_frame == 2:
+                return self.fix_count_for_reading_frame2(count_start, count_end)
+            else:
+                return self.fix_count_for_reading_frame3(count_start, count_end)
+
+    def fix_count_for_reading_frame1(self, count_start, count_end):
+        return [
+            '{0}-{1}'.format(count_start, count_end),
+            '{0}-{1}'.format(count_start + 1, count_end),
+            '{0}-{1}'.format(count_start + 2, count_end),
+        ]
+
+    def fix_count_for_reading_frame2(self, count_start, count_end):
+        return [
+            '{0}-{1}'.format(count_start + 1, count_end),
+            '{0}-{1}'.format(count_start + 2, count_end),
+            '{0}-{1}'.format(count_start, count_end),
+        ]
+
+    def fix_count_for_reading_frame3(self, count_start, count_end):
+        return [
+            '{0}-{1}'.format(count_start + 2, count_end),
+            '{0}-{1}'.format(count_start, count_end),
+            '{0}-{1}'.format(count_start + 1, count_end),
+        ]
 
     def suffix_for_one_codon_position(self):
         sufixes = {
