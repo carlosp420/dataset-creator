@@ -133,7 +133,7 @@ class DatasetFooter(object):
 
     def format_charset_line(self, gene_code, count_start, count_end):
         slash_number = self.make_slash_number()
-        suffixes = self.make_gene_code_suffix()
+        suffixes = self.make_gene_code_suffixes()
         corrected_count = self.correct_count_using_reading_frames(gene_code, count_start, count_end)
 
         out = ''
@@ -156,7 +156,7 @@ class DatasetFooter(object):
         else:
             return ''
 
-    def make_gene_code_suffix(self):
+    def make_gene_code_suffixes(self):
         try:
             return self.suffix_for_one_codon_position()
         except KeyError:
@@ -171,10 +171,10 @@ class DatasetFooter(object):
         return [sufixes[self.codon_positions]]
 
     def suffix_for_several_codon_positions(self):
-        if self.partitioning == 'by gene':
+        if self.codon_positions == 'ALL' and self.partitioning == 'by gene':
             return ['']
-        if self.codon_positions == '1st-2nd' and self.partitioning in ['by gene', '1st-2nd, 3rd']:
-            return '_pos12'
+        elif self.codon_positions == '1st-2nd' and self.partitioning in ['by gene', '1st-2nd, 3rd']:
+            return ['_pos12']
         elif self.codon_positions == '1st-2nd' and self.partitioning == 'by codon position':
             return 'ArgKing_pos1 \\2   \n  Argkin_pos2'
         elif self.codon_positions in [None, 'ALL'] and self.partitioning == 'by gene':
@@ -223,7 +223,7 @@ class DatasetFooter(object):
         ]
 
     def make_partition_line(self):
-        out = 'partition GENES = {0}: '.format(len(self.data.gene_codes) * len(self.make_gene_code_suffix()))
+        out = 'partition GENES = {0}: '.format(len(self.data.gene_codes) * len(self.make_gene_code_suffixes()))
         out += ', '.join(self.add_suffixes_to_gene_codes())
         out += ';'
         out += '\n\nset partition = GENES;'
@@ -233,7 +233,7 @@ class DatasetFooter(object):
         """Appends pos1, pos2, etc to the gene_code if needed."""
         out = []
         for gene_code in self.data.gene_codes:
-            for sufix in self.make_gene_code_suffix():
+            for sufix in self.make_gene_code_suffixes():
                 out.append('{0}{1}'.format(gene_code, sufix))
         return out
 
