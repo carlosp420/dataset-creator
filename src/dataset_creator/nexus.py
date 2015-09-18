@@ -198,7 +198,7 @@ class DatasetFooter(object):
                 return self.fix_count_for_reading_frame3(count_start, count_end)
         elif self.codon_positions in ['ALL', '1st', '2nd', '3rd'] and self.partitioning == 'by gene':
             return ['{0}-{1}'.format(count_start, count_end)]
-        elif self.codon_positions == '1st-2nd' and self.partitioning == 'by gene':
+        elif self.codon_positions == '1st-2nd' and self.partitioning in ['by gene', '1st-2nd, 3rd']:
             return ['{0}-{1}'.format(count_start, count_end)]
 
     def fix_count_for_reading_frame1(self, count_start, count_end):
