@@ -106,10 +106,15 @@ class DatasetFooter(object):
         count = 1
         for gene_code, lengths in self.data.gene_codes_and_lengths.items():
             gene_length = lengths[0] + count - 1
-            formatted_gene_code = self.format_with_codon_positions(gene_code)
-            out += '    charset {0} = {1}-{2};\n'.format(formatted_gene_code, count, gene_length)
+            out += self.format_charset_line(count, gene_code, gene_length)
             count = gene_length + 1
         return out.strip()
+
+    def format_charset_line(self, count, gene_code, gene_length):
+        formatted_gene_code = self.format_with_codon_positions(gene_code)
+        out = '    charset {0} = {1}-{2};\n'.format(formatted_gene_code,
+                                                    count, gene_length)
+        return out
 
     def format_with_codon_positions(self, gene_code):
         """Appends pos1, pos2, etc to the gene_code if needed."""
