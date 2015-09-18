@@ -100,7 +100,6 @@ class DatasetFooter(object):
         self.partitioning = partitioning
         self._validate_partitioning(partitioning)
         self._validate_codon_positions(codon_positions)
-        self.slash_number = None  # \2, \3 of end of charset line
         self.charset_block = self.make_charset_block()
         self.partition_line = self.make_partition_line()
 
@@ -126,11 +125,11 @@ class DatasetFooter(object):
         :return:
         """
         if self.partitioning == 'by codon position' and self.codon_positions == '1st-2nd':
-            self.slash_number = '\\2'
+            return '\\2'
         elif self.partitioning in ['by codon position', '1st-2nd, 3rd'] and self.codon_positions in ['ALL', None]:
-            self.slash_number = '\\3'
+            return '\\3'
         else:
-            self.slash_number = ''
+            return ''
 
     def make_charset_block(self):
         out = 'begin mrbayes;\n'
@@ -147,11 +146,12 @@ class DatasetFooter(object):
         return out
 
     def format_charset_line(self, count, gene_code, gene_length):
-        out = ''
+        slash_number = self.make_slash_number()
         suffixes = self.make_gene_code_suffix()
-        self.make_slash_number()
-        for suffix in suffixes:
-            out += '    charset {0}{1} = {2}-{3}{4};\n'.format(gene_code, suffix, count, gene_length, self.slash_number)
+
+        out = ''
+        for index, val in enumerate(suffixes):
+            out += '    charset {0}{1} = {2}-{3}{4};\n'.format(gene_code, suffixes[index], count, gene_length, slash_number)
         return out
 
     def make_gene_code_suffix(self):
