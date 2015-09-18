@@ -51,8 +51,8 @@ class Dataset(object):
         self.number_chars = None
 
         self.format = format
-        self.partitioning = None
-        self.codon_positions = None
+        self.partitioning = partitioning
+        self.codon_positions = codon_positions
         self._validate_codon_positions(codon_positions)
         self._validate_partitioning(partitioning)
 
