@@ -111,15 +111,23 @@ class DatasetFooter(object):
         return out.strip()
 
     def format_charset_line(self, count, gene_code, gene_length):
+        out = ''
+        for suffix in self.make_gene_code_suffix(gene_code):
+            out += '    charset {0}{1} = {2}-{3};\n'.format(gene_code, suffix, count, gene_length)
+        return out
+        """
         formatted_gene_code = self.format_with_codon_positions(gene_code)
         out = '    charset {0} = {1}-{2};\n'.format(formatted_gene_code,
                                                     count, gene_length)
         return out
+        """
 
     def format_with_codon_positions(self, gene_code):
         """Appends pos1, pos2, etc to the gene_code if needed."""
-        sufix = self.make_gene_code_suffix(gene_code)
-        return '{0}{1}'.format(gene_code, sufix)
+        out = ''
+        for sufix in self.make_gene_code_suffix(gene_code):
+            out += '{0}{1}'.format(gene_code, sufix)
+        return out
 
     def make_gene_code_suffix(self, gene_code):
         sufixes = {
@@ -128,7 +136,7 @@ class DatasetFooter(object):
             '3rd': '_pos3',
         }
         try:
-            return sufixes[self.codon_positions]
+            return [sufixes[self.codon_positions]]
         except KeyError:
             pass
 
@@ -138,9 +146,9 @@ class DatasetFooter(object):
             return 'ArgKing_pos1 \\2   \n  Argkin_pos2'
         elif self.codon_positions in [None, 'ALL']:
             if self.partitioning in [None, 'by gene']:
-                return ''
+                return ['']
             elif self.partitioning == 'by codon position':
-                return 'ArgKing_pos1 \\3   \n  Argkin_pos2 \\3 \n Argking-pos3 \\3'
+                return ['_pos1', '_pos2', '_pos3']
             elif self.partitioning == '1st-2nd, 3rd':
                 return 'ArgKing_pos12 \\3   \n  Argking-pos3 \\3'
 
