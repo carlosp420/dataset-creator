@@ -1,4 +1,5 @@
 from .utils import get_seq
+from .bp_count import BasePairCount
 
 
 def dataset_header(data):
@@ -176,7 +177,7 @@ class DatasetFooter(object):
         elif self.codon_positions == '1st-2nd' and self.partitioning in ['by gene', '1st-2nd, 3rd']:
             return ['_pos12']
         elif self.codon_positions == '1st-2nd' and self.partitioning == 'by codon position':
-            return 'ArgKing_pos1 \\2   \n  Argkin_pos2'
+            return ['_pos1', '_pos2']
         elif self.codon_positions in [None, 'ALL'] and self.partitioning == 'by gene':
             return ['']
 
@@ -188,7 +189,6 @@ class DatasetFooter(object):
             return ['']
 
     def correct_count_using_reading_frames(self, gene_code, count_start, count_end):
-        print(">>>>>> codon_positions, partitioning", self.codon_positions, self.partitioning)
         reading_frame = self.data.reading_frames[gene_code]
 
         if self.codon_positions == 'ALL' and self.partitioning == 'by codon position':
@@ -204,6 +204,10 @@ class DatasetFooter(object):
 
         if self.codon_positions == '1st-2nd' and self.partitioning in ['by gene', '1st-2nd, 3rd']:
             return ['{0}-{1}'.format(count_start, count_end)]
+
+        if self.codon_positions == '1st-2nd' and self.partitioning == 'by codon position':
+            bp = BasePairCount(reading_frame, self.codon_positions, self.partitioning, count_start, count_end)
+            return bp.get_corrected_count()
 
     def fix_count_for_reading_frame1(self, count_start, count_end):
         return [
