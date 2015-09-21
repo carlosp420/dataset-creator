@@ -178,20 +178,20 @@ class DatasetFooter(object):
             return ['_pos12']
         elif self.codon_positions == '1st-2nd' and self.partitioning == 'by codon position':
             return ['_pos1', '_pos2']
-        elif self.codon_positions in [None, 'ALL'] and self.partitioning == 'by gene':
-            return ['']
 
         if self.partitioning == 'by codon position':
             return ['_pos1', '_pos2', '_pos3']
         elif self.partitioning == '1st-2nd, 3rd':
-            return 'ArgKing_pos12 \\3   \n  Argking-pos3 \\3'
-        else:
-            return ['']
+            return ['_pos12', '_pos3']
 
     def correct_count_using_reading_frames(self, gene_code, count_start, count_end):
         reading_frame = self.data.reading_frames[gene_code]
 
         if self.codon_positions == 'ALL' and self.partitioning == 'by codon position':
+            bp = BasePairCount(reading_frame, self.codon_positions, self.partitioning, count_start, count_end)
+            return bp.get_corrected_count()
+
+        if self.codon_positions == 'ALL' and self.partitioning == '1st-2nd, 3rd':
             bp = BasePairCount(reading_frame, self.codon_positions, self.partitioning, count_start, count_end)
             return bp.get_corrected_count()
 
