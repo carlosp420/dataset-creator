@@ -2,7 +2,6 @@ import os
 import unittest
 
 from dataset_creator import Dataset
-from dataset_creator.exceptions import WrongParameterFormat
 from .data import test_data
 
 
