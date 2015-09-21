@@ -80,6 +80,10 @@ class TestDataset(unittest.TestCase):
         result = dataset.dataset_str
         self.assertEqual(expected, result)
 
+    def test_dataset_nexus_wrong_partitioning_parameter(self):
+        self.assertRaises(AttributeError, Dataset, seq_records=test_data, format='NEXUS',
+                          codon_positions='1st', partitioning='1st-2nd-3rd')
+
     def test_dataset_nexus_1st_codon_position(self):
         dataset = Dataset(test_data, format='NEXUS', codon_positions='1st', partitioning='by gene')
         test_data_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'dataset_1st_codon.nex')
