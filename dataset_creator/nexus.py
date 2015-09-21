@@ -186,26 +186,8 @@ class DatasetFooter(object):
 
     def correct_count_using_reading_frames(self, gene_code, count_start, count_end):
         reading_frame = self.data.reading_frames[gene_code]
-
-        if self.codon_positions == 'ALL' and self.partitioning == 'by codon position':
-            bp = BasePairCount(reading_frame, self.codon_positions, self.partitioning, count_start, count_end)
-            return bp.get_corrected_count()
-
-        if self.codon_positions == 'ALL' and self.partitioning == '1st-2nd, 3rd':
-            bp = BasePairCount(reading_frame, self.codon_positions, self.partitioning, count_start, count_end)
-            return bp.get_corrected_count()
-
-        if self.codon_positions in ['ALL', '1st', '2nd', '3rd'] and self.partitioning == 'by gene':
-            # return ['{0}-{1}'.format(count_start, count_end)]
-            bp = BasePairCount(reading_frame, self.codon_positions, self.partitioning, count_start, count_end)
-            return bp.get_corrected_count()
-
-        if self.codon_positions == '1st-2nd' and self.partitioning in ['by gene', '1st-2nd, 3rd']:
-            return ['{0}-{1}'.format(count_start, count_end)]
-
-        if self.codon_positions == '1st-2nd' and self.partitioning == 'by codon position':
-            bp = BasePairCount(reading_frame, self.codon_positions, self.partitioning, count_start, count_end)
-            return bp.get_corrected_count()
+        bp = BasePairCount(reading_frame, self.codon_positions, self.partitioning, count_start, count_end)
+        return bp.get_corrected_count()
 
     def make_partition_line(self):
         out = 'partition GENES = {0}: '.format(len(self.data.gene_codes) * len(self.make_gene_code_suffixes()))

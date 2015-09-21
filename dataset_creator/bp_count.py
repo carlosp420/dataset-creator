@@ -53,19 +53,21 @@ class BasePairCount(object):
             return count_end
 
     def get_corrected_count(self):
-        if self._codon_positions == '1st-2nd' and self._partitioning == 'by codon position':
-            return self._using_1st2nd_codons_partition_by_codon_position()
+        if self._codon_positions == '1st-2nd' and self._partitioning in ['by gene',
+                                                                         'by codon position',
+                                                                         '1st-2nd, 3rd']:
+            return self._using_1st2nd_codons()
 
         if self._codon_positions == 'ALL' and self._partitioning == 'by codon position':
             return self._using_all_codons_partition_by_codon_position()
 
-        if self._codon_positions == 'ALL' and self._partitioning == 'by gene':
+        if self._codon_positions in ['ALL', '1st', '2nd', '3rd'] and self._partitioning == 'by gene':
             return self._using_all_codons_partition_by_gene()
 
         if self._codon_positions == 'ALL' and self._partitioning == '1st-2nd, 3rd':
             return self._using_all_codons_partition_by_1st2nd_3rd()
 
-    def _using_1st2nd_codons_partition_by_codon_position(self):
+    def _using_1st2nd_codons(self):
         return [
             '{0}-{1}'.format(self._count_start, self._count_end),
             '{0}-{1}'.format(self._count_start + 1, self._count_end),
