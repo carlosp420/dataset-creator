@@ -6,6 +6,9 @@ from dataset_creator.dataset import Dataset
 from dataset_creator.nexus import DatasetFooter
 
 
+BASE_TEST_PATH = os.path.abspath(os.path.dirname(__file__))
+
+
 class TestNexus(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
@@ -50,28 +53,28 @@ set partition = GENES;
 
     def test_dataset_all_codon_positions_partitioned_by_gene(self):
         dataset = Dataset(test_data, format='NEXUS', codon_positions='ALL', partitioning='by gene')
-        test_data_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'dataset.nex')
+        test_data_file = os.path.join(BASE_TEST_PATH, 'dataset.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
         self.assertEqual(expected, result)
 
     def test_dataset_1st_2nd_codon_positions_partitioned_by_gene(self):
         dataset = Dataset(test_data, format='NEXUS', codon_positions='1st-2nd', partitioning='by gene')
-        test_data_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'dataset_1st2nd_codons.nex')
+        test_data_file = os.path.join(BASE_TEST_PATH, 'dataset_1st2nd_codons.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
         self.assertEqual(expected, result)
 
     def test_dataset_1st_2nd_codon_positions_partitioned_as_1st2nd_3rd(self):
         dataset = Dataset(test_data, format='NEXUS', codon_positions='1st-2nd', partitioning='1st-2nd, 3rd')
-        test_data_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'dataset_1st2nd_codons_partitioned_as_1st2nd_3rd.nex')
+        test_data_file = os.path.join(BASE_TEST_PATH, 'dataset_1st2nd_codons_partitioned_as_1st2nd_3rd.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
         self.assertEqual(expected, result)
 
     def test_dataset_1st_2nd_codon_positions_partitioned_as_each_codon_position(self):
         dataset = Dataset(test_data, format='NEXUS', codon_positions='1st-2nd', partitioning='by codon position')
-        test_data_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'dataset_1st2nd_codons_partitioned_as_each.nex')
+        test_data_file = os.path.join(BASE_TEST_PATH, 'dataset_1st2nd_codons_partitioned_as_each.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
         self.assertEqual(expected, result)

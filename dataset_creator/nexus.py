@@ -188,7 +188,9 @@ class DatasetFooter(object):
             return ['']
 
     def correct_count_using_reading_frames(self, gene_code, count_start, count_end):
+        print(">>>>>> codon_positions, partitioning", self.codon_positions, self.partitioning)
         reading_frame = self.data.reading_frames[gene_code]
+
         if self.codon_positions == 'ALL' and self.partitioning == 'by codon position':
             if reading_frame == 1:
                 return self.fix_count_for_reading_frame1(count_start, count_end)
@@ -196,9 +198,11 @@ class DatasetFooter(object):
                 return self.fix_count_for_reading_frame2(count_start, count_end)
             else:
                 return self.fix_count_for_reading_frame3(count_start, count_end)
-        elif self.codon_positions in ['ALL', '1st', '2nd', '3rd'] and self.partitioning == 'by gene':
+
+        if self.codon_positions in ['ALL', '1st', '2nd', '3rd'] and self.partitioning == 'by gene':
             return ['{0}-{1}'.format(count_start, count_end)]
-        elif self.codon_positions == '1st-2nd' and self.partitioning in ['by gene', '1st-2nd, 3rd']:
+
+        if self.codon_positions == '1st-2nd' and self.partitioning in ['by gene', '1st-2nd, 3rd']:
             return ['{0}-{1}'.format(count_start, count_end)]
 
     def fix_count_for_reading_frame1(self, count_start, count_end):
