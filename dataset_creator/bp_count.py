@@ -40,3 +40,25 @@ class BasePairCount(object):
                     '{0}-{1}'.format(self._count_start, self._count_end),
                     '{0}-{1}'.format(self._count_start + 1, self._count_end),
                 ]
+
+        if self._codon_positions == 'ALL' and self._partitioning == 'by codon position':
+            if self._reading_frame == 1:
+                return [
+                    '{0}-{1}'.format(self._count_start, self._count_end),
+                    '{0}-{1}'.format(self._count_start + 1, self._count_end),
+                    '{0}-{1}'.format(self._count_start + 2, self._count_end),
+                ]
+
+            if self._reading_frame == 2:
+                return [
+                    '{0}-{1}'.format(self._count_start + 1, self._count_end),
+                    '{0}-{1}'.format(self._count_start + 2, self._count_end),
+                    '{0}-{1}'.format(self._count_start, self._count_end),
+                ]
+
+            if self._reading_frame == 3:
+                return [
+                    '{0}-{1}'.format(self._count_start + 2, self._count_end),
+                    '{0}-{1}'.format(self._count_start, self._count_end),
+                    '{0}-{1}'.format(self._count_start + 1, self._count_end),
+                ]

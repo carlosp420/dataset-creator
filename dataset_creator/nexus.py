@@ -192,12 +192,8 @@ class DatasetFooter(object):
         reading_frame = self.data.reading_frames[gene_code]
 
         if self.codon_positions == 'ALL' and self.partitioning == 'by codon position':
-            if reading_frame == 1:
-                return self.fix_count_for_reading_frame1(count_start, count_end)
-            elif reading_frame == 2:
-                return self.fix_count_for_reading_frame2(count_start, count_end)
-            else:
-                return self.fix_count_for_reading_frame3(count_start, count_end)
+            bp = BasePairCount(reading_frame, self.codon_positions, self.partitioning, count_start, count_end)
+            return bp.get_corrected_count()
 
         if self.codon_positions in ['ALL', '1st', '2nd', '3rd'] and self.partitioning == 'by gene':
             return ['{0}-{1}'.format(count_start, count_end)]
@@ -208,27 +204,6 @@ class DatasetFooter(object):
         if self.codon_positions == '1st-2nd' and self.partitioning == 'by codon position':
             bp = BasePairCount(reading_frame, self.codon_positions, self.partitioning, count_start, count_end)
             return bp.get_corrected_count()
-
-    def fix_count_for_reading_frame1(self, count_start, count_end):
-        return [
-            '{0}-{1}'.format(count_start, count_end),
-            '{0}-{1}'.format(count_start + 1, count_end),
-            '{0}-{1}'.format(count_start + 2, count_end),
-        ]
-
-    def fix_count_for_reading_frame2(self, count_start, count_end):
-        return [
-            '{0}-{1}'.format(count_start + 1, count_end),
-            '{0}-{1}'.format(count_start + 2, count_end),
-            '{0}-{1}'.format(count_start, count_end),
-        ]
-
-    def fix_count_for_reading_frame3(self, count_start, count_end):
-        return [
-            '{0}-{1}'.format(count_start + 2, count_end),
-            '{0}-{1}'.format(count_start, count_end),
-            '{0}-{1}'.format(count_start + 1, count_end),
-        ]
 
     def make_partition_line(self):
         out = 'partition GENES = {0}: '.format(len(self.data.gene_codes) * len(self.make_gene_code_suffixes()))
