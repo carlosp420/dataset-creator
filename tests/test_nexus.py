@@ -24,6 +24,16 @@ class TestDatasetFooter(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
 
+    def test_partitioning_parameter(self):
+        dataset = Dataset(test_data, format='NEXUS', partitioning='by gene')
+        self.assertRaises(AttributeError, DatasetFooter, data=dataset.data,
+                          codon_positions='ALL', partitioning='by genes')
+
+    def test_codon_positions_parameter(self):
+        dataset = Dataset(test_data, format='NEXUS', partitioning='by gene')
+        self.assertRaises(AttributeError, DatasetFooter, data=dataset.data,
+                          codon_positions='1st-2nd, 3rd', partitioning='by gene')
+
     def test_make_charset_block(self):
         dataset = Dataset(test_data, format='NEXUS', partitioning='by gene')
         footer = DatasetFooter(data=dataset.data, codon_positions='ALL', partitioning='by gene')
