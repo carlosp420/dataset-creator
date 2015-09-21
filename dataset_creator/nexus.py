@@ -196,7 +196,9 @@ class DatasetFooter(object):
             return bp.get_corrected_count()
 
         if self.codon_positions in ['ALL', '1st', '2nd', '3rd'] and self.partitioning == 'by gene':
-            return ['{0}-{1}'.format(count_start, count_end)]
+            # return ['{0}-{1}'.format(count_start, count_end)]
+            bp = BasePairCount(reading_frame, self.codon_positions, self.partitioning, count_start, count_end)
+            return bp.get_corrected_count()
 
         if self.codon_positions == '1st-2nd' and self.partitioning in ['by gene', '1st-2nd, 3rd']:
             return ['{0}-{1}'.format(count_start, count_end)]
