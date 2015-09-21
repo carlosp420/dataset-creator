@@ -18,7 +18,7 @@ class Dataset(object):
                                be sorted by gene_code and then voucher code.
         - format             - str. NEXUS, PHYLIP, TNT, MEGA
         - partitioning       - str. Partitioning scheme: 'by gene' (default),
-                               'by codon position', '1st-2nd, 3rd'
+                               'by codon position' (each), '1st-2nd, 3rd'
         - codon_positions    - str. Can be 1st, 2nd, 3rd, 1st-2nd, ALL (default).
 
         * reading_frames
@@ -49,15 +49,32 @@ class Dataset(object):
         self.gene_codes = None
         self.number_taxa = None
         self.number_chars = None
+        self.reading_frames = {}
 
         self.format = format
         self.partitioning = partitioning
         self.codon_positions = codon_positions
+        self._validate_codon_positions(codon_positions)
+        self._validate_partitioning(partitioning)
 
         self.data = None
         self._gene_codes_and_lengths = OrderedDict()
         self._prepare_data()
         self.dataset_str = self._create_dataset()
+
+    def _validate_partitioning(self, partitioning):
+        if partitioning is None:
+            self.partitioning = 'by gene'
+        elif partitioning not in ['by gene', 'by codon position', '1st-2nd, 3rd']:
+            raise AttributeError("Partitioning parameter should be one of these: "
+                                 "None, 'by gene', 'by codon position', '1st-2nd, 3rd")
+
+    def _validate_codon_positions(self, codon_positions):
+        if codon_positions is None:
+            self.codon_positions = 'ALL'
+        elif codon_positions not in ['1st', '2nd', '3rd', '1st-2nd', 'ALL']:
+            raise AttributeError("Codon positions parameter should be one of these: "
+                                 "None, '1st', '2nd', '3rd', '1st-2nd', 'ALL'")
 
     def _prepare_data(self):
         """
@@ -68,11 +85,14 @@ class Dataset(object):
         self._extract_genes()
         self._extract_total_number_of_chars()
         self._extract_number_of_taxa()
+        self._extract_reading_frames()
 
         Data = namedtuple('Data', ['gene_codes', 'number_taxa', 'number_chars',
-                                   'seq_records', 'gene_codes_and_lengths'])
+                                   'seq_records', 'gene_codes_and_lengths',
+                                   'reading_frames'])
         self.data = Data(self.gene_codes, self.number_taxa, self.number_chars,
-                         self.seq_records, self._gene_codes_and_lengths)
+                         self.seq_records, self._gene_codes_and_lengths,
+                         self.reading_frames)
 
     def _extract_genes(self):
         gene_codes = [i.gene_code for i in self.seq_records]
@@ -109,6 +129,11 @@ class Dataset(object):
             n_taxa[i.gene_code] += 1
         number_taxa = sorted([i for i in n_taxa.values()], reverse=True)[0]
         self.number_taxa = str(number_taxa)
+
+    def _extract_reading_frames(self):
+        for seq_record in self.seq_records:
+            if seq_record.gene_code not in self.reading_frames:
+                self.reading_frames[seq_record.gene_code] = seq_record.reading_frame
 
     def _create_dataset(self):
         creator = Creator(self.data, format=self.format,

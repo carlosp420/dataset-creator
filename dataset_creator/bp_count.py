@@ -1,0 +1,83 @@
+class BasePairCount(object):
+    """
+    Uses reading frame info, partitioning method and number of codon positions
+    to return corrected base pair count for charset lines.
+
+    Example:
+
+        >>> bp_count = BasePairCount(reading_frame=1, codon_positions='1st-2nd',
+        ...                          partitioning='by codon position',
+        ...                          count_start=100, count_end=512)
+        >>> bp_count.get_corrected_count()
+        [
+            '100-512',
+            '101-513',
+        ]
+    """
+    def __init__(self, reading_frame=None, codon_positions=None, partitioning=None,
+                 count_start=None, count_end=None):
+        self._reading_frame = self._set_reading_frame(reading_frame)
+        self._codon_positions = self._set_codon_positions(codon_positions)
+        self._partitioning = self._set_partitioning(partitioning)
+        self._count_start = self._set_count_start(count_start)
+        self._count_end = self._set_count_end(count_end)
+
+    def _set_reading_frame(self, reading_frame):
+        if not reading_frame:
+            raise ValueError("_reading_frame argument is needed. Can't be None")
+        else:
+            return reading_frame
+
+    def _set_codon_positions(self, codon_positions):
+        if not codon_positions:
+            raise ValueError("_codon_positions argument is needed. Can't be None")
+        else:
+            return codon_positions
+
+    def _set_partitioning(self, partitioning):
+        if not partitioning:
+            raise ValueError("_partitioning argument is needed. Can't be None")
+        else:
+            return partitioning
+
+    def _set_count_start(self, count_start):
+        if not count_start:
+            raise ValueError("codon_start argument is needed. Can't be None")
+        else:
+            return count_start
+
+    def _set_count_end(self, count_end):
+        if not count_end:
+            raise ValueError("codon_end argument is needed. Can't be None")
+        else:
+            return count_end
+
+    def get_corrected_count(self):
+        if self._codon_positions == '1st-2nd' and self._partitioning == 'by codon position':
+            if self._reading_frame in [1, 2, 3]:
+                return [
+                    '{0}-{1}'.format(self._count_start, self._count_end),
+                    '{0}-{1}'.format(self._count_start + 1, self._count_end),
+                ]
+
+        if self._codon_positions == 'ALL' and self._partitioning == 'by codon position':
+            if self._reading_frame == 1:
+                return [
+                    '{0}-{1}'.format(self._count_start, self._count_end),
+                    '{0}-{1}'.format(self._count_start + 1, self._count_end),
+                    '{0}-{1}'.format(self._count_start + 2, self._count_end),
+                ]
+
+            if self._reading_frame == 2:
+                return [
+                    '{0}-{1}'.format(self._count_start + 1, self._count_end),
+                    '{0}-{1}'.format(self._count_start + 2, self._count_end),
+                    '{0}-{1}'.format(self._count_start, self._count_end),
+                ]
+
+            if self._reading_frame == 3:
+                return [
+                    '{0}-{1}'.format(self._count_start + 2, self._count_end),
+                    '{0}-{1}'.format(self._count_start, self._count_end),
+                    '{0}-{1}'.format(self._count_start + 1, self._count_end),
+                ]

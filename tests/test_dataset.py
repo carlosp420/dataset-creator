@@ -2,7 +2,6 @@ import os
 import unittest
 
 from dataset_creator import Dataset
-from dataset_creator.exceptions import WrongParameterFormat
 from .data import test_data
 
 
@@ -23,7 +22,7 @@ class TestDataset(unittest.TestCase):
         self.assertEqual(expected, result)
 
     def test_extract_number_of_chars_wrong_argument(self):
-        self.assertRaises(WrongParameterFormat,
+        self.assertRaises(AttributeError,
                           Dataset, test_data, format='NEXUS', partitioning='by gene',
                           codon_positions='5th position')
 
@@ -77,6 +76,13 @@ class TestDataset(unittest.TestCase):
     def test_dataset_nexus_1st_codon_position(self):
         dataset = Dataset(test_data, format='NEXUS', codon_positions='1st', partitioning='by gene')
         test_data_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'dataset_1st_codon.nex')
+        expected = open(test_data_file, 'r').read()
+        result = dataset.dataset_str
+        self.assertEqual(expected, result)
+
+    def test_dataset_nexus_all_codon_positions_partitioned_by_codon_positions(self):
+        dataset = Dataset(test_data, format='NEXUS', codon_positions='ALL', partitioning='by codon position')
+        test_data_file = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'dataset_partitioned_as_each.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
         self.assertEqual(expected, result)

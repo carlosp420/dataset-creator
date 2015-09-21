@@ -1,9 +1,9 @@
 [paths]
-source = src
+source = dataset_creator
 
 [run]
 branch = True
-source = src
+source = dataset_creator
 parallel = false
 
 [report]
