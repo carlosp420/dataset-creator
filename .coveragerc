@@ -2,7 +2,7 @@
 source = dataset_creator
 
 [run]
-branch = True
+branch = false
 source = dataset_creator
 parallel = false
 
