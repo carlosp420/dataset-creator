@@ -54,21 +54,24 @@ class BasePairCount(object):
 
     def get_corrected_count(self):
         if self._codon_positions == '1st-2nd' and self._partitioning == 'by codon position':
-            return self.using_1st2nd_codons_partition_by_codon_position()
+            return self._using_1st2nd_codons_partition_by_codon_position()
 
         if self._codon_positions == 'ALL' and self._partitioning == 'by codon position':
-            return self.using_all_codons_partition_by_codon_position()
+            return self._using_all_codons_partition_by_codon_position()
+
+        if self._codon_positions == 'ALL' and self._partitioning == 'by gene':
+            return self._using_all_codons_partition_by_gene()
 
         if self._codon_positions == 'ALL' and self._partitioning == '1st-2nd, 3rd':
-            return self.using_all_codons_partition_by_1st2nd_3rd()
+            return self._using_all_codons_partition_by_1st2nd_3rd()
 
-    def using_1st2nd_codons_partition_by_codon_position(self):
+    def _using_1st2nd_codons_partition_by_codon_position(self):
         return [
             '{0}-{1}'.format(self._count_start, self._count_end),
             '{0}-{1}'.format(self._count_start + 1, self._count_end),
         ]
 
-    def using_all_codons_partition_by_codon_position(self):
+    def _using_all_codons_partition_by_codon_position(self):
         if self._reading_frame == 1:
             return [
                 '{0}-{1}'.format(self._count_start, self._count_end),
@@ -90,7 +93,12 @@ class BasePairCount(object):
                 '{0}-{1}'.format(self._count_start + 1, self._count_end),
             ]
 
-    def using_all_codons_partition_by_1st2nd_3rd(self):
+    def _using_all_codons_partition_by_gene(self):
+        return [
+            '{0}-{1}'.format(self._count_start, self._count_end,)
+        ]
+
+    def _using_all_codons_partition_by_1st2nd_3rd(self):
         if self._reading_frame == 1:
             return [
                 '{0}-{1}\\3 {2}-{3}'.format(self._count_start, self._count_end,
