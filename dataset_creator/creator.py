@@ -54,7 +54,8 @@ class Creator(object):
         pass
 
     def put_everything_together(self):
+        dataset_as_nexus = '{0}\n\n{1}\n\n{2}'.format(self.dataset_header,
+                                                      self.dataset_block,
+                                                      self.dataset_footer)
         if self.format == 'NEXUS':
-            return '{0}\n\n{1}\n\n{2}'.format(self.dataset_header,
-                                              self.dataset_block,
-                                              self.dataset_footer)
+            return dataset_as_nexus
