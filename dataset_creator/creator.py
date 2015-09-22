@@ -1,4 +1,5 @@
 from . import nexus
+from . import phylip
 
 
 class Creator(object):
@@ -37,6 +38,9 @@ class Creator(object):
     def create_dataset_header(self):
         if self.format == 'NEXUS':
             return nexus.dataset_header(self.data)
+
+        if self.format == 'PHYLIP':
+            return phylip.dataset_header(self.data)
 
     def create_dataset_block(self):
         if self.format == 'NEXUS':
