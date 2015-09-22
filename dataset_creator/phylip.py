@@ -1,4 +1,9 @@
-import io
+import six
+
+if six.PY2:
+    from StringIO import StringIO
+else:
+    from io import StringIO
 import os
 import uuid
 
@@ -6,7 +11,7 @@ from Bio import AlignIO
 
 
 def convert_nexus_to_phylip(dataset_as_nexus):
-    fake_handle = io.StringIO(dataset_as_nexus.replace('-', '_'))
+    fake_handle = StringIO(dataset_as_nexus.replace('-', '_'))
     nexus_al = AlignIO.parse(fake_handle, 'nexus')
     tmp_file = make_random_filename()
     AlignIO.write(nexus_al, tmp_file, 'phylip-relaxed')
