@@ -13,9 +13,8 @@ class TestPhylip(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
 
-    def test_header(self):
+    def test_dataset(self):
         dataset = Dataset(test_data, format='PHYLIP', partitioning='by gene')
-        creator = Creator(dataset.data, format='PHYLIP', partitioning='by gene')
-        expected = '10 4739'
-        result = creator.create_dataset_header()
+        expected = open(os.path.join(PHYLIP_DATA_PATH, 'dataset.phy')).read()
+        result = dataset.dataset_str
         self.assertEqual(expected, result)

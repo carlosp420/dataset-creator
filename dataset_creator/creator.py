@@ -1,10 +1,12 @@
 from . import nexus
-from . import phylip
+from .phylip import convert_nexus_to_phylip
 
 
 class Creator(object):
     """
     Create dataset and extra files for formats FASTA, NEXUS, PHYLIP, TNT and MEGA.
+    We will create a NEXUS fomatte dataset first and use BioPython tools to
+    convert to FASTA and PHYLIP formats.
 
     Parameters:
         - data      - named tuple containing:
@@ -59,3 +61,6 @@ class Creator(object):
                                                       self.dataset_footer)
         if self.format == 'NEXUS':
             return dataset_as_nexus
+
+        elif self.format == 'PHYLIP':
+            return convert_nexus_to_phylip(dataset_as_nexus)
