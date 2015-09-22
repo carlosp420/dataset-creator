@@ -90,6 +90,19 @@ class DatasetBlock(object):
 
 class DatasetFooter(object):
     """
+    Builds charset block:
+
+        "
+        begin mrbayes;
+        charset ArgKin = 1-596;
+        charset COI-begin = 597-1265;
+        charset COI_end = 1266-2071;
+        charset ef1a = 2072-3311;
+        charset RpS2 = 3312-3722;
+        charset RpS5 = 3723-4339;
+        charset wingless = 4340-4739;
+        "
+
     :param data: named tuple with necessary info for dataset creation.
     :param codon_positions: 1st, 2nd, 3rd, 1st-2nd, ALL
     :param partitioning: 'by gene', 'by codon position', '1st-2nd, 3rd'
@@ -118,11 +131,19 @@ class DatasetFooter(object):
                                  "None, '1st', '2nd', '3rd', '1st-2nd', 'ALL'")
 
     def make_charset_block(self):
+        """
+        Override this function for Phylip dataset as the content is different and
+        goes into a separate file.
+        """
         out = 'begin mrbayes;\n'
         out += self.make_charsets()
         return out.strip()
 
     def make_charsets(self):
+        """
+        Override this function for Phylip dataset as the content is different and
+        goes into a separate file.
+        """
         count_start = 1
         out = ''
         for gene_code, lengths in self.data.gene_codes_and_lengths.items():
