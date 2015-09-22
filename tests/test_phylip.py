@@ -15,6 +15,12 @@ class TestPhylip(unittest.TestCase):
 
     def test_dataset(self):
         dataset = Dataset(test_data, format='PHYLIP', partitioning='by gene')
-        expected = open(os.path.join(PHYLIP_DATA_PATH, 'dataset.phy')).read()
         result = dataset.dataset_str
+        expected = open(os.path.join(PHYLIP_DATA_PATH, 'dataset.phy')).read()
+        self.assertEqual(expected, result)
+
+    def test_charset_file(self):
+        dataset = Dataset(test_data, format='PHYLIP', partitioning='by gene')
+        result = dataset.extra_dataset_str
+        expected = open(os.path.join(PHYLIP_DATA_PATH, 'charset_block_file.txt')).read()
         self.assertEqual(expected, result)

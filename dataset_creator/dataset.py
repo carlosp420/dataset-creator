@@ -67,6 +67,7 @@ class Dataset(object):
         self.data = None
         self._gene_codes_and_lengths = OrderedDict()
         self._prepare_data()
+        self.extra_dataset_str = None
         self.dataset_str = self._create_dataset()
 
     def _validate_partitioning(self, partitioning):
@@ -148,4 +149,6 @@ class Dataset(object):
                           partitioning=self.partitioning,
                           )
         dataset_str = creator.dataset_str
+        self.extra_dataset_str = creator.extra_dataset_str
+
         return dataset_str
