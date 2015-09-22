@@ -20,7 +20,7 @@ def convert_nexus_to_phylip(dataset_as_nexus):
 
 
 def make_random_filename():
-    return '{}.phy'.format(uuid.uuid4().hex)
+    return '{0}.phy'.format(uuid.uuid4().hex)
 
 
 def read_and_delete_tmp_file(filename):
