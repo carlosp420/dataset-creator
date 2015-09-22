@@ -1,6 +1,6 @@
 import unittest
 
-from dataset_creator.bp_count import BasePairCount
+from dataset_creator.nexus import BasePairCount
 
 
 class TestBpCount(unittest.TestCase):
