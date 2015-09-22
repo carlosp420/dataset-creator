@@ -42,6 +42,13 @@ class Dataset(object):
         '#NEXUS
         blah blah
         '
+        >>> dataset = Dataset(seq_records, format='PHYLIP', codon_positions='ALL',
+        ...                   partitioning='by gene',
+        ...                   )
+        >>> print(dataset.dataset_str)
+        '100 10
+        blah blah
+        '
     """
     def __init__(self, seq_records, format=None, partitioning=None,
                  codon_positions=None):

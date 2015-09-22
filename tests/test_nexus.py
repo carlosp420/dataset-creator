@@ -4,9 +4,10 @@ import unittest
 from .data import test_data
 from dataset_creator.dataset import Dataset
 from dataset_creator.nexus import DatasetFooter
+from dataset_creator.nexus import BasePairCount
 
 
-BASE_TEST_PATH = os.path.abspath(os.path.dirname(__file__))
+NEXUS_DATA_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'Nexus')
 
 
 class TestNexus(unittest.TestCase):
@@ -63,28 +64,53 @@ set partition = GENES;
 
     def test_dataset_all_codon_positions_partitioned_by_gene(self):
         dataset = Dataset(test_data, format='NEXUS', codon_positions='ALL', partitioning='by gene')
-        test_data_file = os.path.join(BASE_TEST_PATH, 'dataset.nex')
+        test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
         self.assertEqual(expected, result)
 
     def test_dataset_1st_2nd_codon_positions_partitioned_by_gene(self):
         dataset = Dataset(test_data, format='NEXUS', codon_positions='1st-2nd', partitioning='by gene')
-        test_data_file = os.path.join(BASE_TEST_PATH, 'dataset_1st2nd_codons.nex')
+        test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset_1st2nd_codons.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
         self.assertEqual(expected, result)
 
     def test_dataset_1st_2nd_codon_positions_partitioned_as_1st2nd_3rd(self):
         dataset = Dataset(test_data, format='NEXUS', codon_positions='1st-2nd', partitioning='1st-2nd, 3rd')
-        test_data_file = os.path.join(BASE_TEST_PATH, 'dataset_1st2nd_codons_partitioned_as_1st2nd_3rd.nex')
+        test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset_1st2nd_codons_partitioned_as_1st2nd_3rd.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
         self.assertEqual(expected, result)
 
     def test_dataset_1st_2nd_codon_positions_partitioned_as_each_codon_position(self):
         dataset = Dataset(test_data, format='NEXUS', codon_positions='1st-2nd', partitioning='by codon position')
-        test_data_file = os.path.join(BASE_TEST_PATH, 'dataset_1st2nd_codons_partitioned_as_each.nex')
+        test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset_1st2nd_codons_partitioned_as_each.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
         self.assertEqual(expected, result)
+
+
+class TestBpCount(unittest.TestCase):
+    def setUp(self):
+        pass
+
+    def test_parameter_reading_frame(self):
+        self.assertRaises(ValueError, BasePairCount, codon_positions='1st-2nd',
+                          partitioning='by codon position', count_start=100, count_end=512)
+
+    def test_parameter_codon_positions(self):
+        self.assertRaises(ValueError, BasePairCount, reading_frame=1,
+                          partitioning='by codon position', count_start=100, count_end=512)
+
+    def test_parameter_partitioning(self):
+        self.assertRaises(ValueError, BasePairCount, codon_positions='1st-2nd',
+                          reading_frame=1, count_start=100, count_end=512)
+
+    def test_parameter_count_start(self):
+        self.assertRaises(ValueError, BasePairCount, codon_positions='1st-2nd',
+                          partitioning='by codon position', reading_frame=1, count_end=512)
+
+    def test_parameter_count_end(self):
+        self.assertRaises(ValueError, BasePairCount, codon_positions='1st-2nd',
+                          partitioning='by codon position', count_start=100, reading_frame=1)
