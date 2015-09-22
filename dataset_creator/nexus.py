@@ -140,6 +140,10 @@ class DatasetFooter(object):
         return out.strip()
 
     def make_charsets(self):
+        """
+        Override this function for Phylip dataset as the content is different and
+        goes into a separate file.
+        """
         count_start = 1
         out = ''
         for gene_code, lengths in self.data.gene_codes_and_lengths.items():
