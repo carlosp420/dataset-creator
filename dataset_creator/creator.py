@@ -1,7 +1,6 @@
 from . import nexus
-from .phylip import convert_nexus_to_phylip
 from .phylip import PhylipDatasetFooter
-from .fasta import convert_nexus_to_fasta
+from .utils import convert_nexus_to_format
 
 
 class Creator(object):
@@ -73,7 +72,7 @@ class Creator(object):
 
         elif self.format == 'PHYLIP':
             self.extra_dataset_str = self.create_extra_dataset_file()
-            return convert_nexus_to_phylip(dataset_as_nexus)
+            return convert_nexus_to_format(dataset_as_nexus, 'phylip-relaxed')
 
         elif self.format == 'FASTA':
-            return convert_nexus_to_fasta(dataset_as_nexus)
+            return convert_nexus_to_format(dataset_as_nexus, 'fasta')
