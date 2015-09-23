@@ -1,4 +1,5 @@
 from . import nexus
+from . import tnt
 from .phylip import PhylipDatasetFooter
 from .utils import convert_nexus_to_format
 from .utils import make_dataset_header
@@ -51,8 +52,12 @@ class Creator(object):
         return make_dataset_header(self.data, file_format=self.format)
 
     def create_dataset_block(self):
-        return nexus.DatasetBlock(self.data, self.codon_positions,
-                                  self.partitioning).dataset_block()
+        if self.format in ['NEXUS', 'PHYLIP', 'FASTA']:
+            return nexus.DatasetBlock(self.data, self.codon_positions,
+                                      self.partitioning).dataset_block()
+        else:  # TNT
+            return tnt.TntDatasetBlock(self.data, self.codon_positions,
+                                       self.partitioning).dataset_block()
 
     def create_dataset_footer(self):
         return nexus.DatasetFooter(self.data, codon_positions=self.codon_positions,
@@ -77,3 +82,6 @@ class Creator(object):
 
         elif self.format == 'FASTA':
             return convert_nexus_to_format(dataset_as_nexus, 'fasta')
+
+        elif self.format == 'TNT':
+            return '{0}\n\n{1}'.format(self.dataset_header, self.dataset_block)
