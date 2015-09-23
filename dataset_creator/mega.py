@@ -13,27 +13,18 @@ class MegaDatasetBlock(DatasetBlock):
 
         :return: flattened data blocks as string
         """
-        taxa_ids = []
-        items = []
+        taxa_ids = [[]] * int(self.data.number_taxa)
+        sequences = [''] * int(self.data.number_taxa)
+
         for block in self._blocks:
             for index, seq_record in enumerate(block):
-                taxon_id = '{0}_{1}_{2}'.format(seq_record.voucher_code,
-                                                seq_record.taxonomy['genus'],
-                                                seq_record.taxonomy['species'],
-                                                )
-                try:
-                    taxa_ids[index] = taxon_id
-                except IndexError:
-                    taxa_ids.append(taxon_id)
-
-                seq = get_seq(seq_record, self.codon_positions)
-
-                try:
-                    items[index] += str(seq)
-                except IndexError:
-                    items.append(str(seq))
+                taxa_ids[index] = '{0}_{1}_{2}'.format(seq_record.voucher_code,
+                                                       seq_record.taxonomy['genus'],
+                                                       seq_record.taxonomy['species'],
+                                                       )
+                sequences[index] += get_seq(seq_record, self.codon_positions)
 
         out = ''
         for index, value in enumerate(taxa_ids):
-            out += '#{0}\n{1}\n'.format(taxa_ids[index], items[index])
+            out += '#{0}\n{1}\n'.format(taxa_ids[index], sequences[index])
         return out
