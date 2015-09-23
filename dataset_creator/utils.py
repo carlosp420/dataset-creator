@@ -80,6 +80,9 @@ FORMAT INTERLEAVE DATATYPE=DNA MISSING=? GAP=-;
 MATRIX
 """.format(data.number_taxa, data.number_chars)
 
+    elif file_format == 'MEGA':
+        return "#MEGA\n!TITLE title;"
+
     else:  # file_format: TNT
         header = """
 nstates dna;

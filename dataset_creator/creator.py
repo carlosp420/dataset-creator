@@ -1,5 +1,6 @@
 from . import nexus
 from . import tnt
+from . import mega
 from .phylip import PhylipDatasetFooter
 from .utils import convert_nexus_to_format
 from .utils import make_dataset_header
@@ -55,6 +56,9 @@ class Creator(object):
         if self.format in ['NEXUS', 'PHYLIP', 'FASTA']:
             return nexus.DatasetBlock(self.data, self.codon_positions,
                                       self.partitioning).dataset_block()
+        elif self.format == 'MEGA':
+            return mega.MegaDatasetBlock(self.data, self.codon_positions,
+                                         self.partitioning).dataset_block()
         else:  # TNT
             return tnt.TntDatasetBlock(self.data, self.codon_positions,
                                        self.partitioning).dataset_block()
@@ -83,4 +87,7 @@ class Creator(object):
             return convert_nexus_to_format(header_and_datablock, 'fasta')
 
         elif self.format == 'TNT':
+            return '{0}\n\n{1}'.format(self.dataset_header, self.dataset_block)
+
+        else:  # MEGA
             return '{0}\n\n{1}'.format(self.dataset_header, self.dataset_block)
