@@ -70,18 +70,17 @@ class Creator(object):
         return phylip_footer.make_charset_block()
 
     def put_everything_together(self):
-        dataset_as_nexus = '{0}\n\n{1}\n\n{2}'.format(self.dataset_header,
-                                                      self.dataset_block,
-                                                      self.dataset_footer)
+        header_and_datablock = '{0}\n\n{1}'.format(self.dataset_header,
+                                                   self.dataset_block)
         if self.format == 'NEXUS':
-            return dataset_as_nexus
+            return '{0}\n\n{1}'.format(header_and_datablock, self.dataset_footer)
 
         elif self.format == 'PHYLIP':
             self.extra_dataset_str = self.create_extra_dataset_file()
-            return convert_nexus_to_format(dataset_as_nexus, 'phylip-relaxed')
+            return convert_nexus_to_format(header_and_datablock, 'phylip-relaxed')
 
         elif self.format == 'FASTA':
-            return convert_nexus_to_format(dataset_as_nexus, 'fasta')
+            return convert_nexus_to_format(header_and_datablock, 'fasta')
 
         elif self.format == 'TNT':
             return '{0}\n\n{1}'.format(self.dataset_header, self.dataset_block)
