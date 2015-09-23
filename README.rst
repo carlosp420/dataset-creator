@@ -61,8 +61,14 @@ Usage
     >>> from seqrecord_expanded import SeqRecord
     >>> from dataset_creator import Dataset
     >>>
-    >>> seq_record1 = SeqRecord('ACTACCTA')
-    >>> seq_record2 = SeqRecord('ACTACCTA')
+    >>> # `table` is the Translation Table code based on NCBI
+    >>> seq_record1 = SeqRecord('ACTACCTA', reading_frame=2, gene_code='RpS5',
+    ...                         table=1, voucher_code='CP100-10',
+    ...                         taxonomy={'genus': 'Aus', 'species': 'bus'})
+    >>>
+    >>> seq_record2 = SeqRecord('ACTACCTA', reading_frame=2, gene_code='RpS5',
+    ...                         table=1, voucher_code='CP100-10',
+    ...                         taxonomy={'genus': 'Aus', 'species': 'bus'})
     >>>
     >>> seq_records = [
     ...    seq_record1, seq_record2,
