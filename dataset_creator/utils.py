@@ -63,3 +63,27 @@ def read_and_delete_tmp_file(filename):
         os.remove(filename)
 
     return contents
+
+
+def make_dataset_header(data, file_format):
+    """
+    :param data: named tuple with necessary info for dataset creation.
+    :param file_format: TNT, PHYLIP, NEXUS, FASTA
+    """
+    if file_format in ['NEXUS', 'PHYLIP', 'FASTA']:
+        header = """
+#NEXUS
+
+BEGIN DATA;
+DIMENSIONS NTAX={0} NCHAR={1};
+FORMAT INTERLEAVE DATATYPE=DNA MISSING=? GAP=-;
+MATRIX
+""".format(data.number_taxa, data.number_chars)
+
+    else:  # file_format: TNT
+        header = """
+nstates dna;
+xread
+{0} {1}""".format(data.number_chars, data.number_taxa)
+
+    return header.strip()
