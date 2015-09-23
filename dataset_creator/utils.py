@@ -1,3 +1,6 @@
+import os
+import uuid
+
 from .exceptions import WrongParameterFormat
 
 
@@ -22,3 +25,17 @@ def get_seq(seq_record, codon_positions):
         return seq_record.first_and_second_codon_positions()
     else:  # None and ALL
         return seq_record.seq
+
+
+def make_random_filename(file_format):
+    return '{0}.{1}'.format(uuid.uuid4().hex, file_format)
+
+
+def read_and_delete_tmp_file(filename):
+    with open(filename, "r") as handle:
+        contents = handle.read()
+
+    if os.path.isfile(filename):
+        os.remove(filename)
+
+    return contents
