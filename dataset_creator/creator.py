@@ -1,6 +1,7 @@
 from . import nexus
 from .phylip import PhylipDatasetFooter
 from .utils import convert_nexus_to_format
+from .utils import make_dataset_header
 
 
 class Creator(object):
@@ -47,7 +48,7 @@ class Creator(object):
         self.extra_dataset_str = self.create_extra_dataset_file()
 
     def create_dataset_header(self):
-        return nexus.dataset_header(self.data)
+        return make_dataset_header(self.data, file_format=self.format)
 
     def create_dataset_block(self):
         return nexus.DatasetBlock(self.data, self.codon_positions,
