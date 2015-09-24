@@ -56,6 +56,9 @@ Installation
 
 Usage
 =====
+The list of SeqRecordExpanded objects should be sorted by gene_code first then
+by voucher_code.
+
 .. code-block:: python
 
     >>> from seqrecord_expanded import SeqRecord
@@ -70,8 +73,16 @@ Usage
     ...                         table=1, voucher_code='CP100-10',
     ...                         taxonomy={'genus': 'Aus', 'species': 'bus'})
     >>>
+    >>> seq_record3 = SeqRecord('ACTACCTA', reading_frame=2, gene_code='wingless',
+    ...                         table=1, voucher_code='CP100-10',
+    ...                         taxonomy={'genus': 'Aus', 'species': 'bus'})
+    >>>
+    >>> seq_record4 = SeqRecord('ACTACCTA', reading_frame=2, gene_code='winglesss',
+    ...                         table=1, voucher_code='CP100-10',
+    ...                         taxonomy={'genus': 'Aus', 'species': 'bus'})
+    >>>
     >>> seq_records = [
-    ...    seq_record1, seq_record2,
+    ...    seq_record1, seq_record2, seq_record3, seq_record4,
     ... ]
     >>> # codon positions can be 1st, 2nd, 3rd, 1st-2nd, ALL (default)
     >>> dataset = Dataset(seq_records, format='NEXUS', partitioning='by gene',
