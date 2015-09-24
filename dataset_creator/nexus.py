@@ -246,23 +246,23 @@ class BasePairCount(object):
     """
     def __init__(self, reading_frame=None, codon_positions=None, partitioning=None,
                  count_start=None, count_end=None):
-        self._reading_frame = self._set_reading_frame(reading_frame)
-        self._codon_positions = self._set_codon_positions(codon_positions)
         self._partitioning = self._set_partitioning(partitioning)
+        self._codon_positions = self._set_codon_positions(codon_positions)
+        self._reading_frame = self._set_reading_frame(reading_frame)
         self._count_start = self._set_count_start(count_start)
         self._count_end = self._set_count_end(count_end)
-
-    def _set_reading_frame(self, reading_frame):
-        if not reading_frame:
-            raise ValueError("_reading_frame argument is needed. Can't be None")
-        else:
-            return reading_frame
 
     def _set_codon_positions(self, codon_positions):
         if not codon_positions:
             raise ValueError("_codon_positions argument is needed. Can't be None")
         else:
             return codon_positions
+
+    def _set_reading_frame(self, reading_frame):
+        if not reading_frame and self._partitioning in ['by codon position', '1st-2nd, 3rd']:
+            raise ValueError("_reading_frame argument is needed. Can't be None")
+        else:
+            return reading_frame
 
     def _set_partitioning(self, partitioning):
         if not partitioning:
