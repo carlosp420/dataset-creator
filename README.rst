@@ -1,3 +1,8 @@
+.. image:: https://rawgit.com/carlosp420/dataset-creator/master/media/logo.svg
+    :width: 240px
+    :align: center
+    :alt: Dataset-creator
+
 =========================================
 Dataset creator for phylogenetic software
 =========================================
