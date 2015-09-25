@@ -122,8 +122,5 @@ class TestDataset(unittest.TestCase):
             test_data2.append(seq_record)
 
         test_data2[0].reading_frame = None
-        dataset = Dataset(test_data2, format='NEXUS', codon_positions='ALL', partitioning='by codon position')
-        test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset_partitioned_as_each.nex')
-        expected = open(test_data_file, 'r').read()
-        result = dataset.dataset_str
-        self.assertEqual(expected, result)
+        self.assertRaises(ValueError, Dataset, test_data2, format='NEXUS', codon_positions='ALL',
+                          partitioning='by codon position')
