@@ -1,6 +1,8 @@
 import os
 import unittest
 
+from seqrecord_expanded import SeqRecordExpanded
+
 from dataset_creator import Dataset
 from .data import test_data
 
@@ -104,6 +106,24 @@ class TestDataset(unittest.TestCase):
     def test_dataset_nexus_all_codon_positions_partitioned_as_1st2nd_3rd(self):
         dataset = Dataset(test_data, format='NEXUS', codon_positions='ALL', partitioning='1st-2nd, 3rd')
         test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset_partitioned_as_1st2nd_3rd.nex')
+        expected = open(test_data_file, 'r').read()
+        result = dataset.dataset_str
+        self.assertEqual(expected, result)
+
+    def test_dataset_missing_reading_frame(self):
+        from .data import sample_data
+
+        test_data2 = []
+        for i in sample_data:
+            seq_record = SeqRecordExpanded(i['seq'], voucher_code=i['voucher_code'],
+                                           taxonomy=i['taxonomy'], gene_code=i['gene_code'],
+                                           reading_frame=i['reading_frame'], table=i['table'],
+                                           )
+            test_data2.append(seq_record)
+
+        test_data2[0].reading_frame = None
+        dataset = Dataset(test_data2, format='NEXUS', codon_positions='ALL', partitioning='by codon position')
+        test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset_partitioned_as_each.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
         self.assertEqual(expected, result)
