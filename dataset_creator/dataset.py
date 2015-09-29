@@ -52,6 +52,7 @@ class Dataset(object):
     """
     def __init__(self, seq_records, format=None, partitioning=None,
                  codon_positions=None):
+        self.warnings = []
         self.seq_records = seq_records
         self.gene_codes = None
         self.number_taxa = None

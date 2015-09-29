@@ -7,6 +7,7 @@ Changelog
 * It will not issue errors if reading frames are not specified unless they
   are strictly necessary to build the dataset (datasets need to be divided by
   codon positions).
+* Added documentation using sphinx-doc
 
 0.1.0 (2015-09-23)
 ------------------

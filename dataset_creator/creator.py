@@ -39,6 +39,7 @@ class Creator(object):
         '
     """
     def __init__(self, data, format=None, codon_positions=None, partitioning=None):
+        self.warnings = []
         self.data = data
         self.format = format
         self.codon_positions = codon_positions
