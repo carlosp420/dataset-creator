@@ -1,6 +1,8 @@
 import os
 import unittest
 
+from seqrecord_expanded import SeqRecordExpanded
+
 from dataset_creator import Dataset
 from .data import test_data
 
@@ -107,3 +109,18 @@ class TestDataset(unittest.TestCase):
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
         self.assertEqual(expected, result)
+
+    def test_dataset_missing_reading_frame(self):
+        from .data import sample_data
+
+        test_data2 = []
+        for i in sample_data:
+            seq_record = SeqRecordExpanded(i['seq'], voucher_code=i['voucher_code'],
+                                           taxonomy=i['taxonomy'], gene_code=i['gene_code'],
+                                           reading_frame=i['reading_frame'], table=i['table'],
+                                           )
+            test_data2.append(seq_record)
+
+        test_data2[0].reading_frame = None
+        self.assertRaises(ValueError, Dataset, test_data2, format='NEXUS', codon_positions='ALL',
+                          partitioning='by codon position')
