@@ -1,3 +1,4 @@
+#! encoding: utf-8
 from collections import namedtuple
 try:
     from collections import OrderedDict
@@ -9,29 +10,25 @@ from .utils import get_seq
 
 
 class Dataset(object):
-    """
-    User's class for making datasets of several formats. It needs as input a
-    list of SeqRecord-expanded objects with as much info as possible:
+    """User's class for making datasets of several formats. It needs as input
+    a list of SeqRecord-expanded objects with as much info as possible:
 
-    Arguments:
-        - seq_records        - list. SeqRecordExpanded objects. The list should
-                               be sorted by gene_code and then voucher code.
-        - format             - str. NEXUS, PHYLIP, TNT, MEGA
-        - partitioning       - str. Partitioning scheme: 'by gene' (default),
-                               'by codon position' (each), '1st-2nd, 3rd'
-        - codon_positions    - str. Can be 1st, 2nd, 3rd, 1st-2nd, ALL (default).
+    Parameters:
+        seq_records (list):     SeqRecordExpanded objects. The list should be
+                                sorted by gene_code and then voucher code.
+        format (str):           NEXUS, PHYLIP, TNT, MEGA
+        partitioning (str):     Partitioning scheme: ``by gene`` (default),
+                                ``by codon position`` (each) and ``1st-2nd, 3rd``.
+        codon_positions (str):  Can be ``1st``, ``2nd``, ``3rd``, ``1st-2nd``,
+                                ``ALL`` (default).
+        aminoacids (boolean):   Returns the dataset as aminoacid sequences.
 
-        * reading_frames
-        * gene_codes
-        * translation tables
-        * taxonomy
-        * sequences
 
     Attributes:
-        - _gene_codes_and_lengths     - a dictionary of the form gene_code: list
-                                        The list contains sequence lengths for its
-                                        sequences. We assume the longest to be the
-                                        real gene_code sequence length.
+         _gene_codes_and_lengths (dict):   in the form ``gene_code: list``
+                                           The list contains sequence lengths for its
+                                           sequences. We assume the longest to be the
+                                           real gene_code sequence length.
 
     Example:
 
@@ -51,7 +48,7 @@ class Dataset(object):
         '
     """
     def __init__(self, seq_records, format=None, partitioning=None,
-                 codon_positions=None):
+                 codon_positions=None, aminoacids=None):
         self.warnings = []
         self.seq_records = seq_records
         self.gene_codes = None
@@ -62,6 +59,7 @@ class Dataset(object):
         self.format = format
         self.partitioning = partitioning
         self.codon_positions = codon_positions
+        self.aminoacids = aminoacids
         self._validate_codon_positions(codon_positions)
         self._validate_partitioning(partitioning)
 
@@ -106,7 +104,9 @@ class Dataset(object):
     def _extract_genes(self):
         gene_codes = [i.gene_code for i in self.seq_records]
         unique_gene_codes = list(set(gene_codes))
-        unique_gene_codes.sort(key=str.lower)
+        # this is better: unique_gene_codes.sort(key=str.lower)
+        # but will not work in python2
+        unique_gene_codes.sort(key=lambda x: x.lower())
         self.gene_codes = unique_gene_codes
 
     def _extract_total_number_of_chars(self):
@@ -124,7 +124,11 @@ class Dataset(object):
         for seq_record in self.seq_records:
             if seq_record.gene_code not in self._gene_codes_and_lengths:
                 self._gene_codes_and_lengths[seq_record.gene_code] = []
-            seq = get_seq(seq_record, self.codon_positions)
+
+            if self.aminoacids is True:
+                seq = seq_record.translate()
+            else:
+                seq = get_seq(seq_record, self.codon_positions)
             self._gene_codes_and_lengths[seq_record.gene_code].append(len(seq))
 
     def _extract_number_of_taxa(self):
@@ -148,6 +152,7 @@ class Dataset(object):
         creator = Creator(self.data, format=self.format,
                           codon_positions=self.codon_positions,
                           partitioning=self.partitioning,
+                          aminoacids=self.aminoacids,
                           )
         dataset_str = creator.dataset_str
         self.extra_dataset_str = creator.extra_dataset_str

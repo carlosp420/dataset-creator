@@ -20,6 +20,14 @@ class TestNexus(unittest.TestCase):
         result = dataset.number_taxa
         self.assertEqual(expected, result)
 
+    def test_aminoacid_dataset(self):
+        dataset = Dataset(test_data, format='NEXUS', partitioning='by gene',
+                          aminoacids=True)
+        result = dataset.dataset_str
+        with open(os.path.join(NEXUS_DATA_PATH, 'dataset_aa.nex'), 'r') as handle:
+            expected = handle.read()
+        self.assertEqual(expected, result)
+
 
 class TestDatasetFooter(unittest.TestCase):
     def setUp(self):

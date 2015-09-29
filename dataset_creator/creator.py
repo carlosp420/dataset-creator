@@ -12,22 +12,21 @@ class Creator(object):
     We will create a NEXUS fomatte dataset first and use BioPython tools to
     convert to FASTA and PHYLIP formats.
 
-    Attributes:
-        - extra_dataset_str    - Charset block in Phylip formatted datasets.
-
     Parameters:
-        - data      - named tuple containing:
-                        * gene_codes: list
-                        * number_chars: string
-                        * number_taxa: string
-                        * seq_recods: list of SeqRecordExpanded objetcs
-                        * gene_codes_and_lengths
-        - format    - str. NEXUS, PHYLIP, TNT, MEGA
-        - gene_codes_and_lengths      - dict of gene_code and length of sequence
-                                        as inferred from the longest DNA seq for
-                                        each gene.
-        - codon_positions    - str. Can be 1st, 2nd, 3rd, 1st-2nd, ALL (default).
-        - partitioniong:     - 'by gene', 'by codon position', '1st-2nd, 3rd'
+        data (named tuple):   containing:
+                                * gene_codes: list
+                                * number_chars: string
+                                * number_taxa: string
+                                * seq_recods: list of SeqRecordExpanded objetcs
+                                * gene_codes_and_lengths
+        format (str):         NEXUS, PHYLIP, TNT, MEGA
+        codon_positions (str):  Can be 1st, 2nd, 3rd, 1st-2nd, ALL (default).
+        partitioniong (str):    'by gene', 'by codon position', '1st-2nd, 3rd'
+        aminoacids (bolean):  To create aminoacid sequences instead of returning
+                              nucleotides.
+
+    Attributes:
+        extra_dataset_str (str):    Charset block in Phylip formatted datasets.
 
     Example:
 
@@ -38,12 +37,14 @@ class Creator(object):
         blah blah
         '
     """
-    def __init__(self, data, format=None, codon_positions=None, partitioning=None):
+    def __init__(self, data, format=None, codon_positions=None, partitioning=None,
+                 aminoacids=None):
         self.warnings = []
         self.data = data
         self.format = format
         self.codon_positions = codon_positions
         self.partitioning = partitioning
+        self.aminoacids = aminoacids
         self.dataset_header = self.create_dataset_header()
         self.dataset_block = self.create_dataset_block()
         self.dataset_footer = self.create_dataset_footer()
@@ -56,7 +57,8 @@ class Creator(object):
     def create_dataset_block(self):
         if self.format in ['NEXUS', 'PHYLIP', 'FASTA']:
             return nexus.DatasetBlock(self.data, self.codon_positions,
-                                      self.partitioning).dataset_block()
+                                      self.partitioning,
+                                      self.aminoacids).dataset_block()
         elif self.format == 'MEGA':
             return mega.MegaDatasetBlock(self.data, self.codon_positions,
                                          self.partitioning).dataset_block()

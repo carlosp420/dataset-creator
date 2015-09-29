@@ -10,9 +10,8 @@ Contents:
 
 .. toctree::
    :maxdepth: 2
-   :hidden:
 
-   modules
+   usage
 
 
 Indices and tables
