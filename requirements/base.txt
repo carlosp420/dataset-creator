@@ -1,1 +1,1 @@
-seqrecord-expanded==0.1.2
+seqrecord-expanded==0.2.0
