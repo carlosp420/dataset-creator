@@ -149,6 +149,7 @@ class Dataset(object):
         creator = Creator(self.data, format=self.format,
                           codon_positions=self.codon_positions,
                           partitioning=self.partitioning,
+                          aminoacids=self.aminoacids,
                           )
         dataset_str = creator.dataset_str
         self.extra_dataset_str = creator.extra_dataset_str

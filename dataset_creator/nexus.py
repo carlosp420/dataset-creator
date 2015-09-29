@@ -4,19 +4,21 @@ from .utils import get_seq
 class DatasetBlock(object):
     """
     Parameters:
-        - data      - named tuple containing:
-                        * gene_codes: list
-                        * number_chars: string
-                        * number_taxa: string
-                        * seq_recods: list of SeqRecordExpanded objetcs
-                        * gene_codes_and_lengths: OrderedDict
-        - codon_positions    - str. Can be 1st, 2nd, 3rd, 1st-2nd, ALL (default).
-        - partitioning
+        data (named tuple):      containing:
+                                  * gene_codes: list
+                                  * number_chars: string
+                                  * number_taxa: string
+                                  * seq_recods: list of SeqRecordExpanded objetcs
+                                  * gene_codes_and_lengths: OrderedDict
+        codon_positions (str):   str. Can be 1st, 2nd, 3rd, 1st-2nd, ALL (default).
+        partitioning (str):
+        aminoacids (boolead):
     """
-    def __init__(self, data, codon_positions, partitioning):
+    def __init__(self, data, codon_positions, partitioning, aminoacids):
         self.data = data
         self.codon_positions = codon_positions
         self.partitioning = partitioning
+        self.aminoacids = aminoacids
         self._blocks = []
 
     def dataset_block(self):
@@ -68,15 +70,26 @@ class DatasetBlock(object):
                                             seq_record.taxonomy['genus'],
                                             seq_record.taxonomy['species'],
                                             )
-            seq = get_seq(seq_record, self.codon_positions)
+            if self.aminoacids is True:
+                seq = seq_record.translate()
+            else:
+                seq = get_seq(seq_record, self.codon_positions)
+
             out += '{0}{1}\n'.format(taxon_id.ljust(55), seq)
         return out
 
 
 class DatasetFooter(object):
-    """
-    Builds charset block:
+    """Builds charset block:
 
+    Parameters:
+        data (namedtuple): with necessary info for dataset creation.
+        codon_positions (str): 1st, 2nd, 3rd, 1st-2nd, ALL
+        partitioning (str): 'by gene', 'by codon position', '1st-2nd, 3rd'
+
+    Example:
+
+        >>>
         "
         begin mrbayes;
         charset ArgKin = 1-596;
@@ -88,9 +101,6 @@ class DatasetFooter(object):
         charset wingless = 4340-4739;
         "
 
-    :param data: named tuple with necessary info for dataset creation.
-    :param codon_positions: 1st, 2nd, 3rd, 1st-2nd, ALL
-    :param partitioning: 'by gene', 'by codon position', '1st-2nd, 3rd'
     """
     def __init__(self, data, codon_positions=None, partitioning=None):
         self.data = data
