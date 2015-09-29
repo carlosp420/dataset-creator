@@ -1,3 +1,4 @@
+#! encoding: utf-8
 from collections import namedtuple
 try:
     from collections import OrderedDict
@@ -103,7 +104,9 @@ class Dataset(object):
     def _extract_genes(self):
         gene_codes = [i.gene_code for i in self.seq_records]
         unique_gene_codes = list(set(gene_codes))
-        unique_gene_codes.sort(key=str.lower)
+        # this is better: unique_gene_codes.sort(key=str.lower)
+        # but will not work in python2
+        unique_gene_codes.sort(key=lambda x: x.lower())
         self.gene_codes = unique_gene_codes
 
     def _extract_total_number_of_chars(self):
