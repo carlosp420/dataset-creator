@@ -20,8 +20,6 @@ def get_seq(seq_record, codon_positions):
     :param seq_record: SeqRecordExpanded object.
     :return: str.
     """
-    # TODO: catch the warning from seqrecord and return it with the sequence as a named tuple
-    # TODO: start documentation.
     if codon_positions not in [None, '1st', '2nd', '3rd', '1st-2nd', 'ALL']:
         raise WrongParameterFormat("`codon_positions` argument should be any of the following"
                                    ": 1st, 2nd, 3rd, 1st-2nd or ALL")

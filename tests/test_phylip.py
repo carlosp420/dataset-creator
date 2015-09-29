@@ -2,7 +2,6 @@ import os
 import unittest
 
 from dataset_creator.dataset import Dataset
-from dataset_creator.creator import Creator
 
 from .data import test_data
 

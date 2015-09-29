@@ -14,7 +14,7 @@ class DatasetBlock(object):
         partitioning (str):
         aminoacids (boolead):
     """
-    def __init__(self, data, codon_positions, partitioning, aminoacids):
+    def __init__(self, data, codon_positions, partitioning, aminoacids=None):
         self.data = data
         self.codon_positions = codon_positions
         self.partitioning = partitioning
