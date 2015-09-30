@@ -94,11 +94,11 @@ END;
 begin mrbayes;
     charset ArgKin = 1-596;
     charset COI-begin = 597-1264;
-    charset COI_end = 1265-2070;
-    charset ef1a = 2071-3310;
-    charset RpS2 = 3311-3722;
-    charset RpS5 = 3723-4339;
-    charset wingless = 4340-4739;
+    charset COI_end = 1265-2069;
+    charset ef1a = 2070-3308;
+    charset RpS2 = 3309-3717;
+    charset RpS5 = 3718-4333;
+    charset wingless = 4334-4732;
 partition GENES = 7: ArgKin, COI-begin, COI_end, ef1a, RpS2, RpS5, wingless;
 
 set partition = GENES;
