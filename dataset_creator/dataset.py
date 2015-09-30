@@ -130,6 +130,8 @@ class Dataset(object):
 
             if self.aminoacids is True:
                 seq = seq_record.translate()
+            elif self.aminoacids is not True and self.degenerate is not None:
+                seq = seq_record.degenerate(method=self.degenerate)
             else:
                 seq = get_seq(seq_record, self.codon_positions)
             self._gene_codes_and_lengths[seq_record.gene_code].append(len(seq))
