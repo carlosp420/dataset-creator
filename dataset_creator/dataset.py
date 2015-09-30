@@ -22,7 +22,9 @@ class Dataset(object):
         codon_positions (str):  Can be ``1st``, ``2nd``, ``3rd``, ``1st-2nd``,
                                 ``ALL`` (default).
         aminoacids (boolean):   Returns the dataset as aminoacid sequences.
-
+        degenerate (str):       Method to degenerate nucleotide sequences,
+                                following Zwick et al. Can be ``S``, ``Z``,
+                                ``SZ`` and ``normal``.
 
     Attributes:
          _gene_codes_and_lengths (dict):   in the form ``gene_code: list``
@@ -48,7 +50,7 @@ class Dataset(object):
         '
     """
     def __init__(self, seq_records, format=None, partitioning=None,
-                 codon_positions=None, aminoacids=None):
+                 codon_positions=None, aminoacids=None, degenerate=None):
         self.warnings = []
         self.seq_records = seq_records
         self.gene_codes = None
@@ -60,6 +62,7 @@ class Dataset(object):
         self.partitioning = partitioning
         self.codon_positions = codon_positions
         self.aminoacids = aminoacids
+        self.degenerate = degenerate
         self._validate_codon_positions(codon_positions)
         self._validate_partitioning(partitioning)
 
@@ -127,6 +130,8 @@ class Dataset(object):
 
             if self.aminoacids is True:
                 seq = seq_record.translate()
+            elif self.aminoacids is not True and self.degenerate is not None:
+                seq = seq_record.degenerate(method=self.degenerate)
             else:
                 seq = get_seq(seq_record, self.codon_positions)
             self._gene_codes_and_lengths[seq_record.gene_code].append(len(seq))
@@ -153,6 +158,7 @@ class Dataset(object):
                           codon_positions=self.codon_positions,
                           partitioning=self.partitioning,
                           aminoacids=self.aminoacids,
+                          degenerate=self.degenerate,
                           )
         dataset_str = creator.dataset_str
         self.extra_dataset_str = creator.extra_dataset_str

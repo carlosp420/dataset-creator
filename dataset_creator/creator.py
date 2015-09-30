@@ -13,17 +13,20 @@ class Creator(object):
     convert to FASTA and PHYLIP formats.
 
     Parameters:
-        data (named tuple):   containing:
-                                * gene_codes: list
-                                * number_chars: string
-                                * number_taxa: string
-                                * seq_recods: list of SeqRecordExpanded objetcs
-                                * gene_codes_and_lengths
-        format (str):         NEXUS, PHYLIP, TNT, MEGA
+        data (named tuple):     containing:
+                                  * gene_codes: list
+                                  * number_chars: string
+                                  * number_taxa: string
+                                  * seq_recods: list of SeqRecordExpanded objetcs
+                                  * gene_codes_and_lengths
+        format (str):           NEXUS, PHYLIP, TNT, MEGA
         codon_positions (str):  Can be 1st, 2nd, 3rd, 1st-2nd, ALL (default).
         partitioniong (str):    'by gene', 'by codon position', '1st-2nd, 3rd'
-        aminoacids (bolean):  To create aminoacid sequences instead of returning
-                              nucleotides.
+        aminoacids (bolean):    To create aminoacid sequences instead of returning
+                                nucleotides.
+        degenerate (str):       Method to degenerate nucleotide sequences,
+                                following Zwick et al. Can be ``S``, ``Z``,
+                                ``SZ`` and ``normal``.
 
     Attributes:
         extra_dataset_str (str):    Charset block in Phylip formatted datasets.
@@ -38,13 +41,14 @@ class Creator(object):
         '
     """
     def __init__(self, data, format=None, codon_positions=None, partitioning=None,
-                 aminoacids=None):
+                 aminoacids=None, degenerate=None):
         self.warnings = []
         self.data = data
         self.format = format
         self.codon_positions = codon_positions
         self.partitioning = partitioning
         self.aminoacids = aminoacids
+        self.degenerate = degenerate
         self.dataset_header = self.create_dataset_header()
         self.dataset_block = self.create_dataset_block()
         self.dataset_footer = self.create_dataset_footer()
@@ -58,7 +62,8 @@ class Creator(object):
         if self.format in ['NEXUS', 'PHYLIP', 'FASTA']:
             return nexus.DatasetBlock(self.data, self.codon_positions,
                                       self.partitioning,
-                                      self.aminoacids).dataset_block()
+                                      self.aminoacids,
+                                      self.degenerate).dataset_block()
         elif self.format == 'MEGA':
             return mega.MegaDatasetBlock(self.data, self.codon_positions,
                                          self.partitioning).dataset_block()

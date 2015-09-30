@@ -128,3 +128,23 @@ class TestDataset(unittest.TestCase):
 
         self.assertRaises(ValueError, Dataset, data, format='NEXUS', codon_positions='ALL',
                           partitioning='1st-2nd, 3rd', aminoacids=True)
+
+    def test_degenerate(self):
+        SAMPLE_DATA_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'sample_data.txt')
+        with open(SAMPLE_DATA_PATH, 'r') as handle:
+            sample_data = json.loads(handle.read())
+
+        data = []
+        append = data.append
+        for i in sample_data:
+            seq_record = SeqRecordExpanded(i['seq'], voucher_code=i['voucher_code'],
+                                           taxonomy=i['taxonomy'], gene_code=i['gene_code'],
+                                           reading_frame=i['reading_frame'], table=i['table'])
+            append(seq_record)
+
+        dataset = Dataset(data, format='NEXUS', codon_positions='ALL',
+                          partitioning='by gene', degenerate='S')
+        with open(os.path.join(NEXUS_DATA_PATH, 'dataset_degenerated.nex'), 'r') as handle:
+            expected = handle.read().strip()
+        result = dataset.dataset_str
+        self.assertEqual(expected, result)
