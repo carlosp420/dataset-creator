@@ -1,1 +1,3 @@
 seqrecord-expanded==0.2.1
+sphinxcontrib-napoleon==0.3.11
+
