@@ -12,14 +12,17 @@ class DatasetBlock(object):
                                   * gene_codes_and_lengths: OrderedDict
         codon_positions (str):   str. Can be 1st, 2nd, 3rd, 1st-2nd, ALL (default).
         partitioning (str):
-        aminoacids (boolead):
+        aminoacids (boolean):
+        degenerate (str):
     """
-    def __init__(self, data, codon_positions, partitioning, aminoacids=None):
+    def __init__(self, data, codon_positions, partitioning, aminoacids=None,
+                 degenerate=None):
         self.warnings = []
         self.data = data
         self.codon_positions = codon_positions
         self.partitioning = partitioning
         self.aminoacids = aminoacids
+        self.degenerate = degenerate
         self._blocks = []
 
     def dataset_block(self):
@@ -73,6 +76,8 @@ class DatasetBlock(object):
                                             )
             if self.aminoacids is True:
                 seq = seq_record.translate()
+            elif self.aminoacids is not True and self.degenerate is not None:
+                seq = seq_record.degenerate(method=self.degenerate)
             else:
                 seq = get_seq(seq_record, self.codon_positions)
 
