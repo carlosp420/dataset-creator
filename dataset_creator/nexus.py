@@ -243,15 +243,7 @@ class DatasetFooter(object):
         return self.make_footer()
 
     def make_footer(self):
-        outgroup_taxonomy = ''
-        if self.outgroup is not None:
-            for i in self.data.seq_records:
-                if self.outgroup == i.voucher_code:
-                    outgroup_taxonomy = '{0}_{1}'.format(i.taxonomy['genus'], i.taxonomy['species'])
-                    break
-            outgroup = '\noutgroup {0}_{1};'.format(self.outgroup, outgroup_taxonomy)
-        else:
-            outgroup = ''
+        outgroup = self.get_outgroup()
 
         footer = """{0}\n{1}
 
@@ -266,6 +258,23 @@ mcmc ngen=10000000 printfreq=1000 samplefreq=1000 nchains=4 nruns=2 savebrlens=y
 END;
     """.format(self.charset_block, self.partition_line, outgroup)
         return footer.strip()
+
+    def get_outgroup(self):
+        """Generates the outgroup line from the voucher code specified by the
+        user.
+        """
+        if self.outgroup is not None:
+            outgroup_taxonomy = ''
+            for i in self.data.seq_records:
+                if self.outgroup == i.voucher_code:
+                    outgroup_taxonomy = '{0}_{1}'.format(i.taxonomy['genus'],
+                                                         i.taxonomy['species'])
+                    break
+            outgroup = '\noutgroup {0}_{1};'.format(self.outgroup,
+                                                    outgroup_taxonomy)
+        else:
+            outgroup = ''
+        return outgroup
 
 
 class BasePairCount(object):
