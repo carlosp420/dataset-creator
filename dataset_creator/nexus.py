@@ -343,6 +343,9 @@ class BasePairCount(object):
         if self._codon_positions in ['ALL', '1st', '2nd', '3rd'] and self._partitioning == 'by gene':
             return self._using_all_codons_partition_by_gene()
 
+        if self._codon_positions in ['1st', '2nd', '3rd'] and self._partitioning == 'by codon position':
+            return self._using_one_codon_position_partitioned_by_codon_position(self._codon_positions)
+
         if self._codon_positions == 'ALL' and self._partitioning == '1st-2nd, 3rd':
             return self._using_all_codons_partition_by_1st2nd_3rd()
 
@@ -373,6 +376,11 @@ class BasePairCount(object):
                 '{0}-{1}'.format(self._count_start, self._count_end),
                 '{0}-{1}'.format(self._count_start + 1, self._count_end),
             ]
+
+    def _using_one_codon_position_partitioned_by_codon_position(self, position):
+        return [
+            '{0}-{1}'.format(self._count_start, self._count_end),
+        ]
 
     def _using_all_codons_partition_by_gene(self):
         return [
