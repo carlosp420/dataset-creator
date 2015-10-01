@@ -89,9 +89,11 @@ class DatasetFooter(object):
     """Builds charset block:
 
     Parameters:
-        data (namedtuple): with necessary info for dataset creation.
-        codon_positions (str): 1st, 2nd, 3rd, 1st-2nd, ALL
-        partitioning (str): 'by gene', 'by codon position', '1st-2nd, 3rd'
+        data (namedtuple):      with necessary info for dataset creation.
+        codon_positions (str):  `1st`, `2nd`, `3rd`, `1st-2nd`, `ALL`.
+        partitioning (str):     `by gene`, `by codon position`, `1st-2nd, 3rd`.
+        outgroup (str):         voucher code to be used as outgroup for NEXUS
+                                and TNT files.
 
     Example:
 
@@ -105,13 +107,25 @@ class DatasetFooter(object):
         charset RpS2 = 3312-3722;
         charset RpS5 = 3723-4339;
         charset wingless = 4340-4739;
-        "
 
+        set autoclose=yes;
+        prset applyto=(all) ratepr=variable brlensp=unconstrained:Exp(100.0) shapepr=exp(1.0) tratiopr=beta(2.0,1.0);
+        lset applyto=(all) nst=mixed rates=gamma [invgamma];
+        unlink statefreq=(all);
+        unlink shape=(all) revmat=(all) tratio=(all) [pinvar=(all)];
+        mcmc ngen=10000000 printfreq=1000 samplefreq=1000 nchains=4 nruns=2 savebrlens=yes [temp=0.11];
+         sump relburnin=yes [no] burninfrac=0.25 [2500];
+         sumt relburnin=yes [no] burninfrac=0.25 [2500] contype=halfcompat [allcompat];
+        END;
+        "
     """
-    def __init__(self, data, codon_positions=None, partitioning=None):
+    def __init__(self, data, codon_positions=None, partitioning=None,
+                 outgroup=None):
         self.data = data
         self.codon_positions = codon_positions
         self.partitioning = partitioning
+        self.outgroup = outgroup
+
         self._validate_partitioning(partitioning)
         self._validate_codon_positions(codon_positions)
         self.charset_block = self.make_charset_block()
@@ -229,9 +243,11 @@ class DatasetFooter(object):
         return self.make_footer()
 
     def make_footer(self):
+        outgroup = self.get_outgroup()
+
         footer = """{0}\n{1}
 
-set autoclose=yes;
+set autoclose=yes;{2}
 prset applyto=(all) ratepr=variable brlensp=unconstrained:Exp(100.0) shapepr=exp(1.0) tratiopr=beta(2.0,1.0);
 lset applyto=(all) nst=mixed rates=gamma [invgamma];
 unlink statefreq=(all);
@@ -240,8 +256,25 @@ mcmc ngen=10000000 printfreq=1000 samplefreq=1000 nchains=4 nruns=2 savebrlens=y
  sump relburnin=yes [no] burninfrac=0.25 [2500];
  sumt relburnin=yes [no] burninfrac=0.25 [2500] contype=halfcompat [allcompat];
 END;
-    """.format(self.charset_block, self.partition_line)
+    """.format(self.charset_block, self.partition_line, outgroup)
         return footer.strip()
+
+    def get_outgroup(self):
+        """Generates the outgroup line from the voucher code specified by the
+        user.
+        """
+        if self.outgroup is not None:
+            outgroup_taxonomy = ''
+            for i in self.data.seq_records:
+                if self.outgroup == i.voucher_code:
+                    outgroup_taxonomy = '{0}_{1}'.format(i.taxonomy['genus'],
+                                                         i.taxonomy['species'])
+                    break
+            outgroup = '\noutgroup {0}_{1};'.format(self.outgroup,
+                                                    outgroup_taxonomy)
+        else:
+            outgroup = ''
+        return outgroup
 
 
 class BasePairCount(object):

@@ -142,9 +142,17 @@ class TestDataset(unittest.TestCase):
                                            reading_frame=i['reading_frame'], table=i['table'])
             append(seq_record)
 
-        dataset = Dataset(data, format='NEXUS', codon_positions='ALL',
-                          partitioning='by gene', degenerate='S')
         with open(os.path.join(NEXUS_DATA_PATH, 'dataset_degenerated.nex'), 'r') as handle:
             expected = handle.read().strip()
+
+        dataset = Dataset(data, format='NEXUS', codon_positions='ALL',
+                          partitioning='by gene', degenerate='S')
         result = dataset.dataset_str
         self.assertEqual(expected, result)
+
+    def test_using_outgroup(self):
+        dataset = Dataset(test_data, format='NEXUS', codon_positions='ALL',
+                          outgroup='CP100-19')
+        expected = 'outgroup CP100-19_Aus_jus;'
+        result = dataset.dataset_str
+        self.assertTrue(expected in result)

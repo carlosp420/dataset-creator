@@ -25,6 +25,8 @@ class Dataset(object):
         degenerate (str):       Method to degenerate nucleotide sequences,
                                 following Zwick et al. Can be ``S``, ``Z``,
                                 ``SZ`` and ``normal``.
+        outgroup (str):         voucher code to be used as outgroup for NEXUS
+                                and TNT files.
 
     Attributes:
          _gene_codes_and_lengths (dict):   in the form ``gene_code: list``
@@ -50,7 +52,8 @@ class Dataset(object):
         '
     """
     def __init__(self, seq_records, format=None, partitioning=None,
-                 codon_positions=None, aminoacids=None, degenerate=None):
+                 codon_positions=None, aminoacids=None, degenerate=None,
+                 outgroup=None):
         self.warnings = []
         self.seq_records = seq_records
         self.gene_codes = None
@@ -63,6 +66,8 @@ class Dataset(object):
         self.codon_positions = codon_positions
         self.aminoacids = aminoacids
         self.degenerate = degenerate
+        self.outgroup = outgroup
+
         self._validate_codon_positions(codon_positions)
         self._validate_partitioning(partitioning)
 
@@ -159,6 +164,7 @@ class Dataset(object):
                           partitioning=self.partitioning,
                           aminoacids=self.aminoacids,
                           degenerate=self.degenerate,
+                          outgroup=self.outgroup,
                           )
         dataset_str = creator.dataset_str
         self.extra_dataset_str = creator.extra_dataset_str

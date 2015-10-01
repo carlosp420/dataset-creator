@@ -27,6 +27,8 @@ class Creator(object):
         degenerate (str):       Method to degenerate nucleotide sequences,
                                 following Zwick et al. Can be ``S``, ``Z``,
                                 ``SZ`` and ``normal``.
+        outgroup (str):         voucher code to be used as outgroup for NEXUS
+                                and TNT files.
 
     Attributes:
         extra_dataset_str (str):    Charset block in Phylip formatted datasets.
@@ -41,7 +43,7 @@ class Creator(object):
         '
     """
     def __init__(self, data, format=None, codon_positions=None, partitioning=None,
-                 aminoacids=None, degenerate=None):
+                 aminoacids=None, degenerate=None, outgroup=None):
         self.warnings = []
         self.data = data
         self.format = format
@@ -49,6 +51,7 @@ class Creator(object):
         self.partitioning = partitioning
         self.aminoacids = aminoacids
         self.degenerate = degenerate
+        self.outgroup = outgroup
         self.dataset_header = self.create_dataset_header()
         self.dataset_block = self.create_dataset_block()
         self.dataset_footer = self.create_dataset_footer()
@@ -73,7 +76,8 @@ class Creator(object):
 
     def create_dataset_footer(self):
         return nexus.DatasetFooter(self.data, codon_positions=self.codon_positions,
-                                   partitioning=self.partitioning).dataset_footer()
+                                   partitioning=self.partitioning,
+                                   outgroup=self.outgroup).dataset_footer()
 
     def create_extra_dataset_file(self):
         phylip_footer = PhylipDatasetFooter(self.data,
