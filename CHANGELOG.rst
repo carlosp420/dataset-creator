@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.3.1 (2015-10-01)
+------------------
+* Fixed bug that raised an exception when user wanted partitioned dataset by
+  codon positions of only one codon.
+
 0.3.0 (2015-10-01)
 ------------------
 * Accepts voucher code as string that will be used to generate the outgroup
