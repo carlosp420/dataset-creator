@@ -1,7 +1,12 @@
 Changelog
 =========
 
-0.1.2 (2015-09-30)
+0.3.0 (2015-10-01)
+------------------
+* Accepts voucher code as string that will be used to generate the outgroup
+  string needed for NEXUS and TNT files.
+
+0.2.0 (2015-09-30)
 ------------------
 * Creates datasets as degenerated sequences using the method by Zwick et al.
 
