@@ -243,8 +243,13 @@ class DatasetFooter(object):
         return self.make_footer()
 
     def make_footer(self):
+        outgroup_taxonomy = ''
         if self.outgroup is not None:
-            outgroup = '\n{0}\n'.format(self.outgroup)
+            for i in self.data.seq_records:
+                if self.outgroup == i.voucher_code:
+                    outgroup_taxonomy = '{0}_{1}'.format(i.taxonomy['genus'], i.taxonomy['species'])
+                    break
+            outgroup = '\noutgroup {0}_{1};'.format(self.outgroup, outgroup_taxonomy)
         else:
             outgroup = ''
 

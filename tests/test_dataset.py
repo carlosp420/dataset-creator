@@ -152,7 +152,7 @@ class TestDataset(unittest.TestCase):
 
     def test_using_outgroup(self):
         dataset = Dataset(test_data, format='NEXUS', codon_positions='ALL',
-                          outgroup='CP100-09')
-        expected = 'outgroup CP100-09_Aus_bus;'
+                          outgroup='CP100-19')
+        expected = 'outgroup CP100-19_Aus_jus;'
         result = dataset.dataset_str
-        self.assertEqual(expected, result)
+        self.assertTrue(expected in result)
