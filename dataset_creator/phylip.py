@@ -1,4 +1,4 @@
-from .nexus import DatasetFooter
+from .base_dataset import DatasetFooter
 
 
 class PhylipDatasetFooter(DatasetFooter):

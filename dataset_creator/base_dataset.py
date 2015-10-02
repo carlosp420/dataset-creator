@@ -28,6 +28,18 @@ class DatasetBlock(object):
         self._blocks = []
 
     def dataset_block(self):
+        """Creates the block with taxon names and their sequences.
+
+        Override this function if the dataset block needs to be different
+        due to file format.
+
+        Example:
+
+            CP100_10_Aus_aus   ACGATRGACGATRA...
+            CP100_11_Aus_bus   ACGATRGACGATRA...
+            ...
+
+        """
         self.split_data()
         out = []
         for block in self._blocks:
@@ -61,12 +73,11 @@ class DatasetBlock(object):
             self._blocks[list_length - 1].append(seq_record)
 
     def convert_to_string(self, block):
-        """
-        Takes a list of SeqRecordExpanded objects corresponding to a gene_code
+        """Takes a list of SeqRecordExpanded objects corresponding to a gene_code
         and produces the gene_block as string.
 
-        :param block:
-        :return: str.
+        Override this function if the dataset block needs to be different
+        due to file format.
         """
         out = None
         for seq_record in block:

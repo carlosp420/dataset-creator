@@ -1,4 +1,4 @@
-from . import nexus
+from . import base_dataset
 from . import tnt
 from . import mega
 from .phylip import PhylipDatasetFooter
@@ -64,10 +64,10 @@ class Creator(object):
 
     def create_dataset_block(self):
         if self.format in ['NEXUS', 'PHYLIP', 'FASTA']:
-            return nexus.DatasetBlock(self.data, self.codon_positions,
-                                      self.partitioning,
-                                      self.aminoacids,
-                                      self.degenerate).dataset_block()
+            return base_dataset.DatasetBlock(self.data, self.codon_positions,
+                                             self.partitioning,
+                                             self.aminoacids,
+                                             self.degenerate).dataset_block()
         elif self.format == 'MEGA':
             return mega.MegaDatasetBlock(self.data, self.codon_positions,
                                          self.partitioning).dataset_block()
@@ -76,9 +76,9 @@ class Creator(object):
                                        self.partitioning).dataset_block()
 
     def create_dataset_footer(self):
-        return nexus.DatasetFooter(self.data, codon_positions=self.codon_positions,
-                                   partitioning=self.partitioning,
-                                   outgroup=self.outgroup).dataset_footer()
+        return base_dataset.DatasetFooter(self.data, codon_positions=self.codon_positions,
+                                          partitioning=self.partitioning,
+                                          outgroup=self.outgroup).dataset_footer()
 
     def create_extra_dataset_file(self):
         phylip_footer = PhylipDatasetFooter(self.data,

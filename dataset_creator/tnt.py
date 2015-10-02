@@ -1,5 +1,5 @@
 from .utils import get_seq
-from .nexus import DatasetBlock
+from .base_dataset import DatasetBlock
 
 
 class TntDatasetBlock(DatasetBlock):
