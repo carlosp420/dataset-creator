@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.3.3 (2015-10-02)
+------------------
+* Fixed bug that raised an exception when SeqExpandedRecords did not have data
+  in the ``taxonomy`` field.
+
 0.3.2 (2015-10-01)
 ------------------
 * Fixed bug that raised an exception when user wanted partitioned dataset as
