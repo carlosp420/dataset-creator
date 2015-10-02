@@ -65,20 +65,29 @@ def read_and_delete_tmp_file(filename):
     return contents
 
 
-def make_dataset_header(data, file_format):
+def make_dataset_header(data, file_format, aminoacids):
+    """Creates the dataset header for NEXUS files from ``#NEXUS`` to ``MATRIX``.
+
+    Parameters:
+        data (namedtuple):    with necessary info for dataset creation.
+        file_format (str):    TNT, PHYLIP, NEXUS, FASTA
+        aminoacids (boolean): If ``aminoacids is True`` the header will show
+                              ``DATATYPE=PROTEIN`` otherwise it will be ``DNA``.
     """
-    :param data: named tuple with necessary info for dataset creation.
-    :param file_format: TNT, PHYLIP, NEXUS, FASTA
-    """
+    if aminoacids is True:
+        datatype = 'PROTEIN'
+    else:
+        datatype = 'DNA'
+
     if file_format in ['NEXUS', 'PHYLIP', 'FASTA']:
         header = """
 #NEXUS
 
 BEGIN DATA;
 DIMENSIONS NTAX={0} NCHAR={1};
-FORMAT INTERLEAVE DATATYPE=DNA MISSING=? GAP=-;
+FORMAT INTERLEAVE DATATYPE={2} MISSING=? GAP=-;
 MATRIX
-""".format(data.number_taxa, data.number_chars)
+""".format(data.number_taxa, data.number_chars, datatype)
 
     elif file_format == 'MEGA':
         return "#MEGA\n!TITLE title;"

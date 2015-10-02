@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.3.4 (2015-10-02)
+------------------
+* Fixed bug that did not show DATATYPE=PROTEIN in Nexus files when aminoacid
+  sequences were requested by user.
+
 0.3.3 (2015-10-02)
 ------------------
 * Fixed bug that raised an exception when SeqExpandedRecords did not have data

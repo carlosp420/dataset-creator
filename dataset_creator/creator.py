@@ -59,7 +59,8 @@ class Creator(object):
         self.extra_dataset_str = self.create_extra_dataset_file()
 
     def create_dataset_header(self):
-        return make_dataset_header(self.data, file_format=self.format)
+        return make_dataset_header(self.data, file_format=self.format,
+                                   aminoacids=self.aminoacids)
 
     def create_dataset_block(self):
         if self.format in ['NEXUS', 'PHYLIP', 'FASTA']:
