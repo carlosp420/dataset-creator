@@ -73,7 +73,7 @@ class DatasetBlock(object):
             if not out:
                 out = '[{0}]\n'.format(seq_record.gene_code)
             taxonomy_as_string = self.flatten_taxonomy(seq_record)
-            taxon_id = '{0}_{1}'.format(seq_record.voucher_code, taxonomy_as_string)
+            taxon_id = '{0}{1}'.format(seq_record.voucher_code, taxonomy_as_string)
 
             if self.aminoacids is True:
                 seq = seq_record.translate()
@@ -91,14 +91,13 @@ class DatasetBlock(object):
             return out
         else:
             if 'family' in seq_record.taxonomy:
-                out += seq_record.taxonomy['family']
+                out += '_' + seq_record.taxonomy['family']
             if 'genus' in seq_record.taxonomy:
                 out += '_' + seq_record.taxonomy['genus']
             if 'species' in seq_record.taxonomy:
                 out += '_' + seq_record.taxonomy['species']
 
-            removed_double_underscores = re.sub('_+', '_', out)
-            return re.sub('^_', '', removed_double_underscores)
+            return re.sub('_+', '_', out)
 
 
 class DatasetFooter(object):
