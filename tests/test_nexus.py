@@ -1,5 +1,8 @@
+import json
 import os
 import unittest
+
+from seqrecord_expanded import SeqRecordExpanded
 
 from .data import test_data
 from dataset_creator.dataset import Dataset
@@ -8,6 +11,26 @@ from dataset_creator.nexus import BasePairCount
 
 
 NEXUS_DATA_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'Nexus')
+
+
+def get_test_data(type_of_data=None):
+    """
+    Parameters:
+        type_of_data (str):     ``raw_data`` or ``seq_records``
+    """
+    with open(os.path.join(NEXUS_DATA_PATH, "..", "sample_data.txt"), "r") as handle:
+        raw_data = json.loads(handle.read())
+
+    if type_of_data == 'raw_data':
+        return raw_data
+    elif type_of_data == 'seq_records':
+        seq_records = []
+        for i in raw_data:
+            seq_record = SeqRecordExpanded(i['seq'], voucher_code=i['voucher_code'],
+                                           taxonomy=i['taxonomy'], gene_code=i['gene_code'],
+                                           reading_frame=i['reading_frame'], table=i['table'])
+            seq_records.append(seq_record)
+        return seq_records
 
 
 class TestNexus(unittest.TestCase):
@@ -27,6 +50,34 @@ class TestNexus(unittest.TestCase):
         with open(os.path.join(NEXUS_DATA_PATH, 'dataset_aa.nex'), 'r') as handle:
             expected = handle.read()
         self.assertEqual(expected, result)
+
+    def test_dataset_when_seqrecord_taxonomy_is_none(self):
+        raw_data = get_test_data('raw_data')
+        raw_data[0]['taxonomy'] = None
+
+        seq_records = []
+        for i in raw_data:
+            seq_record = SeqRecordExpanded(i['seq'], voucher_code=i['voucher_code'],
+                                           taxonomy=i['taxonomy'], gene_code=i['gene_code'],
+                                           reading_frame=i['reading_frame'], table=i['table'])
+            seq_records.append(seq_record)
+
+        dataset = Dataset(seq_records, format='NEXUS', partitioning='by gene')
+        self.assertTrue('CP100-10      ' in dataset.dataset_str)
+
+    def test_dataset_when_seqrecord_taxonomy_is_has_family(self):
+        raw_data = get_test_data('raw_data')
+        raw_data[0]['taxonomy'] = {'family': 'Aussidae', 'genus': 'Aus', 'species': 'aus'}
+
+        seq_records = []
+        for i in raw_data:
+            seq_record = SeqRecordExpanded(i['seq'], voucher_code=i['voucher_code'],
+                                           taxonomy=i['taxonomy'], gene_code=i['gene_code'],
+                                           reading_frame=i['reading_frame'], table=i['table'])
+            seq_records.append(seq_record)
+
+        dataset = Dataset(seq_records, format='NEXUS', partitioning='by gene')
+        self.assertTrue('CP100-10_Aussidae_Aus_aus    ' in dataset.dataset_str)
 
 
 class TestDatasetFooter(unittest.TestCase):

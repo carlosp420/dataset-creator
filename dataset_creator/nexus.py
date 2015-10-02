@@ -1,3 +1,5 @@
+import re
+
 from .utils import get_seq
 
 
@@ -70,10 +72,9 @@ class DatasetBlock(object):
         for seq_record in block:
             if not out:
                 out = '[{0}]\n'.format(seq_record.gene_code)
-            taxon_id = '{0}_{1}_{2}'.format(seq_record.voucher_code,
-                                            seq_record.taxonomy['genus'],
-                                            seq_record.taxonomy['species'],
-                                            )
+            taxonomy_as_string = self.flatten_taxonomy(seq_record)
+            taxon_id = '{0}{1}'.format(seq_record.voucher_code, taxonomy_as_string)
+
             if self.aminoacids is True:
                 seq = seq_record.translate()
             elif self.aminoacids is not True and self.degenerate is not None:
@@ -83,6 +84,20 @@ class DatasetBlock(object):
 
             out += '{0}{1}\n'.format(taxon_id.ljust(55), seq)
         return out
+
+    def flatten_taxonomy(self, seq_record):
+        out = ''
+        if seq_record.taxonomy is None:
+            return out
+        else:
+            if 'family' in seq_record.taxonomy:
+                out += '_' + seq_record.taxonomy['family']
+            if 'genus' in seq_record.taxonomy:
+                out += '_' + seq_record.taxonomy['genus']
+            if 'species' in seq_record.taxonomy:
+                out += '_' + seq_record.taxonomy['species']
+
+            return re.sub('_+', '_', out)
 
 
 class DatasetFooter(object):
