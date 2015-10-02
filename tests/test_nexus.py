@@ -4,7 +4,7 @@ import unittest
 
 from seqrecord_expanded import SeqRecordExpanded
 
-from data import test_data
+from .data import test_data
 from dataset_creator.dataset import Dataset
 from dataset_creator.nexus import DatasetFooter
 from dataset_creator.nexus import BasePairCount
@@ -64,6 +64,20 @@ class TestNexus(unittest.TestCase):
 
         dataset = Dataset(seq_records, format='NEXUS', partitioning='by gene')
         self.assertTrue('CP100-10      ' in dataset.dataset_str)
+
+    def test_dataset_when_seqrecord_taxonomy_is_has_family(self):
+        raw_data = get_test_data('raw_data')
+        raw_data[0]['taxonomy'] = {'family': 'Aussidae', 'genus': 'Aus', 'species': 'aus'}
+
+        seq_records = []
+        for i in raw_data:
+            seq_record = SeqRecordExpanded(i['seq'], voucher_code=i['voucher_code'],
+                                           taxonomy=i['taxonomy'], gene_code=i['gene_code'],
+                                           reading_frame=i['reading_frame'], table=i['table'])
+            seq_records.append(seq_record)
+
+        dataset = Dataset(seq_records, format='NEXUS', partitioning='by gene')
+        self.assertTrue('CP100-10_Aussidae_Aus_aus    ' in dataset.dataset_str)
 
 
 class TestDatasetFooter(unittest.TestCase):
