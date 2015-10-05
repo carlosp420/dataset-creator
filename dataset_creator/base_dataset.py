@@ -16,15 +16,17 @@ class DatasetBlock(object):
         partitioning (str):
         aminoacids (boolean):
         degenerate (str):
+        format (str):       NEXUS or FASTA.
     """
     def __init__(self, data, codon_positions, partitioning, aminoacids=None,
-                 degenerate=None):
+                 degenerate=None, format=None):
         self.warnings = []
         self.data = data
         self.codon_positions = codon_positions
         self.partitioning = partitioning
         self.aminoacids = aminoacids
         self.degenerate = degenerate
+        self.format = format
         self._blocks = []
 
     def dataset_block(self):
@@ -47,9 +49,11 @@ class DatasetBlock(object):
         return '\n'.join(out).strip() + '\n;\nEND;'
 
     def split_data(self):
-        """
-        Splits the list of SeqRecordExpanded objects into lists, which are kept into
-        a bigger list:
+        """Splits the list of SeqRecordExpanded objects into lists, which are
+        kept into a bigger list.
+
+        If the file_format is Nexus, then it is only partitioned by gene. If it
+        is FASTA, then it needs partitioning by codon positions if required.
 
         Example:
 
@@ -59,12 +63,8 @@ class DatasetBlock(object):
             ...     [SeqRecord1, SeqRecord2],  # for gene 3
             ...     [SeqRecord1, SeqRecord2],  # for gene 4
             ... ]
-
-        :param data: list of SeqRecordExpanded objects
-        :return: list in the variable `self._blocks`
         """
         this_gene_code = None
-
         for seq_record in self.data.seq_records:
             if this_gene_code is None or this_gene_code != seq_record.gene_code:
                 this_gene_code = seq_record.gene_code
@@ -78,13 +78,47 @@ class DatasetBlock(object):
 
         Override this function if the dataset block needs to be different
         due to file format.
+
+        This block will need to be splitted further if the dataset is FASTA or
+        TNT and the partitioning scheme is 1st-2nd, 3rd.
+
+        As the dataset is split into several blocks due to 1st-2nd, 3rd
+        we cannot trasnlate to aminoacids or degenerate the sequences.
         """
+        if self.partitioning != '1st-2nd, 3rd':
+            return self.make_datablock_by_gene(block)
+        else:
+            if self.format == 'FASTA':
+                return self.make_datablock_1st2nd_3rd_as_fasta_format(block)
+            else:
+                return self.make_datablock_by_gene(block)
+
+    def make_datablock_1st2nd_3rd_as_fasta_format(self, block):
+        out = None
+        for seq_record in block:
+            if not out:
+                out = '>{0}\n----\n'.format(seq_record.gene_code)
+            taxonomy_as_string = self.flatten_taxonomy(seq_record)
+            taxon_id = '{0}{1}'.format(seq_record.voucher_code,
+                                       taxonomy_as_string)
+
+            seqs = [
+                seq_record.first_and_second_codon_positions(),
+                seq_record.third_codon_position(),
+            ]
+
+            for seq in seqs:
+                out += '{0}{1}\n'.format(taxon_id.ljust(55), seq)
+        return out
+
+    def make_datablock_by_gene(self, block):
         out = None
         for seq_record in block:
             if not out:
                 out = '[{0}]\n'.format(seq_record.gene_code)
             taxonomy_as_string = self.flatten_taxonomy(seq_record)
-            taxon_id = '{0}{1}'.format(seq_record.voucher_code, taxonomy_as_string)
+            taxon_id = '{0}{1}'.format(seq_record.voucher_code,
+                                       taxonomy_as_string)
 
             if self.aminoacids is True:
                 seq = seq_record.translate()
