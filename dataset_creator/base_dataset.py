@@ -1,4 +1,8 @@
 import re
+try:
+    from collections import OrderedDict
+except ImportError:
+    from ordereddict import OrderedDict
 
 from .utils import get_seq
 
@@ -94,21 +98,32 @@ class DatasetBlock(object):
                 return self.make_datablock_by_gene(block)
 
     def make_datablock_1st2nd_3rd_as_fasta_format(self, block):
-        out = None
-        for seq_record in block:
-            if not out:
-                out = '>{0}\n----\n'.format(seq_record.gene_code)
+        block_1st2nd = OrderedDict()
+        block_3rd = OrderedDict()
+        out = ''
+        for seq_record in block:  # splitting each block in two
+            if seq_record.gene_code not in block_1st2nd:
+                block_1st2nd[seq_record.gene_code] = []
+            if seq_record.gene_code not in block_3rd:
+                block_3rd[seq_record.gene_code] = []
+
             taxonomy_as_string = self.flatten_taxonomy(seq_record)
-            taxon_id = '{0}{1}'.format(seq_record.voucher_code,
-                                       taxonomy_as_string)
+            taxon_id = '>{0}{1}'.format(seq_record.voucher_code,
+                                        taxonomy_as_string)
 
-            seqs = [
-                seq_record.first_and_second_codon_positions(),
-                seq_record.third_codon_position(),
-            ]
-
+            block_1st2nd[seq_record.gene_code].append('{0}\n{1}\n'.format(taxon_id,
+                                                                          seq_record.first_and_second_codon_positions()))
+            block_3rd[seq_record.gene_code].append('{0}\n{1}\n'.format(taxon_id,
+                                                                       seq_record.third_codon_position()))
+        for gene_code, seqs in block_1st2nd.items():
+            out += '>{0}_1st-2nd\n----\n'.format(gene_code)
             for seq in seqs:
-                out += '{0}{1}\n'.format(taxon_id.ljust(55), seq)
+                out += seq
+
+        for gene_code, seqs in block_3rd.items():
+            out += '\n>{0}_3rd\n----\n'.format(gene_code)
+            for seq in seqs:
+                out += seq
         return out
 
     def make_datablock_by_gene(self, block):

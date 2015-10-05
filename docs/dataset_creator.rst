@@ -4,6 +4,14 @@ dataset_creator package
 Submodules
 ----------
 
+dataset_creator.base_dataset module
+-----------------------------------
+
+.. automodule:: dataset_creator.base_dataset
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 dataset_creator.creator module
 ------------------------------
 
@@ -32,14 +40,6 @@ dataset_creator.mega module
 ---------------------------
 
 .. automodule:: dataset_creator.mega
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-dataset_creator.nexus module
-----------------------------
-
-.. automodule:: dataset_creator.nexus
     :members:
     :undoc-members:
     :show-inheritance:

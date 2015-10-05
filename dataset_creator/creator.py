@@ -67,7 +67,8 @@ class Creator(object):
             return base_dataset.DatasetBlock(self.data, self.codon_positions,
                                              self.partitioning,
                                              self.aminoacids,
-                                             self.degenerate).dataset_block()
+                                             self.degenerate,
+                                             self.format).dataset_block()
         elif self.format == 'MEGA':
             return mega.MegaDatasetBlock(self.data, self.codon_positions,
                                          self.partitioning).dataset_block()
@@ -96,8 +97,11 @@ class Creator(object):
             self.extra_dataset_str = self.create_extra_dataset_file()
             return convert_nexus_to_format(header_and_datablock, 'phylip-relaxed')
 
-        elif self.format == 'FASTA':
+        elif self.format == 'FASTA' and self.partitioning != '1st-2nd, 3rd':
             return convert_nexus_to_format(header_and_datablock, 'fasta')
+
+        elif self.format == 'FASTA' and self.partitioning == '1st-2nd, 3rd':
+            return self.dataset_block.replace(';\nEND;', '')
 
         elif self.format == 'TNT':
             return '{0}\n\n{1}'.format(self.dataset_header, self.dataset_block)
