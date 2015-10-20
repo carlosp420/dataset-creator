@@ -55,7 +55,7 @@ class Dataset(object):
                  codon_positions=None, aminoacids=None, degenerate=None,
                  outgroup=None):
         self.warnings = []
-        self.seq_records = seq_records
+        self.seq_records = self.sort_seq_records(seq_records)
         self.gene_codes = None
         self.number_taxa = None
         self.number_chars = None
@@ -76,6 +76,32 @@ class Dataset(object):
         self._prepare_data()
         self.extra_dataset_str = None
         self.dataset_str = self._create_dataset()
+
+    def sort_seq_records(self, seq_records):
+        """Makes sure that SeqExpandedRecords are sorted by gene_code and then
+        by voucher code.
+        """
+        unsorted_gene_codes = set([i.gene_code for i in seq_records])
+        sorted_gene_codes = list(unsorted_gene_codes)
+        sorted_gene_codes.sort(key=lambda x: x.lower())
+
+        unsorted_voucher_codes = set([i.voucher_code for i in seq_records])
+        sorted_voucher_codes = list(unsorted_voucher_codes)
+        sorted_voucher_codes.sort(key=lambda x: x.lower())
+
+        if sorted_gene_codes == list(unsorted_gene_codes) and \
+                sorted_voucher_codes == list(unsorted_voucher_codes):
+            return seq_records
+        else:
+            sorted_seq_records = []
+            append = sorted_seq_records.append
+            for gene_code in sorted_gene_codes:
+                for voucher_code in sorted_voucher_codes:
+                    for seq_record in seq_records:
+                        if seq_record.gene_code == gene_code and \
+                                seq_record.voucher_code == voucher_code:
+                            append(seq_record)
+            return sorted_seq_records
 
     def _validate_partitioning(self, partitioning):
         if partitioning is None:
