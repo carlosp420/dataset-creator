@@ -9,6 +9,10 @@ from .utils import get_seq
 
 class DatasetBlock(object):
     """
+    By default, the data sequences block generated is NEXUS and we use BioPython
+    tools to convert it to other formats such as FASTA.
+    However, sometimes the blo
+
     Parameters:
         data (named tuple):      containing:
                                   * gene_codes: list
