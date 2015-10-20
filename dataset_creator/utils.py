@@ -17,8 +17,9 @@ def get_seq(seq_record, codon_positions):
     Checks parameters such as codon_positions, ... to return the required
     sequence as string
 
-    :param seq_record: SeqRecordExpanded object.
-    :return: str.
+    Parameters:
+        seq_record (SeqRecordExpanded object):
+        codon_positions (str):
     """
     if codon_positions not in [None, '1st', '2nd', '3rd', '1st-2nd', 'ALL']:
         raise WrongParameterFormat("`codon_positions` argument should be any of the following"

@@ -6,8 +6,8 @@ from seqrecord_expanded import SeqRecordExpanded
 
 from .data import test_data
 from dataset_creator.dataset import Dataset
-from dataset_creator.nexus import DatasetFooter
-from dataset_creator.nexus import BasePairCount
+from dataset_creator.base_dataset import DatasetFooter
+from dataset_creator.base_dataset import BasePairCount
 
 
 NEXUS_DATA_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'Nexus')

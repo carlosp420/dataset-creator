@@ -1,10 +1,18 @@
 import re
+try:
+    from collections import OrderedDict
+except ImportError:
+    from ordereddict import OrderedDict
 
 from .utils import get_seq
 
 
 class DatasetBlock(object):
     """
+    By default, the data sequences block generated is NEXUS and we use BioPython
+    tools to convert it to other formats such as FASTA.
+    However, sometimes the blo
+
     Parameters:
         data (named tuple):      containing:
                                   * gene_codes: list
@@ -16,18 +24,32 @@ class DatasetBlock(object):
         partitioning (str):
         aminoacids (boolean):
         degenerate (str):
+        format (str):       NEXUS or FASTA.
     """
     def __init__(self, data, codon_positions, partitioning, aminoacids=None,
-                 degenerate=None):
+                 degenerate=None, format=None):
         self.warnings = []
         self.data = data
         self.codon_positions = codon_positions
         self.partitioning = partitioning
         self.aminoacids = aminoacids
         self.degenerate = degenerate
+        self.format = format
         self._blocks = []
 
     def dataset_block(self):
+        """Creates the block with taxon names and their sequences.
+
+        Override this function if the dataset block needs to be different
+        due to file format.
+
+        Example:
+
+            CP100_10_Aus_aus   ACGATRGACGATRA...
+            CP100_11_Aus_bus   ACGATRGACGATRA...
+            ...
+
+        """
         self.split_data()
         out = []
         for block in self._blocks:
@@ -35,9 +57,11 @@ class DatasetBlock(object):
         return '\n'.join(out).strip() + '\n;\nEND;'
 
     def split_data(self):
-        """
-        Splits the list of SeqRecordExpanded objects into lists, which are kept into
-        a bigger list:
+        """Splits the list of SeqRecordExpanded objects into lists, which are
+        kept into a bigger list.
+
+        If the file_format is Nexus, then it is only partitioned by gene. If it
+        is FASTA, then it needs partitioning by codon positions if required.
 
         Example:
 
@@ -47,12 +71,8 @@ class DatasetBlock(object):
             ...     [SeqRecord1, SeqRecord2],  # for gene 3
             ...     [SeqRecord1, SeqRecord2],  # for gene 4
             ... ]
-
-        :param data: list of SeqRecordExpanded objects
-        :return: list in the variable `self._blocks`
         """
         this_gene_code = None
-
         for seq_record in self.data.seq_records:
             if this_gene_code is None or this_gene_code != seq_record.gene_code:
                 this_gene_code = seq_record.gene_code
@@ -61,19 +81,63 @@ class DatasetBlock(object):
             self._blocks[list_length - 1].append(seq_record)
 
     def convert_to_string(self, block):
-        """
-        Takes a list of SeqRecordExpanded objects corresponding to a gene_code
+        """Takes a list of SeqRecordExpanded objects corresponding to a gene_code
         and produces the gene_block as string.
 
-        :param block:
-        :return: str.
+        Override this function if the dataset block needs to be different
+        due to file format.
+
+        This block will need to be splitted further if the dataset is FASTA or
+        TNT and the partitioning scheme is 1st-2nd, 3rd.
+
+        As the dataset is split into several blocks due to 1st-2nd, 3rd
+        we cannot trasnlate to aminoacids or degenerate the sequences.
         """
+        if self.partitioning != '1st-2nd, 3rd':
+            return self.make_datablock_by_gene(block)
+        else:
+            if self.format == 'FASTA':
+                return self.make_datablock_1st2nd_3rd_as_fasta_format(block)
+            else:
+                return self.make_datablock_by_gene(block)
+
+    def make_datablock_1st2nd_3rd_as_fasta_format(self, block):
+        block_1st2nd = OrderedDict()
+        block_3rd = OrderedDict()
+        out = ''
+        for seq_record in block:  # splitting each block in two
+            if seq_record.gene_code not in block_1st2nd:
+                block_1st2nd[seq_record.gene_code] = []
+            if seq_record.gene_code not in block_3rd:
+                block_3rd[seq_record.gene_code] = []
+
+            taxonomy_as_string = self.flatten_taxonomy(seq_record)
+            taxon_id = '>{0}{1}'.format(seq_record.voucher_code,
+                                        taxonomy_as_string)
+
+            block_1st2nd[seq_record.gene_code].append('{0}\n{1}\n'.format(taxon_id,
+                                                                          seq_record.first_and_second_codon_positions()))
+            block_3rd[seq_record.gene_code].append('{0}\n{1}\n'.format(taxon_id,
+                                                                       seq_record.third_codon_position()))
+        for gene_code, seqs in block_1st2nd.items():
+            out += '>{0}_1st-2nd\n----\n'.format(gene_code)
+            for seq in seqs:
+                out += seq
+
+        for gene_code, seqs in block_3rd.items():
+            out += '\n>{0}_3rd\n----\n'.format(gene_code)
+            for seq in seqs:
+                out += seq
+        return out
+
+    def make_datablock_by_gene(self, block):
         out = None
         for seq_record in block:
             if not out:
                 out = '[{0}]\n'.format(seq_record.gene_code)
             taxonomy_as_string = self.flatten_taxonomy(seq_record)
-            taxon_id = '{0}{1}'.format(seq_record.voucher_code, taxonomy_as_string)
+            taxon_id = '{0}{1}'.format(seq_record.voucher_code,
+                                       taxonomy_as_string)
 
             if self.aminoacids is True:
                 seq = seq_record.translate()
