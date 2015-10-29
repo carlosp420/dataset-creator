@@ -66,10 +66,11 @@ class Dataset(object):
         self.codon_positions = codon_positions
         self.aminoacids = aminoacids
         self.degenerate = degenerate
-        self.outgroup = outgroup
+        self.outgroup = None
 
         self._validate_codon_positions(codon_positions)
         self._validate_partitioning(partitioning)
+        self._validate_outgroup(outgroup)
 
         self.data = None
         self._gene_codes_and_lengths = OrderedDict()
@@ -116,6 +117,21 @@ class Dataset(object):
         elif codon_positions not in ['1st', '2nd', '3rd', '1st-2nd', 'ALL']:
             raise AttributeError("Codon positions parameter should be one of these: "
                                  "None, '1st', '2nd', '3rd', '1st-2nd', 'ALL'")
+
+    def _validate_outgroup(self, outgroup):
+        if outgroup:
+            good_outgroup = False
+            for seq_record in self.seq_records:
+                if seq_record.voucher_code == outgroup:
+                    good_outgroup = True
+                    break
+            if good_outgroup:
+                self.outgroup = outgroup
+            else:
+                raise ValueError("The given outgroup {0!r} cannot be found in the"
+                                 "input sequence records.")
+        else:
+            self.outgroup = None
 
     def _prepare_data(self):
         """

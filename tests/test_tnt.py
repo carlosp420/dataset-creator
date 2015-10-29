@@ -35,3 +35,7 @@ class TestTnt(unittest.TestCase):
             expected = handle.read()
         dataset = Dataset(self.data, format='TNT', partitioning='by gene', outgroup='CP100-15')
         self.assertEqual(expected, dataset.dataset_str)
+
+    def test_dataset_with_wrong_outgroup(self):
+        self.assertRaises(ValueError, Dataset, self.data, format='TNT',
+                          partitioning='by gene', outgroup='CP1000000-15')
