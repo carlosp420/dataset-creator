@@ -29,3 +29,9 @@ class TestTnt(unittest.TestCase):
         result = dataset.dataset_str
         expected = open(os.path.join(TNT_DATA_PATH, 'dataset.tnt')).read()
         self.assertEqual(expected, result)
+
+    def test_dataset_with_outgroup(self):
+        with open(os.path.join(TNT_DATA_PATH, 'dataset_outgroup.tnt'), "r") as handle:
+            expected = handle.read()
+        dataset = Dataset(self.data, format='TNT', partitioning='by gene', outgroup='CP100-15')
+        self.assertEqual(expected, dataset.dataset_str)
