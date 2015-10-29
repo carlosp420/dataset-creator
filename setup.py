@@ -24,7 +24,7 @@ if sys.version_info < (2, 7,):
 
 setup(
     name='dataset-creator',
-    version='0.3.4',
+    version='0.3.5',
     license='BSD',
     description='Takes SeqRecordExpanded objects and creates datasets for phylogenetic software',
     long_description='%s\n%s' % (read('README.rst'), re.sub(':[a-z]+:`~?(.*?)`', r'``\1``', read('CHANGELOG.rst'))),
