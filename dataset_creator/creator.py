@@ -74,7 +74,8 @@ class Creator(object):
                                          self.partitioning).dataset_block()
         else:  # TNT
             return tnt.TntDatasetBlock(self.data, self.codon_positions,
-                                       self.partitioning).dataset_block()
+                                       self.partitioning,
+                                       outgroup=self.outgroup).dataset_block()
 
     def create_dataset_footer(self):
         return base_dataset.DatasetFooter(self.data, codon_positions=self.codon_positions,
