@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.3.5 (2015-10-29)
+------------------
+* If user provides outgroup, then TNT datasets will place its sequences in first
+  position in the dataset blocks.
+
 0.3.4 (2015-10-02)
 ------------------
 * Fixed bug that did not show DATATYPE=PROTEIN in Nexus files when aminoacid
