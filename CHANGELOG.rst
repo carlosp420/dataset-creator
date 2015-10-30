@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.3.6 (2015-10-30)
+------------------
+* Fixed 3rd codon positions bug that returned FASTA datasets with 3rd codon
+  positions even if they were not needed.
+
 0.3.5 (2015-10-29)
 ------------------
 * If user provides outgroup, then TNT datasets will place its sequences in first
