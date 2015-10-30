@@ -110,6 +110,10 @@ class Dataset(object):
         elif partitioning not in ['by gene', 'by codon position', '1st-2nd, 3rd']:
             raise AttributeError("Partitioning parameter should be one of these: "
                                  "None, 'by gene', 'by codon position', '1st-2nd, 3rd")
+        elif partitioning in ['by codon position', '1st-2nd, 3rd'] \
+                and self.degenerate:
+            raise ValueError("Cannot degenerate if partitions scheme is {0!r}".format(
+                partitioning))
 
     def _validate_codon_positions(self, codon_positions):
         if codon_positions is None:

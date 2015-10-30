@@ -3,7 +3,7 @@ import unittest
 
 from dataset_creator.dataset import Dataset
 
-from .data import test_data
+from data import test_data
 
 MEGA_DATA_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'Mega')
 
@@ -31,3 +31,7 @@ class TestMega(unittest.TestCase):
         result = dataset.dataset_str
         expected = open(os.path.join(MEGA_DATA_PATH, 'dataset_degenerate.meg')).read()
         self.assertEqual(expected, result)
+
+    def test_dataset_as_degenerate_bad_partitioning_scheme(self):
+        self.assertRaises(ValueError, Dataset, test_data, format='MEGA',
+                          partitioning='1st-2nd, 3rd', degenerate='S')
