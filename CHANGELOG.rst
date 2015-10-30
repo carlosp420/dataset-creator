@@ -1,5 +1,8 @@
 Changelog
 =========
+0.3.7 (2015-10-30)
+------------------
+* Fixed 2nd, 3rd codon positions bug that returned empty FASTA datasets.
 
 0.3.6 (2015-10-30)
 ------------------
