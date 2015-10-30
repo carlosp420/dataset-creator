@@ -9,7 +9,7 @@ from .utils import make_dataset_header
 class Creator(object):
     """
     Create dataset and extra files for formats FASTA, NEXUS, PHYLIP, TNT and MEGA.
-    We will create a NEXUS fomatte dataset first and use BioPython tools to
+    We will create a NEXUS formatted dataset first and use BioPython tools to
     convert to FASTA and PHYLIP formats.
 
     Parameters:
@@ -17,12 +17,12 @@ class Creator(object):
                                   * gene_codes: list
                                   * number_chars: string
                                   * number_taxa: string
-                                  * seq_recods: list of SeqRecordExpanded objetcs
+                                  * seq_records: list of SeqRecordExpanded objects
                                   * gene_codes_and_lengths
         format (str):           NEXUS, PHYLIP, TNT, MEGA
         codon_positions (str):  Can be 1st, 2nd, 3rd, 1st-2nd, ALL (default).
-        partitioniong (str):    'by gene', 'by codon position', '1st-2nd, 3rd'
-        aminoacids (bolean):    To create aminoacid sequences instead of returning
+        partitioning (str):    'by gene', 'by codon position', '1st-2nd, 3rd'
+        aminoacids (boolean):    To create aminoacid sequences instead of returning
                                 nucleotides.
         degenerate (str):       Method to degenerate nucleotide sequences,
                                 following Zwick et al. Can be ``S``, ``Z``,
