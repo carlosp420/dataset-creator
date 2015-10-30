@@ -30,3 +30,10 @@ class TestFasta(unittest.TestCase):
         result = dataset.dataset_str
         expected = open(os.path.join(FASTA_DATA_PATH, 'dataset_1st2nd.fas')).read()
         self.assertEqual(expected, result)
+
+    def test_partitioned_by_1st2nd_3rd_only_1st_codon_position(self):
+        dataset = Dataset(test_data, format='FASTA', partitioning='1st-2nd, 3rd',
+                          codon_positions='1st')
+        result = dataset.dataset_str
+        expected = open(os.path.join(FASTA_DATA_PATH, 'dataset_1st.fas')).read()
+        self.assertEqual(expected, result)

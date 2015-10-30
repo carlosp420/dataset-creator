@@ -99,16 +99,23 @@ class DatasetBlock(object):
             return self.make_datablock_by_gene(block)
         else:
             if self.format == 'FASTA':
-                return self.make_datablock_1st2nd_3rd_as_fasta_format(block)
+                return self.make_datablock_considering_codon_positions_as_fasta_format(block)
             else:
                 return self.make_datablock_by_gene(block)
 
-    def make_datablock_1st2nd_3rd_as_fasta_format(self, block):
+    def make_datablock_considering_codon_positions_as_fasta_format(self, block):
         block_1st2nd = OrderedDict()
+        block_1st = OrderedDict()
+        block_2nd = OrderedDict()
         block_3rd = OrderedDict()
+
         for seq_record in block:  # splitting each block in two
             if seq_record.gene_code not in block_1st2nd:
                 block_1st2nd[seq_record.gene_code] = []
+            if seq_record.gene_code not in block_1st:
+                block_1st[seq_record.gene_code] = []
+            if seq_record.gene_code not in block_2nd:
+                block_2nd[seq_record.gene_code] = []
             if seq_record.gene_code not in block_3rd:
                 block_3rd[seq_record.gene_code] = []
 
@@ -118,12 +125,16 @@ class DatasetBlock(object):
 
             block_1st2nd[seq_record.gene_code].append('{0}\n{1}\n'.format(taxon_id,
                                                                           seq_record.first_and_second_codon_positions()))
+            block_1st[seq_record.gene_code].append('{0}\n{1}\n'.format(taxon_id,
+                                                                       seq_record.first_codon_position()))
+            block_2nd[seq_record.gene_code].append('{0}\n{1}\n'.format(taxon_id,
+                                                                       seq_record.second_codon_position()))
             block_3rd[seq_record.gene_code].append('{0}\n{1}\n'.format(taxon_id,
                                                                        seq_record.third_codon_position()))
-        out = self.convert_block_dicts_to_string(block_1st2nd, block_3rd)
+        out = self.convert_block_dicts_to_string(block_1st2nd, block_1st, block_2nd, block_3rd)
         return out
 
-    def convert_block_dicts_to_string(self, block_1st2nd, block_3rd):
+    def convert_block_dicts_to_string(self, block_1st2nd, block_1st, block_2nd, block_3rd):
         """Takes into account whether we need to output all codon positions."""
         out = ""
         # We need 1st and 2nd positions
@@ -132,6 +143,12 @@ class DatasetBlock(object):
                 out += '>{0}_1st-2nd\n----\n'.format(gene_code)
                 for seq in seqs:
                     out += seq
+        elif self.codon_positions == '1st':
+            for gene_code, seqs in block_1st.items():
+                out += '>{0}_1st\n----\n'.format(gene_code)
+                for seq in seqs:
+                    out += seq
+
         # We also need 3rd positions
         if self.codon_positions == 'ALL':
             for gene_code, seqs in block_3rd.items():
