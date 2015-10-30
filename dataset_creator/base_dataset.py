@@ -148,6 +148,11 @@ class DatasetBlock(object):
                 out += '>{0}_1st\n----\n'.format(gene_code)
                 for seq in seqs:
                     out += seq
+        elif self.codon_positions == '2nd':
+            for gene_code, seqs in block_2nd.items():
+                out += '>{0}_2nd\n----\n'.format(gene_code)
+                for seq in seqs:
+                    out += seq
 
         # We also need 3rd positions
         if self.codon_positions == 'ALL':
