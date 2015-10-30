@@ -22,7 +22,7 @@ class Creator(object):
         format (str):           NEXUS, PHYLIP, TNT, MEGA
         codon_positions (str):  Can be 1st, 2nd, 3rd, 1st-2nd, ALL (default).
         partitioning (str):    'by gene', 'by codon position', '1st-2nd, 3rd'
-        aminoacids (boolean):    To create aminoacid sequences instead of returning
+        aminoacids (boolean):   To create aminoacid sequences instead of returning
                                 nucleotides.
         degenerate (str):       Method to degenerate nucleotide sequences,
                                 following Zwick et al. Can be ``S``, ``Z``,
@@ -71,7 +71,8 @@ class Creator(object):
                                              self.format).dataset_block()
         elif self.format == 'MEGA':
             return mega.MegaDatasetBlock(self.data, self.codon_positions,
-                                         self.partitioning).dataset_block()
+                                         self.partitioning,
+                                         aminoacids=self.aminoacids).dataset_block()
         else:  # TNT
             return tnt.TntDatasetBlock(self.data, self.codon_positions,
                                        self.partitioning,

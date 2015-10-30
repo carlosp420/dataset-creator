@@ -17,3 +17,10 @@ class TestMega(unittest.TestCase):
         result = dataset.dataset_str
         expected = open(os.path.join(MEGA_DATA_PATH, 'dataset.meg')).read()
         self.assertEqual(expected, result)
+
+    def test_dataset_as_aminoacids(self):
+        dataset = Dataset(test_data, format='MEGA', partitioning='by gene',
+                          aminoacids=True)
+        result = dataset.dataset_str
+        expected = open(os.path.join(MEGA_DATA_PATH, 'dataset_aa.meg')).read()
+        self.assertEqual(expected, result)

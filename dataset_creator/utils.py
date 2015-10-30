@@ -12,18 +12,22 @@ from Bio import AlignIO
 from .exceptions import WrongParameterFormat
 
 
-def get_seq(seq_record, codon_positions):
+def get_seq(seq_record, codon_positions, aminoacids=False):
     """
-    Checks parameters such as codon_positions, ... to return the required
-    sequence as string
+    Checks parameters such as codon_positions, aminoacids... to return the
+    required sequence as string.
 
     Parameters:
         seq_record (SeqRecordExpanded object):
         codon_positions (str):
+        aminoacids (boolean):
     """
     if codon_positions not in [None, '1st', '2nd', '3rd', '1st-2nd', 'ALL']:
         raise WrongParameterFormat("`codon_positions` argument should be any of the following"
                                    ": 1st, 2nd, 3rd, 1st-2nd or ALL")
+    if aminoacids:
+        return seq_record.translate()
+
     if codon_positions == '1st':
         return seq_record.first_codon_position()
     elif codon_positions == '2nd':
