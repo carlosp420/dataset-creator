@@ -155,7 +155,7 @@ class DatasetBlock(object):
                     out += seq
 
         # We also need 3rd positions
-        if self.codon_positions == 'ALL':
+        if self.codon_positions in ['ALL', '3rd']:
             for gene_code, seqs in block_3rd.items():
                 out += '\n>{0}_3rd\n----\n'.format(gene_code)
                 for seq in seqs:
