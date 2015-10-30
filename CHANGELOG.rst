@@ -1,5 +1,11 @@
 Changelog
 =========
+
+0.3.8 (2015-10-30)
+------------------
+* Fixed making dataset as aminoacid seqs for MEGA format.
+* Fixed making dataset as degenerated seqs for MEGA format.
+
 0.3.7 (2015-10-30)
 ------------------
 * Fixed 2nd, 3rd codon positions bug that returned empty FASTA datasets.

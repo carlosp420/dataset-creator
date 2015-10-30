@@ -72,6 +72,7 @@ class Creator(object):
         elif self.format == 'MEGA':
             return mega.MegaDatasetBlock(self.data, self.codon_positions,
                                          self.partitioning,
+                                         degenerate=self.degenerate,
                                          aminoacids=self.aminoacids).dataset_block()
         else:  # TNT
             return tnt.TntDatasetBlock(self.data, self.codon_positions,

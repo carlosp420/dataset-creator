@@ -24,3 +24,10 @@ class TestMega(unittest.TestCase):
         result = dataset.dataset_str
         expected = open(os.path.join(MEGA_DATA_PATH, 'dataset_aa.meg')).read()
         self.assertEqual(expected, result)
+
+    def test_dataset_as_degenerate(self):
+        dataset = Dataset(test_data, format='MEGA', partitioning='by gene',
+                          degenerate='S')
+        result = dataset.dataset_str
+        expected = open(os.path.join(MEGA_DATA_PATH, 'dataset_degenerate.meg')).read()
+        self.assertEqual(expected, result)

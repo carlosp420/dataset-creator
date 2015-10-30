@@ -12,7 +12,7 @@ from Bio import AlignIO
 from .exceptions import WrongParameterFormat
 
 
-def get_seq(seq_record, codon_positions, aminoacids=False):
+def get_seq(seq_record, codon_positions, aminoacids=False, degenerate=None):
     """
     Checks parameters such as codon_positions, aminoacids... to return the
     required sequence as string.
@@ -27,6 +27,8 @@ def get_seq(seq_record, codon_positions, aminoacids=False):
                                    ": 1st, 2nd, 3rd, 1st-2nd or ALL")
     if aminoacids:
         return seq_record.translate()
+    if degenerate:
+        return seq_record.degenerate(degenerate)
 
     if codon_positions == '1st':
         return seq_record.first_codon_position()
