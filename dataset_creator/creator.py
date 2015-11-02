@@ -78,6 +78,7 @@ class Creator(object):
             return tnt.TntDatasetBlock(self.data, self.codon_positions,
                                        self.partitioning,
                                        degenerate=self.degenerate,
+                                       aminoacids=self.aminoacids,
                                        outgroup=self.outgroup).dataset_block()
 
     def create_dataset_footer(self):
