@@ -5,6 +5,7 @@ Changelog
 ------------------
 * Fixed making dataset as aminoacid seqs for MEGA format.
 * Fixed making dataset as degenerated seqs for MEGA format.
+* Fixed making dataset as degenerated seqs for TNT format.
 * Raise ValueError when asked to degenerate seqs that will go to partitioning
   based on codon positions.
 
