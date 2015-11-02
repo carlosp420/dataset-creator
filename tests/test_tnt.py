@@ -39,3 +39,10 @@ class TestTnt(unittest.TestCase):
     def test_dataset_with_wrong_outgroup(self):
         self.assertRaises(ValueError, Dataset, self.data, format='TNT',
                           partitioning='by gene', outgroup='CP1000000-15')
+
+    def test_dataset_with_degenerate(self):
+        dataset = Dataset(self.data, format='TNT', partitioning='by gene',
+                          degenerate='S')
+        result = dataset.dataset_str
+        expected = open(os.path.join(TNT_DATA_PATH, 'dataset_degenerate.tnt')).read()
+        self.assertEqual(expected.rstrip(), result)
