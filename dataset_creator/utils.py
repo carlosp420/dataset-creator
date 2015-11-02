@@ -100,9 +100,13 @@ MATRIX
         return "#MEGA\n!TITLE title;"
 
     else:  # file_format: TNT
+        if aminoacids:
+            molecule_type = "prot"
+        else:
+            molecule_type = "dna"
         header = """
-nstates dna;
+nstates {0};
 xread
-{0} {1}""".format(data.number_chars, data.number_taxa)
+{1} {2}""".format(molecule_type, data.number_chars, data.number_taxa)
 
     return header.strip()

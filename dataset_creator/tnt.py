@@ -30,10 +30,15 @@ class TntDatasetBlock(DatasetBlock):
         :param block:
         :return: str.
         """
+        if self.aminoacids:
+            molecule_type = "protein"
+        else:
+            molecule_type = "dna"
+
         out = None
         for seq_record in block:
             if not out:
-                out = '&[dna]\n'.format(seq_record.gene_code)
+                out = '&[{0}]\n'.format(molecule_type, seq_record.gene_code)
             taxon_id = '{0}_{1}_{2}'.format(seq_record.voucher_code,
                                             seq_record.taxonomy['genus'],
                                             seq_record.taxonomy['species'],
