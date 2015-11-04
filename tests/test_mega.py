@@ -35,3 +35,7 @@ class TestMega(unittest.TestCase):
     def test_dataset_as_degenerate_bad_partitioning_scheme(self):
         self.assertRaises(ValueError, Dataset, test_data, format='MEGA',
                           partitioning='1st-2nd, 3rd', degenerate='S')
+
+    def test_partitioning_dataset_in_mega_format(self):
+        self.assertRaises(ValueError, Dataset, test_data, format='MEGA',
+                          partitioning='1st-2nd, 3rd')

@@ -114,6 +114,8 @@ class Dataset(object):
                 and self.degenerate:
             raise ValueError("Cannot degenerate if partitions scheme is {0!r}".format(
                 partitioning))
+        elif partitioning in ['by codon position', '1st-2nd, 3rd'] and self.format == 'MEGA':
+            raise ValueError("Cannot produce MEGA dataset with codon positions in different partitions")
 
     def _validate_codon_positions(self, codon_positions):
         if codon_positions is None:

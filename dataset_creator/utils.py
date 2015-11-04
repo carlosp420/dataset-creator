@@ -58,7 +58,7 @@ def get_seq(seq_record, codon_positions, aminoacids=False, degenerate=None):
 
 def convert_nexus_to_format(dataset_as_nexus, dataset_format):
     """
-    Converts nexus format to Phylip and Fasta using BioPython tools.
+    Converts nexus format to Phylip and Fasta using Biopython tools.
 
     :param dataset_as_nexus:
     :param dataset_format:

@@ -24,7 +24,7 @@ class DatasetBlock(object):
         partitioning (str):
         aminoacids (boolean):
         degenerate (str):
-        format (str):       NEXUS or FASTA.
+        format (str):       NEXUS, PHYLIP or FASTA.
         outgroup (str):     Specimen code of taxon that should be used as outgroup.
     """
     def __init__(self, data, codon_positions, partitioning, aminoacids=None,
