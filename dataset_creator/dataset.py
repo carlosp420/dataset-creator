@@ -179,9 +179,9 @@ class Dataset(object):
             if seq_record.gene_code not in self._gene_codes_and_lengths:
                 self._gene_codes_and_lengths[seq_record.gene_code] = []
 
-            if self.aminoacids is True:
+            if self.aminoacids:
                 seq = seq_record.translate()
-            elif self.aminoacids is not True and self.degenerate is not None:
+            elif not self.aminoacids and self.degenerate is not None:
                 seq = seq_record.degenerate(method=self.degenerate)
             else:
                 sequence = get_seq(seq_record, self.codon_positions)
