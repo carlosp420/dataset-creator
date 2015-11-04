@@ -171,15 +171,12 @@ class DatasetBlock(object):
             taxon_id = '{0}{1}'.format(seq_record.voucher_code,
                                        taxonomy_as_string)
 
-            if self.aminoacids:
-                seq = seq_record.translate()
-            elif not self.aminoacids and self.degenerate is not None:
-                seq = seq_record.degenerate(method=self.degenerate)
-            else:
-                sequence = get_seq(seq_record, self.codon_positions)
-                seq = sequence.seq
-                if sequence.warning:
-                    self.warnings.append(sequence.warning)
+            sequence = get_seq(seq_record, self.codon_positions,
+                               aminoacids=self.aminoacids,
+                               degenerate=self.degenerate)
+            seq = sequence.seq
+            if sequence.warning:
+                self.warnings.append(sequence.warning)
 
             out += '{0}{1}\n'.format(taxon_id.ljust(55), seq)
         return out
