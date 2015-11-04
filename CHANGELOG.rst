@@ -10,6 +10,7 @@ Changelog
 * Raise ValueError when asked to degenerate seqs that will go to partitioning
   based on codon positions.
 * Dataset creator returns warnings if translated sequences have stop codons '*'.
+* Cannot generate MEGA datasets with partitioning.
 
 0.3.7 (2015-10-30)
 ------------------
