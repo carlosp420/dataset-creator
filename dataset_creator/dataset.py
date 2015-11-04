@@ -216,7 +216,7 @@ class Dataset(object):
                           outgroup=self.outgroup,
                           )
         self.warnings = creator.warnings
-        dataset_str = creator.dataset_str
         self.extra_dataset_str = creator.extra_dataset_str
+        dataset_str = creator.dataset_str
 
         return dataset_str

@@ -43,7 +43,11 @@ class TntDatasetBlock(DatasetBlock):
                                             seq_record.taxonomy['genus'],
                                             seq_record.taxonomy['species'],
                                             )
-            seq = get_seq(seq_record, self.codon_positions, self.aminoacids,
-                          self.degenerate)
+            sequence = get_seq(seq_record, self.codon_positions, self.aminoacids,
+                               self.degenerate)
+            seq = sequence.seq
+            if sequence.warning:
+                self.warnings.append(sequence.warning)
+
             out += '{0}{1}\n'.format(taxon_id.ljust(55), seq)
         return out
