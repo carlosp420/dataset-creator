@@ -64,11 +64,16 @@ class Creator(object):
 
     def create_dataset_block(self):
         if self.format in ['NEXUS', 'PHYLIP', 'FASTA']:
-            return base_dataset.DatasetBlock(self.data, self.codon_positions,
-                                             self.partitioning,
-                                             self.aminoacids,
-                                             self.degenerate,
-                                             self.format).dataset_block()
+            dataset_constructor = base_dataset.DatasetBlock(self.data,
+                                                            self.codon_positions,
+                                                            self.partitioning,
+                                                            self.aminoacids,
+                                                            self.degenerate,
+                                                            self.format)
+            dataset_block = dataset_constructor.dataset_block()
+            self.warnings = dataset_constructor.warnings
+            return dataset_block
+
         elif self.format == 'MEGA':
             return mega.MegaDatasetBlock(self.data, self.codon_positions,
                                          self.partitioning,

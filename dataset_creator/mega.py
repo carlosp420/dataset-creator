@@ -22,9 +22,12 @@ class MegaDatasetBlock(DatasetBlock):
                                                        seq_record.taxonomy['genus'],
                                                        seq_record.taxonomy['species'],
                                                        )
-                sequences[index] += get_seq(seq_record, self.codon_positions,
-                                            aminoacids=self.aminoacids,
-                                            degenerate=self.degenerate)
+                sequence = get_seq(seq_record, self.codon_positions,
+                                   aminoacids=self.aminoacids,
+                                   degenerate=self.degenerate)
+                sequences[index] += sequence.seq
+                if sequence.warning:
+                    self.warnings.append(sequence.warning)
 
         out = ''
         for index, value in enumerate(taxa_ids):

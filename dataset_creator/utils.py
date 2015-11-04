@@ -52,7 +52,7 @@ def get_seq(seq_record, codon_positions, aminoacids=False, degenerate=None):
     elif codon_positions == '1st-2nd':
         return Sequence(seq=seq_record.first_and_second_codon_positions(), warning=None)
     else:  # None and ALL
-        return Sequence(seq=seq_record.seq, warning=None)
+        return Sequence(seq=str(seq_record.seq), warning=None)
 
 
 def convert_nexus_to_format(dataset_as_nexus, dataset_format):
