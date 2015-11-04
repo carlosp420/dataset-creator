@@ -24,9 +24,9 @@ def get_seq(seq_record, codon_positions, aminoacids=False, degenerate=None):
         aminoacids (boolean):
 
     Returns:
-        Namedtuple containing ``seq (str)`` and ``warnings (list)``.
+        Namedtuple containing ``seq (str)`` and ``warning (str)``.
     """
-    Sequence = namedtuple('Sequence', ['seq', 'warnings'])
+    Sequence = namedtuple('Sequence', ['seq', 'warning'])
 
     if codon_positions not in [None, '1st', '2nd', '3rd', '1st-2nd', 'ALL']:
         raise WrongParameterFormat("`codon_positions` argument should be any of the following"
@@ -34,23 +34,25 @@ def get_seq(seq_record, codon_positions, aminoacids=False, degenerate=None):
     if aminoacids:
         aa = seq_record.translate()
         if '*' in aa:
-            warnings = "Gene {0!r}, sequence {1!r} contains stop codons '*'".format(seq_record.gene_code,
-                                                                                    seq_record.voucher_code)
-        return Sequence(seq=aa, warnings=warnings)
+            warning = "Gene {0!r}, sequence {1!r} contains stop codons '*'".format(seq_record.gene_code,
+                                                                                   seq_record.voucher_code)
+        else:
+            warning = None
+        return Sequence(seq=aa, warning=warning)
 
     if degenerate:
-        return Sequence(seq=seq_record.degenerate(degenerate), warnings=None)
+        return Sequence(seq=seq_record.degenerate(degenerate), warning=None)
 
     if codon_positions == '1st':
-        return Sequence(seq=seq_record.first_codon_position(), warnings=None)
+        return Sequence(seq=seq_record.first_codon_position(), warning=None)
     elif codon_positions == '2nd':
-        return Sequence(seq=seq_record.second_codon_position(), warnings=None)
+        return Sequence(seq=seq_record.second_codon_position(), warning=None)
     elif codon_positions == '3rd':
-        return Sequence(seq=seq_record.third_codon_position(), warnings=None)
+        return Sequence(seq=seq_record.third_codon_position(), warning=None)
     elif codon_positions == '1st-2nd':
-        return Sequence(seq=seq_record.first_and_second_codon_positions(), warnings=None)
+        return Sequence(seq=seq_record.first_and_second_codon_positions(), warning=None)
     else:  # None and ALL
-        return Sequence(seq=seq_record.seq, warnings=None)
+        return Sequence(seq=seq_record.seq, warning=None)
 
 
 def convert_nexus_to_format(dataset_as_nexus, dataset_format):
