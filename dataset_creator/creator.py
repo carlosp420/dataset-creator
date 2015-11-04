@@ -70,21 +70,21 @@ class Creator(object):
                                                             self.aminoacids,
                                                             self.degenerate,
                                                             self.format)
-            dataset_block = dataset_constructor.dataset_block()
-            self.warnings = dataset_constructor.warnings
-            return dataset_block
-
         elif self.format == 'MEGA':
-            return mega.MegaDatasetBlock(self.data, self.codon_positions,
-                                         self.partitioning,
-                                         degenerate=self.degenerate,
-                                         aminoacids=self.aminoacids).dataset_block()
+            dataset_constructor = mega.MegaDatasetBlock(self.data,
+                                                        self.codon_positions,
+                                                        self.partitioning,
+                                                        aminoacids=self.aminoacids,
+                                                        degenerate=self.degenerate)
         else:  # TNT
-            return tnt.TntDatasetBlock(self.data, self.codon_positions,
-                                       self.partitioning,
-                                       degenerate=self.degenerate,
-                                       aminoacids=self.aminoacids,
-                                       outgroup=self.outgroup).dataset_block()
+            dataset_constructor = tnt.TntDatasetBlock(self.data, self.codon_positions,
+                                                      self.partitioning,
+                                                      degenerate=self.degenerate,
+                                                      aminoacids=self.aminoacids,
+                                                      outgroup=self.outgroup)
+        dataset_block = dataset_constructor.dataset_block()
+        self.warnings = dataset_constructor.warnings
+        return dataset_block
 
     def create_dataset_footer(self):
         return base_dataset.DatasetFooter(self.data, codon_positions=self.codon_positions,

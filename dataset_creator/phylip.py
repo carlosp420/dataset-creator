@@ -4,7 +4,7 @@ from .base_dataset import DatasetFooter
 class PhylipDatasetFooter(DatasetFooter):
     def make_charset_block(self):
         """
-        Overriden function for Phylip dataset as the content is different and
+        Overridden function for Phylip dataset as the content is different and
         goes into a separate file.
         """
         out = self.make_charsets()
@@ -12,7 +12,7 @@ class PhylipDatasetFooter(DatasetFooter):
 
     def make_charsets(self):
         """
-        Overriden function for Phylip dataset as the content is different and
+        Overridden function for Phylip dataset as the content is different and
         goes into a separate file.
         """
         count_start = 1
