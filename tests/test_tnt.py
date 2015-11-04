@@ -36,6 +36,20 @@ class TestTnt(unittest.TestCase):
         dataset = Dataset(self.data, format='TNT', partitioning='by gene', outgroup='CP100-15')
         self.assertEqual(expected, dataset.dataset_str)
 
+    def test_aa_dataset_with_outgroup(self):
+        with open(os.path.join(TNT_DATA_PATH, 'dataset_aa_with_outgroup.tnt'), "r") as handle:
+            expected = handle.read()
+        dataset = Dataset(self.data, format='TNT', partitioning='by gene',
+                          outgroup='CP100-15', aminoacids=True)
+        self.assertEqual(expected.rstrip(), dataset.dataset_str)
+
     def test_dataset_with_wrong_outgroup(self):
         self.assertRaises(ValueError, Dataset, self.data, format='TNT',
                           partitioning='by gene', outgroup='CP1000000-15')
+
+    def test_dataset_with_degenerate(self):
+        dataset = Dataset(self.data, format='TNT', partitioning='by gene',
+                          degenerate='S')
+        result = dataset.dataset_str
+        expected = open(os.path.join(TNT_DATA_PATH, 'dataset_degenerate.tnt')).read()
+        self.assertEqual(expected.rstrip(), result)

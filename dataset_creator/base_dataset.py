@@ -171,9 +171,9 @@ class DatasetBlock(object):
             taxon_id = '{0}{1}'.format(seq_record.voucher_code,
                                        taxonomy_as_string)
 
-            if self.aminoacids is True:
+            if self.aminoacids:
                 seq = seq_record.translate()
-            elif self.aminoacids is not True and self.degenerate is not None:
+            elif not self.aminoacids and self.degenerate is not None:
                 seq = seq_record.degenerate(method=self.degenerate)
             else:
                 seq = get_seq(seq_record, self.codon_positions)
