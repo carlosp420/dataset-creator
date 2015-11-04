@@ -1,12 +1,13 @@
 Changelog
 =========
 
-0.3.8 (2015-10-30)
+0.3.x (2015-10-30)
 ------------------
 * Fixed making dataset as aminoacid seqs for MEGA format.
 * Fixed making dataset as degenerated seqs for MEGA format.
 * Raise ValueError when asked to degenerate seqs that will go to partitioning
   based on codon positions.
+* Dataset creator returns warnings if translated sequences have stop codons '*'.
 
 0.3.7 (2015-10-30)
 ------------------

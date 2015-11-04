@@ -184,7 +184,10 @@ class Dataset(object):
             elif self.aminoacids is not True and self.degenerate is not None:
                 seq = seq_record.degenerate(method=self.degenerate)
             else:
-                seq = get_seq(seq_record, self.codon_positions)
+                sequence = get_seq(seq_record, self.codon_positions)
+                seq = sequence.seq
+                if sequence.warning:
+                    self.warnings.append(sequence.warning)
             self._gene_codes_and_lengths[seq_record.gene_code].append(len(seq))
 
     def _extract_number_of_taxa(self):
@@ -212,6 +215,7 @@ class Dataset(object):
                           degenerate=self.degenerate,
                           outgroup=self.outgroup,
                           )
+        self.warnings = creator.warnings
         dataset_str = creator.dataset_str
         self.extra_dataset_str = creator.extra_dataset_str
 

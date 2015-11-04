@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 import json
 import os
 import unittest
@@ -82,6 +83,13 @@ class TestNexus(unittest.TestCase):
 
         dataset = Dataset(seq_records, format='NEXUS', partitioning='by gene')
         self.assertTrue('CP100-10_Aussidae_Aus_aus    ' in dataset.dataset_str)
+
+    def test_generation_of_warnings(self):
+        self.seq_records[0].seq = 'TTTCAGTAG'
+        dataset = Dataset(self.seq_records, format='NEXUS', partitioning='by gene',
+                          aminoacids=True)
+        expected = "Gene ArgKin, sequence CP100-10 contains stop codons '*'"
+        self.assertEqual(expected, dataset.warnings[0])
 
 
 class TestDatasetFooter(unittest.TestCase):
