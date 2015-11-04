@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 import json
 import os
 import unittest
@@ -87,8 +88,8 @@ class TestNexus(unittest.TestCase):
         self.seq_records[0].seq = 'TTTCAGTAG'
         dataset = Dataset(self.seq_records, format='NEXUS', partitioning='by gene',
                           aminoacids=True)
-        expected = ["Gene 'ArgKin', sequence 'CP100-10' contains stop codons '*'"]
-        self.assertEqual(expected, dataset.warnings)
+        expected = "Gene ArgKin, sequence CP100-10 contains stop codons '*'"
+        self.assertEqual(expected, dataset.warnings[0])
 
 
 class TestDatasetFooter(unittest.TestCase):

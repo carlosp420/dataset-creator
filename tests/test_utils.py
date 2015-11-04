@@ -19,5 +19,5 @@ class TestUtils(unittest.TestCase):
         """Test the returned sequence and warning"""
         result = get_seq(self.seq_record, codon_positions='ALL', aminoacids=True)
         self.assertEqual("IR*", result.seq)
-        self.assertEqual("Gene 'wingless', sequence 'CP100-10' contains stop codons '*'",
+        self.assertEqual("Gene wingless, sequence CP100-10 contains stop codons '*'",
                          result.warning)

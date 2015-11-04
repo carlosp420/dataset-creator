@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 import six
 if six.PY2:
     from StringIO import StringIO
@@ -34,8 +35,8 @@ def get_seq(seq_record, codon_positions, aminoacids=False, degenerate=None):
     if aminoacids:
         aa = seq_record.translate()
         if '*' in aa:
-            warning = "Gene {0!r}, sequence {1!r} contains stop codons '*'".format(seq_record.gene_code,
-                                                                                   seq_record.voucher_code)
+            warning = "Gene {0}, sequence {1} contains stop codons '*'".format(seq_record.gene_code,
+                                                                               seq_record.voucher_code)
         else:
             warning = None
         return Sequence(seq=aa, warning=warning)
