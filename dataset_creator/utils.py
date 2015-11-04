@@ -5,6 +5,7 @@ else:
     from io import StringIO
 
 import os
+from collections import namedtuple
 import uuid
 
 from Bio import AlignIO
@@ -21,25 +22,35 @@ def get_seq(seq_record, codon_positions, aminoacids=False, degenerate=None):
         seq_record (SeqRecordExpanded object):
         codon_positions (str):
         aminoacids (boolean):
+
+    Returns:
+        Namedtuple containing ``seq (str)`` and ``warnings (list)``.
     """
+    Sequence = namedtuple('Sequence', ['seq', 'warnings'])
+
     if codon_positions not in [None, '1st', '2nd', '3rd', '1st-2nd', 'ALL']:
         raise WrongParameterFormat("`codon_positions` argument should be any of the following"
                                    ": 1st, 2nd, 3rd, 1st-2nd or ALL")
     if aminoacids:
-        return seq_record.translate()
+        aa = seq_record.translate()
+        if '*' in aa:
+            warnings = "Gene {0!r}, sequence {1!r} contains stop codons '*'".format(seq_record.gene_code,
+                                                                                    seq_record.voucher_code)
+        return Sequence(seq=aa, warnings=warnings)
+
     if degenerate:
-        return seq_record.degenerate(degenerate)
+        return Sequence(seq=seq_record.degenerate(degenerate), warnings=None)
 
     if codon_positions == '1st':
-        return seq_record.first_codon_position()
+        return Sequence(seq=seq_record.first_codon_position(), warnings=None)
     elif codon_positions == '2nd':
-        return seq_record.second_codon_position()
+        return Sequence(seq=seq_record.second_codon_position(), warnings=None)
     elif codon_positions == '3rd':
-        return seq_record.third_codon_position()
+        return Sequence(seq=seq_record.third_codon_position(), warnings=None)
     elif codon_positions == '1st-2nd':
-        return seq_record.first_and_second_codon_positions()
+        return Sequence(seq=seq_record.first_and_second_codon_positions(), warnings=None)
     else:  # None and ALL
-        return seq_record.seq
+        return Sequence(seq=seq_record.seq, warnings=None)
 
 
 def convert_nexus_to_format(dataset_as_nexus, dataset_format):
