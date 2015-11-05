@@ -3,7 +3,7 @@ import unittest
 
 from dataset_creator.dataset import Dataset
 
-from data import test_data
+from .data import test_data
 
 FASTA_DATA_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'Fasta')
 

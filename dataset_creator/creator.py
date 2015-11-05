@@ -1,6 +1,7 @@
 from . import base_dataset
 from . import tnt
 from . import mega
+from . import genbank_fasta
 from .phylip import PhylipDatasetFooter
 from .utils import convert_nexus_to_format
 from .utils import make_dataset_header
@@ -70,6 +71,12 @@ class Creator(object):
                                                             self.aminoacids,
                                                             self.degenerate,
                                                             self.format)
+        elif self.format == 'GenBankFASTA':
+            dataset_constructor = genbank_fasta.GenBankFASTADatasetBlock(self.data,
+                                                                         self.codon_positions,
+                                                                         self.partitioning,
+                                                                         aminoacids=self.aminoacids,
+                                                                         degenerate=self.degenerate)
         elif self.format == 'MEGA':
             dataset_constructor = mega.MegaDatasetBlock(self.data,
                                                         self.codon_positions,
