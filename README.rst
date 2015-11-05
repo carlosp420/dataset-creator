@@ -48,21 +48,34 @@ Dataset creator for phylogenetic software
   :target: https://www.quantifiedcode.com/app/project/f059ab475f2547758722b80ea528c457
   :alt: Code issues
 
+Dataset-Creator - easy way to creat phylogenetic datasets in many formats
+=========================================================================
+
+Documentation: `dataset-creator.readthedocs.org <http://dataset-creator.readthedocs.org/en/latest/>`_
+-----------------------------------------------------------------------------------------------------
+
 Takes SeqRecordExpanded objects and creates datasets for phylogenetic software
+such as MrBayes, TNT, BEAST, RAxML, MEGA, etc.
 
-* Free software: BSD license
+Features
+--------
 
-Installation
-============
+- Creates datasets in the following formats: FASTA, GenBankFASTA, NEXUS, TNT, MEGA
+  and Phylip.
+- Can generate datasets of DNA and aminoacid sequences.
+- Can generate datasets of degenerated sequences.
+- It can partition datasets by codon positions or by gene.
 
-::
+Quick start
+-----------
+
+First::
 
     pip install dataset_creator
 
-Usage
-=====
-The list of SeqRecordExpanded objects should be sorted by gene_code first then
-by voucher_code.
+
+Then the list of SeqRecordExpanded objects should be sorted by gene_code first
+then by voucher_code.
 
 .. code-block:: python
 
@@ -89,16 +102,22 @@ by voucher_code.
     >>> seq_records = [
     ...    seq_record1, seq_record2, seq_record3, seq_record4,
     ... ]
+
     >>> # codon positions can be 1st, 2nd, 3rd, 1st-2nd, ALL (default)
+    >>> dataset = Dataset(seq_records, format='TNT', partitioning='by codon position',
+    ...                   codon_positions='ALL')
+
+    >>> dataset = Dataset(seq_records, format='PHYLIP', partitioning='1st-2nd, 3rd',
+    ...                   codon_positions='ALL')
+
     >>> dataset = Dataset(seq_records, format='NEXUS', partitioning='by gene',
-    ...                   codon_positions='1st',
-    ...                   )
+    ...                   codon_positions='1st')
     >>> print(dataset.dataset_str)
-    """#NEXUS
-    blah blah
-    """
+    #NEXUS
+    blah blah ...
 
-
+Further documentation can be found at
+`dataset-creator.readthedocs.org <http://dataset-creator.readthedocs.org/en/latest/>`_
 
 Development
 ===========
