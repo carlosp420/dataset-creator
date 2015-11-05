@@ -120,6 +120,9 @@ class Creator(object):
         elif self.format == 'FASTA' and self.partitioning == '1st-2nd, 3rd':
             return self.dataset_block.replace(';\nEND;', '')
 
+        elif self.format == 'GenBankFASTA':
+            return self.dataset_block.replace(';\nEND;', '')
+
         elif self.format == 'TNT':
             return '{0}\n\n{1}'.format(self.dataset_header, self.dataset_block)
 

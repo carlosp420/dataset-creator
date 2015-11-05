@@ -11,14 +11,9 @@ class GenBankFASTADatasetBlock(DatasetBlock):
         :param block:
         :return: str.
         """
-        if self.aminoacids:
-            molecule_type = "protein"
-        else:
-            molecule_type = "dna"
-
         out = ""
         for seq_record in block:
-            taxon_id = '>{0}_{1}_{2} [org={0} {1}] [Specimen-voucher={2}] [note={3} gene, partial cds.] [Lineage=]'.format(
+            taxon_id = '>{0}_{1}_{2} [org={0} {1}] [Specimen-voucher={2}] [note={3} gene, partial cds.] [Lineage=]'.format(
                 seq_record.taxonomy['genus'],
                 seq_record.taxonomy['species'],
                 seq_record.voucher_code,
