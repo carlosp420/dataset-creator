@@ -209,7 +209,6 @@ class DatasetFooter(object):
     Example:
 
         >>>
-        "
         begin mrbayes;
         charset ArgKin = 1-596;
         charset COI-begin = 597-1265;
@@ -218,7 +217,6 @@ class DatasetFooter(object):
         charset RpS2 = 3312-3722;
         charset RpS5 = 3723-4339;
         charset wingless = 4340-4739;
-
         set autoclose=yes;
         prset applyto=(all) ratepr=variable brlensp=unconstrained:Exp(100.0) shapepr=exp(1.0) tratiopr=beta(2.0,1.0);
         lset applyto=(all) nst=mixed rates=gamma [invgamma];
@@ -228,7 +226,7 @@ class DatasetFooter(object):
          sump relburnin=yes [no] burninfrac=0.25 [2500];
          sumt relburnin=yes [no] burninfrac=0.25 [2500] contype=halfcompat [allcompat];
         END;
-        "
+
     """
     def __init__(self, data, codon_positions=None, partitioning=None,
                  outgroup=None):

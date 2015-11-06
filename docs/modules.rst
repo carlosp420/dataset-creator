@@ -5,4 +5,3 @@ dataset_creator
    :maxdepth: 4
 
    dataset_creator
-   modules

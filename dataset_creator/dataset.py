@@ -16,7 +16,7 @@ class Dataset(object):
     Parameters:
         seq_records (list):     SeqRecordExpanded objects. The list should be
                                 sorted by gene_code and then voucher code.
-        format (str):           NEXUS, PHYLIP, TNT, MEGA
+        format (str):           NEXUS, PHYLIP, TNT, MEGA, GenBankFASTA.
         partitioning (str):     Partitioning scheme: ``by gene`` (default),
                                 ``by codon position`` (each) and ``1st-2nd, 3rd``.
         codon_positions (str):  Can be ``1st``, ``2nd``, ``3rd``, ``1st-2nd``,

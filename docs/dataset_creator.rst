@@ -36,6 +36,14 @@ dataset_creator.exceptions module
     :undoc-members:
     :show-inheritance:
 
+dataset_creator.genbank_fasta module
+------------------------------------
+
+.. automodule:: dataset_creator.genbank_fasta
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 dataset_creator.mega module
 ---------------------------
 
