@@ -1,6 +1,12 @@
 Changelog
 =========
 
+0.3.9 (2015-11-06)
+------------------
+* Create datasets using the GenBankFASTA format. This format has the following
+  extra info in the description of sequences:
+  >Aus_aus_CP100-10 [org=Aus aus] [Specimen-voucher=CP100-10] [note=ArgKin gene, partial cds.] [Lineage=]
+
 0.3.8 (2015-10-30)
 ------------------
 * Fixed making dataset as aminoacid seqs for MEGA format.
