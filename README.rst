@@ -112,6 +112,14 @@ then by voucher_code.
 
     >>> dataset = Dataset(seq_records, format='NEXUS', partitioning='by gene',
     ...                   codon_positions='1st')
+
+    >>> dataset = Dataset(seq_records, format='NEXUS', partitioning='by gene',
+    ...                   codon_positions='ALL', aminoacids=True)
+
+    >>> # Produce a dataset of degenerated sequences using the 'S' method:
+    >>> dataset = Dataset(seq_records, format='NEXUS', partitioning='by gene',
+    ...                   codon_positions='ALL', degenerate='S')
+
     >>> print(dataset.dataset_str)
     #NEXUS
     blah blah ...
