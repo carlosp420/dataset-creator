@@ -13,6 +13,8 @@ before_install:
   - python --version
   - uname -a
   - lsb_release -a
+  #Lib unittest2 is needed for some assertRaises tests under Python 2.6
+  - "if [[ $TRAVIS_PYTHON_VERSION == '2.6' ]]; then pip install unittest2; fi"
 
 install: pip install -r requirements/testing.txt
 
@@ -24,4 +26,3 @@ notifications:
   email:
     on_success: never
     on_failure: always
-

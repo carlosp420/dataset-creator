@@ -1,7 +1,12 @@
 # -*- coding: UTF-8 -*-
 import json
 import os
-import unittest
+
+try:
+    # Needed for Python 2.6. Remove this import after dropping support for Python 2.6
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 
 from seqrecord_expanded import SeqRecordExpanded
 from seqrecord_expanded.exceptions import TranslationErrorMixedGappedSeq
