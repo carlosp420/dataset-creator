@@ -1,9 +1,15 @@
 # -*- coding: UTF-8 -*-
 import json
 import os
-import unittest
+
+try:
+    # Needed for Python 2.6. Remove this import after dropping support for Python 2.6
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 
 from seqrecord_expanded import SeqRecordExpanded
+from seqrecord_expanded.exceptions import TranslationErrorMixedGappedSeq
 
 from .data import test_data
 from dataset_creator.dataset import Dataset
@@ -90,6 +96,12 @@ class TestNexus(unittest.TestCase):
                           aminoacids=True)
         expected = "Gene ArgKin, sequence CP100-10 contains stop codons '*'"
         self.assertEqual(expected, dataset.warnings[0])
+
+    def test_generation_of_errors(self):
+        self.seq_records[0].seq = 'TTTN--CAGTAG'
+        with self.assertRaises(TranslationErrorMixedGappedSeq):
+            Dataset(self.seq_records, format='NEXUS', partitioning='by gene',
+                    aminoacids=True)
 
 
 class TestDatasetFooter(unittest.TestCase):

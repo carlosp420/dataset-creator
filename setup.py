@@ -18,7 +18,7 @@ def read(*names, **kwargs):
     ).read()
 
 
-required_libs = ['seqrecord-expanded==0.2.2']
+required_libs = ['seqrecord-expanded==0.2.4']
 if sys.version_info < (2, 7,):
     required_libs.append('ordereddict==1.1')
 
