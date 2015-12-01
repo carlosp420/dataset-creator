@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.3.10 (2015-12-01)
+-------------------
+* Fixed bug that produced FASTA sequences with underscores. Now all voucher codes
+  will have their dashes replaced by underscores.
+
 0.3.9 (2015-11-06)
 ------------------
 * Create datasets using the GenBankFASTA format. This format has the following
