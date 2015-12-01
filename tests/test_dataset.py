@@ -55,8 +55,8 @@ class TestDataset(unittest.TestCase):
         result = Dataset(seq_records).seq_records
         self.assertEqual(expected, [i.gene_code for i in result])
 
-        expected = ['CP100-10', 'CP100-11', 'CP100-10', 'CP100-11',
-                    'CP100-10', 'CP100-11', 'CP100-10', 'CP100-11']
+        expected = ['CP100_10', 'CP100_11', 'CP100_10', 'CP100_11',
+                    'CP100_10', 'CP100_11', 'CP100_10', 'CP100_11']
         self.assertEqual(expected, [i.voucher_code for i in result])
 
     def test_extract_genes(self):
@@ -211,6 +211,6 @@ class TestDataset(unittest.TestCase):
     def test_using_outgroup(self):
         dataset = Dataset(test_data, format='NEXUS', codon_positions='ALL',
                           outgroup='CP100-19')
-        expected = 'outgroup CP100-19_Aus_jus;'
+        expected = 'outgroup CP100_19_Aus_jus;'
         result = dataset.dataset_str
         self.assertTrue(expected in result)

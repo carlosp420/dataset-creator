@@ -30,7 +30,7 @@ class DatasetBlock(object):
     def __init__(self, data, codon_positions, partitioning, aminoacids=None,
                  degenerate=None, format=None, outgroup=None):
         self.warnings = []
-        self.data = self.convert_dashes_in_voucher_codes(data)
+        self.data = data
         self.codon_positions = codon_positions
         self.partitioning = partitioning
         self.aminoacids = aminoacids
@@ -38,17 +38,6 @@ class DatasetBlock(object):
         self.format = format
         self.outgroup = outgroup
         self._blocks = []
-
-    def convert_dashes_in_voucher_codes(self, data):
-        """Biopython needs the dashes converted to underscores.
-
-        In this way, Biopython can be used to do the format conversion from
-        Nexus to FASTA, Phylip, etc.
-
-        """
-        for seq_record in data.seq_records:
-            seq_record.voucher_code = seq_record.voucher_code.replace("-", "_")
-        return data
 
     def dataset_block(self):
         """Creates the block with taxon names and their sequences.

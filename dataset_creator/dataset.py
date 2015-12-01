@@ -85,6 +85,9 @@ class Dataset(object):
         dataset will be accepted by Biopython to do format conversions.
 
         """
+        for seq_record in seq_records:
+            seq_record.voucher_code = seq_record.voucher_code.replace("-", "_")
+
         unsorted_gene_codes = set([i.gene_code for i in seq_records])
         sorted_gene_codes = list(unsorted_gene_codes)
         sorted_gene_codes.sort(key=lambda x: x.lower())
@@ -128,7 +131,9 @@ class Dataset(object):
                                  "None, '1st', '2nd', '3rd', '1st-2nd', 'ALL'")
 
     def _validate_outgroup(self, outgroup):
+        """All voucher codes in our datasets have dashes converted to underscores."""
         if outgroup:
+            outgroup = outgroup.replace("-", "_")
             good_outgroup = False
             for seq_record in self.seq_records:
                 if seq_record.voucher_code == outgroup:
@@ -137,8 +142,8 @@ class Dataset(object):
             if good_outgroup:
                 self.outgroup = outgroup
             else:
-                raise ValueError("The given outgroup {0!r} cannot be found in the"
-                                 "input sequence records.")
+                raise ValueError("The given outgroup {0!r} cannot be found in the "
+                                 "input sequence records.".format(outgroup))
         else:
             self.outgroup = None
 

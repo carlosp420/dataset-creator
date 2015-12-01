@@ -74,7 +74,7 @@ class TestNexus(unittest.TestCase):
             seq_records.append(seq_record)
 
         dataset = Dataset(seq_records, format='NEXUS', partitioning='by gene')
-        self.assertTrue('CP100-10      ' in dataset.dataset_str)
+        self.assertTrue('CP100_10      ' in dataset.dataset_str)
 
     def test_dataset_when_seqrecord_taxonomy_is_has_family(self):
         raw_data = get_test_data('raw_data')
@@ -88,13 +88,13 @@ class TestNexus(unittest.TestCase):
             seq_records.append(seq_record)
 
         dataset = Dataset(seq_records, format='NEXUS', partitioning='by gene')
-        self.assertTrue('CP100-10_Aussidae_Aus_aus    ' in dataset.dataset_str)
+        self.assertTrue('CP100_10_Aussidae_Aus_aus    ' in dataset.dataset_str)
 
     def test_generation_of_warnings(self):
         self.seq_records[0].seq = 'TTTCAGTAG'
         dataset = Dataset(self.seq_records, format='NEXUS', partitioning='by gene',
                           aminoacids=True)
-        expected = "Gene ArgKin, sequence CP100-10 contains stop codons '*'"
+        expected = "Gene ArgKin, sequence CP100_10 contains stop codons '*'"
         self.assertEqual(expected, dataset.warnings[0])
 
     def test_generation_of_errors(self):
