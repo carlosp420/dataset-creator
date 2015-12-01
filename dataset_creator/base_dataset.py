@@ -30,7 +30,7 @@ class DatasetBlock(object):
     def __init__(self, data, codon_positions, partitioning, aminoacids=None,
                  degenerate=None, format=None, outgroup=None):
         self.warnings = []
-        self.data = data
+        self.data = self.convert_dashes_in_voucher_codes(data)
         self.codon_positions = codon_positions
         self.partitioning = partitioning
         self.aminoacids = aminoacids
@@ -38,6 +38,17 @@ class DatasetBlock(object):
         self.format = format
         self.outgroup = outgroup
         self._blocks = []
+
+    def convert_dashes_in_voucher_codes(self, data):
+        """Biopython needs the dashes converted to underscores.
+
+        In this way, Biopython can be used to do the format conversion from
+        Nexus to FASTA, Phylip, etc.
+
+        """
+        for seq_record in data.seq_records:
+            seq_record.voucher_code = seq_record.voucher_code.replace("-", "_")
+        return data
 
     def dataset_block(self):
         """Creates the block with taxon names and their sequences.
@@ -73,6 +84,7 @@ class DatasetBlock(object):
             ...     [SeqRecord1, SeqRecord2],  # for gene 3
             ...     [SeqRecord1, SeqRecord2],  # for gene 4
             ... ]
+
         """
         this_gene_code = None
         for seq_record in self.data.seq_records:
@@ -83,8 +95,7 @@ class DatasetBlock(object):
             self._blocks[list_length - 1].append(seq_record)
 
     def convert_to_string(self, block):
-        """Takes a list of SeqRecordExpanded objects corresponding to a gene_code
-        and produces the gene_block as string.
+        """Makes gene_block as str from list of SeqRecordExpanded objects of a gene_code.
 
         Override this function if the dataset block needs to be different
         due to file format.
@@ -94,6 +105,7 @@ class DatasetBlock(object):
 
         As the dataset is split into several blocks due to 1st-2nd, 3rd
         we cannot translate to aminoacids or degenerate the sequences.
+
         """
         if self.partitioning != '1st-2nd, 3rd':
             return self.make_datablock_by_gene(block)

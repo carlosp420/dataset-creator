@@ -79,8 +79,11 @@ class Dataset(object):
         self.dataset_str = self._create_dataset()
 
     def sort_seq_records(self, seq_records):
-        """Makes sure that SeqExpandedRecords are sorted by gene_code and then
-        by voucher code.
+        """Checks that SeqExpandedRecords are sorted by gene_code and then by voucher code.
+
+        The dashes in taxon names need to be converted to underscores so the
+        dataset will be accepted by Biopython to do format conversions.
+
         """
         unsorted_gene_codes = set([i.gene_code for i in seq_records])
         sorted_gene_codes = list(unsorted_gene_codes)

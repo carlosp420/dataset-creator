@@ -64,7 +64,7 @@ def convert_nexus_to_format(dataset_as_nexus, dataset_format):
     :param dataset_format:
     :return:
     """
-    fake_handle = StringIO(dataset_as_nexus.replace('-', '_'))
+    fake_handle = StringIO(dataset_as_nexus)
     nexus_al = AlignIO.parse(fake_handle, 'nexus')
     tmp_file = make_random_filename()
     AlignIO.write(nexus_al, tmp_file, dataset_format)
