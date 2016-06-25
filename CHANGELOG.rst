@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.3.11 (2016-06-25)
+-------------------
+* Upgraded seqrecord-expanded requirement.
+
 0.3.10 (2015-12-01)
 -------------------
 * Fixed bug that produced FASTA sequences with underscores. Now all voucher codes
