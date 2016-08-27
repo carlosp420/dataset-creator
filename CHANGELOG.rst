@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.3.13 (2016-08-27)
+-------------------
+* Fixed bug that did not replace all white spaces for underscores in taxon names
+  when building datasets. Due to taxon names with whitespaces, the NEXUS
+  interpreter assumed that part of the name was actually part of the sequence,
+  rendering the sequence invalid.
+
 0.3.11 (2016-06-25)
 -------------------
 * Upgraded seqrecord-expanded requirement.

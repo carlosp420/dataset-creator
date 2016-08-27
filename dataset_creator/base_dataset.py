@@ -193,7 +193,7 @@ class DatasetBlock(object):
                 out += '_' + seq_record.taxonomy['genus']
             if 'species' in seq_record.taxonomy:
                 out += '_' + seq_record.taxonomy['species']
-
+            out = out.replace(" ", "_")
             return re.sub('_+', '_', out)
 
 
