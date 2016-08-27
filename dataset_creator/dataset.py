@@ -101,13 +101,12 @@ class Dataset(object):
             return seq_records
         else:
             sorted_seq_records = []
-            append = sorted_seq_records.append
             for gene_code in sorted_gene_codes:
                 for voucher_code in sorted_voucher_codes:
                     for seq_record in seq_records:
                         if seq_record.gene_code == gene_code and \
                                 seq_record.voucher_code == voucher_code:
-                            append(seq_record)
+                            sorted_seq_records.append(seq_record)
             return sorted_seq_records
 
     def _validate_partitioning(self, partitioning):
