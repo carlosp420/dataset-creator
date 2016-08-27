@@ -1,4 +1,6 @@
+degenerate-dna==0.0.9
 seqrecord-expanded==0.2.5
+six==1.10.0
 sphinxcontrib-napoleon==0.3.11
 sphinx-rtd-theme==0.1.9
 

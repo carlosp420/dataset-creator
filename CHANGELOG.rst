@@ -7,6 +7,7 @@ Changelog
   when building datasets. Due to taxon names with whitespaces, the NEXUS
   interpreter assumed that part of the name was actually part of the sequence,
   rendering the sequence invalid.
+* Added some dependencies to requirements.
 
 0.3.11 (2016-06-25)
 -------------------

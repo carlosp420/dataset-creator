@@ -96,19 +96,17 @@ class Dataset(object):
         sorted_voucher_codes = list(unsorted_voucher_codes)
         sorted_voucher_codes.sort(key=lambda x: x.lower())
 
-        if sorted_gene_codes == list(unsorted_gene_codes) and \
-                sorted_voucher_codes == list(unsorted_voucher_codes):
-            return seq_records
-        else:
-            sorted_seq_records = []
-            append = sorted_seq_records.append
-            for gene_code in sorted_gene_codes:
-                for voucher_code in sorted_voucher_codes:
-                    for seq_record in seq_records:
-                        if seq_record.gene_code == gene_code and \
-                                seq_record.voucher_code == voucher_code:
-                            append(seq_record)
-            return sorted_seq_records
+        sorted_seq_records = []
+        for gene_code in sorted_gene_codes:
+            for voucher_code in sorted_voucher_codes:
+                for seq_record in seq_records:
+                    should_be_done = (
+                        seq_record.gene_code == gene_code and
+                        seq_record.voucher_code == voucher_code
+                    )
+                    if should_be_done:
+                        sorted_seq_records.append(seq_record)
+        return sorted_seq_records
 
     def _validate_partitioning(self, partitioning):
         if partitioning is None:

@@ -18,7 +18,12 @@ def read(*names, **kwargs):
     ).read()
 
 
-required_libs = ['seqrecord-expanded==0.2.5']
+required_libs = [
+    'degenerate-dna==0.0.9',
+    'seqrecord-expanded==0.2.5',
+    'six==1.10.0',
+]
+
 if sys.version_info < (2, 7,):
     required_libs.append('ordereddict==1.1')
 
