@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.3.14 (2016-09-11)
+-------------------
+* upgrade `seqrecord-expanded`.
+
 0.3.13 (2016-08-27)
 -------------------
 * Fixed bug that did not replace all white spaces for underscores in taxon names

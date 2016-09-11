@@ -20,7 +20,7 @@ def read(*names, **kwargs):
 
 required_libs = [
     'degenerate-dna==0.0.9',
-    'seqrecord-expanded==0.2.5',
+    'seqrecord-expanded==0.2.6',
     'six==1.10.0',
 ]
 
