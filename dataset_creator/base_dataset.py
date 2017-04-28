@@ -123,6 +123,7 @@ class DatasetBlock(object):
             taxonomy_as_string = self.flatten_taxonomy(seq_record)
             taxon_id = '>{0}{1}'.format(seq_record.voucher_code,
                                         taxonomy_as_string)
+            taxon_id = taxon_id[0:54]
 
             block_1st2nd[seq_record.gene_code].append('{0}\n{1}\n'.format(taxon_id,
                                                                           seq_record.first_and_second_codon_positions()))
@@ -171,6 +172,7 @@ class DatasetBlock(object):
             taxonomy_as_string = self.flatten_taxonomy(seq_record)
             taxon_id = '{0}{1}'.format(seq_record.voucher_code,
                                        taxonomy_as_string)
+            taxon_id = taxon_id[0:54]
 
             sequence = get_seq(seq_record, self.codon_positions,
                                aminoacids=self.aminoacids,
@@ -187,13 +189,52 @@ class DatasetBlock(object):
         if seq_record.taxonomy is None:
             return out
         else:
-            if 'family' in seq_record.taxonomy:
-                out += '_' + seq_record.taxonomy['family']
-            if 'genus' in seq_record.taxonomy:
-                out += '_' + seq_record.taxonomy['genus']
-            if 'species' in seq_record.taxonomy:
-                out += '_' + seq_record.taxonomy['species']
+            try:
+                out += "_" + seq_record.taxonomy['orden']
+            except KeyError:
+                pass
+            try:
+                out += "_" + seq_record.taxonomy['superfamily']
+            except KeyError:
+                pass
+            try:
+                out += "_" + seq_record.taxonomy['family']
+            except KeyError:
+                pass
+            try:
+                out += "_" + seq_record.taxonomy['subfamily']
+            except KeyError:
+                pass
+            try:
+                out += "_" + seq_record.taxonomy['tribe']
+            except KeyError:
+                pass
+            try:
+                out += "_" + seq_record.taxonomy['subtribe']
+            except KeyError:
+                pass
+            try:
+                out += "_" + seq_record.taxonomy['genus']
+            except KeyError:
+                pass
+            try:
+                out += "_" + seq_record.taxonomy['species']
+            except KeyError:
+                pass
+            try:
+                out += "_" + seq_record.taxonomy['subspecies']
+            except KeyError:
+                pass
+            try:
+                out += "_" + seq_record.taxonomy['author']
+            except KeyError:
+                pass
+            try:
+                out += "_" + seq_record.taxonomy['hostorg']
+            except KeyError:
+                pass
             out = out.replace(" ", "_")
+            out = re.sub("_$", "", out)
             return re.sub('_+', '_', out)
 
 
