@@ -165,8 +165,9 @@ set partition = GENES;
         self.assertEqual(expected, result)
 
     def test_dataset_1st_2nd_codon_positions_partitioned_as_1st2nd_3rd(self):
-        dataset = Dataset(self.seq_records, format='NEXUS', codon_positions='1st-2nd', partitioning='1st-2nd, 3rd')
-        test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset_1st2nd_codons_partitioned_as_1st2nd_3rd.nex')
+        seq_records = get_test_data("seq_records", "sample_data_numbers.txt")
+        dataset = Dataset(seq_records, format='NEXUS', codon_positions='1st-2nd', partitioning='1st-2nd, 3rd')
+        test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset_1st2nd_codons_partitioned_as_1st2nd_3rd_numbers.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
         self.assertEqual(expected, result)
