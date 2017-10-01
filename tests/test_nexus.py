@@ -20,12 +20,12 @@ from dataset_creator.base_dataset import BasePairCount
 NEXUS_DATA_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'Nexus')
 
 
-def get_test_data(type_of_data=None):
+def get_test_data(type_of_data=None, filename="sample_data.txt"):
     """
     Parameters:
         type_of_data (str):     ``raw_data`` or ``seq_records``
     """
-    with open(os.path.join(NEXUS_DATA_PATH, "..", "sample_data.txt"), "r") as handle:
+    with open(os.path.join(NEXUS_DATA_PATH, "..", filename), "r") as handle:
         raw_data = json.loads(handle.read())
 
     if type_of_data == 'raw_data':
@@ -157,8 +157,9 @@ set partition = GENES;
         self.assertEqual(expected, result)
 
     def test_dataset_1st_2nd_codon_positions_partitioned_by_gene(self):
-        dataset = Dataset(self.seq_records, format='NEXUS', codon_positions='1st-2nd', partitioning='by gene')
-        test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset_1st2nd_codons.nex')
+        seq_records = get_test_data("seq_records", "sample_data_numbers.txt")
+        dataset = Dataset(seq_records, format='NEXUS', codon_positions='1st-2nd', partitioning='by gene')
+        test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset_1st2nd_codons_numbers.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
         self.assertEqual(expected, result)
