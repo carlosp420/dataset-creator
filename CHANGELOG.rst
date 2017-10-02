@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.3.16 (2017-10-01)
+-------------------
+* Fixed creating dataset with 1st, 2nd or 3rd codon positions.
+
 0.3.14 (2016-09-11)
 -------------------
 * upgrade `seqrecord-expanded`.
