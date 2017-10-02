@@ -6,6 +6,7 @@ from seqrecord_expanded import SeqRecordExpanded
 
 from dataset_creator import Dataset
 from .data import test_data
+from .generate_test_data import get_test_data
 
 
 NEXUS_DATA_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'Nexus')
@@ -79,28 +80,28 @@ class TestDataset(unittest.TestCase):
     def test_extract_number_of_chars_first_codon_positions(self):
         dataset = Dataset(test_data, format='NEXUS', partitioning='by gene',
                           codon_positions='1st')
-        expected = '1580'
+        expected = '1578'
         result = dataset.number_chars
         self.assertEqual(expected, result)
 
     def test_extract_number_of_chars_second_codon_positions(self):
         dataset = Dataset(test_data, format='NEXUS', partitioning='by gene',
                           codon_positions='2nd')
-        expected = '1578'
+        expected = '1577'
         result = dataset.number_chars
         self.assertEqual(expected, result)
 
     def test_extract_number_of_chars_third_codon_positions(self):
         dataset = Dataset(test_data, format='NEXUS', partitioning='by gene',
                           codon_positions='3rd')
-        expected = '1581'
+        expected = '1573'
         result = dataset.number_chars
         self.assertEqual(expected, result)
 
     def test_extract_number_of_chars_first_and_second_codon_positions(self):
         dataset = Dataset(test_data, format='NEXUS', partitioning='by gene',
                           codon_positions='1st-2nd')
-        expected = '3158'
+        expected = '3155'
         result = dataset.number_chars
         self.assertEqual(expected, result)
 
@@ -135,22 +136,25 @@ class TestDataset(unittest.TestCase):
                           codon_positions='1st', partitioning='1st-2nd-3rd')
 
     def test_dataset_nexus_1st_codon_position(self):
+        test_data = get_test_data("sample_data_numbers.txt")
         dataset = Dataset(test_data, format='NEXUS', codon_positions='1st', partitioning='by gene')
-        test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset_1st_codon.nex')
+        test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset_1st_codon_numbers.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
         self.assertEqual(expected, result)
 
     def test_dataset_nexus_3rd_codon_position(self):
+        test_data = get_test_data("sample_data_numbers.txt")
         dataset = Dataset(test_data, format='NEXUS', codon_positions='3rd', partitioning='by codon position')
-        test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset_3rd_codon.nex')
+        test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset_3rd_codon_numbers.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
         self.assertEqual(expected, result)
 
     def test_dataset_nexus_3rd_codon_position_partitioned_as_1st2nd_3rd(self):
+        test_data = get_test_data("sample_data_numbers.txt")
         dataset = Dataset(test_data, format='NEXUS', codon_positions='3rd', partitioning='1st-2nd, 3rd')
-        test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset_3rd_codon.nex')
+        test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset_3rd_codon_numbers.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
         self.assertEqual(expected, result)
