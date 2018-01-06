@@ -13,11 +13,13 @@ class GenBankFASTADatasetBlock(DatasetBlock):
         """
         out = ""
         for seq_record in block:
-            taxon_id = '>{0}_{1}_{2} [org={0} {1}] [Specimen-voucher={2}] [note={3} gene, partial cds.] [Lineage=]'.format(
+            taxon_id = ">{0}_{1}_{2} [org={0} {1}] [Specimen-voucher={2}] " \
+                       "[note={3} gene, partial cds.] [Lineage={4}]".format(
                 seq_record.taxonomy['genus'],
                 seq_record.taxonomy['species'],
                 seq_record.voucher_code,
                 seq_record.gene_code,
+                seq_record.lineage,
             )
             sequence = get_seq(seq_record, self.codon_positions, self.aminoacids,
                                self.degenerate)
