@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.3.17 (2018-01-06)
+-------------------
+* Avoid raising exception when translating sequence with dash.
+
 0.3.16 (2017-10-01)
 -------------------
 * Fixed creating dataset with 1st, 2nd or 3rd codon positions.
