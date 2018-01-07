@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.3.18 (2018-01-06)
+-------------------
+* Support lineages for genbank fasta files.
+
 0.3.17 (2018-01-06)
 -------------------
 * Avoid raising exception when translating sequence with dash.
