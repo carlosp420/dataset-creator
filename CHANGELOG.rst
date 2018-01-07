@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.3.19 (2018-01-06)
+-------------------
+* Fixed version of seqrecord expanded in setup.py.
+
 0.3.18 (2018-01-06)
 -------------------
 * Support lineages for genbank fasta files.
