@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.3.20 (2018-01-07)
+-------------------
+* Updated seq record expanded.
+
 0.3.19 (2018-01-06)
 -------------------
 * Fixed version of seqrecord expanded in setup.py.
