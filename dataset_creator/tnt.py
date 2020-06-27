@@ -47,6 +47,9 @@ class TntDatasetBlock(DatasetBlock):
                 max_taxon_id = len(taxon_id)
 
         pad_number = max_taxon_id + 1
+        if pad_number < 55:
+            pad_number = 55
+
         for seq_record in block:
             if not out:
                 out = '&[{0}]\n'.format(molecule_type, seq_record.gene_code)

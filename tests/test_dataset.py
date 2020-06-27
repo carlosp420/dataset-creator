@@ -122,14 +122,14 @@ class TestDataset(unittest.TestCase):
         test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
-        self.assertEqual(expected, result)
+        self.assertEqual(expected.strip(), result)
 
     def test_dataset_nexus_using_default_parameters(self):
         dataset = Dataset(test_data, format='NEXUS')
         test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
-        self.assertEqual(expected, result)
+        self.assertEqual(expected.strip(), result)
 
     def test_dataset_nexus_wrong_partitioning_parameter(self):
         self.assertRaises(AttributeError, Dataset, seq_records=test_data, format='NEXUS',
@@ -141,7 +141,7 @@ class TestDataset(unittest.TestCase):
         test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset_1st_codon_numbers.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
-        self.assertEqual(expected, result)
+        self.assertEqual(expected.strip(), result)
 
     def test_dataset_nexus_3rd_codon_position(self):
         test_data = get_test_data("sample_data_numbers.txt")
@@ -157,14 +157,14 @@ class TestDataset(unittest.TestCase):
         test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset_3rd_codon_numbers.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
-        self.assertEqual(expected, result)
+        self.assertEqual(expected.strip(), result)
 
     def test_dataset_nexus_all_codon_positions_partitioned_by_codon_positions(self):
         dataset = Dataset(test_data, format='NEXUS', codon_positions='ALL', partitioning='by codon position')
         test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset_partitioned_as_each.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
-        self.assertEqual(expected, result)
+        self.assertEqual(expected.strip(), result)
 
     def test_dataset_nexus_all_codon_positions_partitioned_as_1st2nd_3rd(self):
         dataset = Dataset(test_data, format='NEXUS', codon_positions='ALL', partitioning='1st-2nd, 3rd')
