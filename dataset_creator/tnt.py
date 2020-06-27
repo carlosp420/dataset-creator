@@ -36,6 +36,17 @@ class TntDatasetBlock(DatasetBlock):
             molecule_type = "dna"
 
         out = None
+
+        max_taxon_id = 0
+        for seq_record in block:
+            taxon_id = '{0}_{1}_{2}'.format(seq_record.voucher_code,
+                                            seq_record.taxonomy['genus'],
+                                            seq_record.taxonomy['species'],
+                                            )
+            if len(taxon_id) > max_taxon_id:
+                max_taxon_id = len(taxon_id)
+
+        pad_number = max_taxon_id + 1
         for seq_record in block:
             if not out:
                 out = '&[{0}]\n'.format(molecule_type, seq_record.gene_code)
@@ -49,5 +60,5 @@ class TntDatasetBlock(DatasetBlock):
             if sequence.warning:
                 self.warnings.append(sequence.warning)
 
-            out += '{0}{1}\n'.format(taxon_id.ljust(55), seq)
+            out += '{0}{1}\n'.format(taxon_id.ljust(pad_number), seq)
         return out
