@@ -167,8 +167,8 @@ class DatasetBlock(object):
         max_taxon_id = 0
         for seq_record in block:
             taxon_id = '{0}_{1}_{2}'.format(seq_record.voucher_code,
-                                            seq_record.taxonomy['genus'],
-                                            seq_record.taxonomy['species'],
+                                            seq_record.taxonomy.get('genus', ''),
+                                            seq_record.taxonomy.get('species', ''),
                                             )
             if len(taxon_id) > max_taxon_id:
                 max_taxon_id = len(taxon_id)
