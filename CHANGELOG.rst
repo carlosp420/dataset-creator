@@ -1,6 +1,11 @@
 Changelog
 =========
 
+0.4.0 (2020-06-28)
+------------------
+* dropped support for python 2
+* added support for long taxon names in generated dataset files
+
 0.3.20 (2018-01-07)
 -------------------
 * Updated seq record expanded.
