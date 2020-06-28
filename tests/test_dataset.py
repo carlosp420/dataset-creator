@@ -1,6 +1,7 @@
 import json
 import os
 import unittest
+from copy import copy
 
 from seqrecord_expanded import SeqRecordExpanded
 
@@ -15,6 +16,8 @@ NEXUS_DATA_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'Nexu
 class TestDataset(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
+        self.test_data = copy(test_data)
+        self.test_data_numbers = get_test_data("sample_data_numbers.txt")
 
     def test_sorting_seq_records(self):
         """Test SeqRecordExpanded objects are sorted by gene_code and then by
@@ -61,113 +64,110 @@ class TestDataset(unittest.TestCase):
         self.assertEqual(expected, [i.voucher_code for i in result])
 
     def test_extract_genes(self):
-        dataset = Dataset(test_data, format='NEXUS', partitioning='by gene')
+        dataset = Dataset(self.test_data, format='NEXUS', partitioning='by gene')
         expected = ['ArgKin', 'COI-begin', 'COI_end', 'ef1a', 'RpS2', 'RpS5', 'wingless']
         result = dataset.gene_codes
         self.assertEqual(expected, result)
 
     def test_extract_number_of_chars(self):
-        dataset = Dataset(test_data, format='NEXUS', partitioning='by gene')
+        dataset = Dataset(self.test_data, format='NEXUS', partitioning='by gene')
         expected = '4739'
         result = dataset.number_chars
         self.assertEqual(expected, result)
 
     def test_extract_number_of_chars_wrong_argument(self):
         self.assertRaises(AttributeError,
-                          Dataset, test_data, format='NEXUS', partitioning='by gene',
+                          Dataset, self.test_data, format='NEXUS', partitioning='by gene',
                           codon_positions='5th position')
 
     def test_extract_number_of_chars_first_codon_positions(self):
-        dataset = Dataset(test_data, format='NEXUS', partitioning='by gene',
+        dataset = Dataset(self.test_data, format='NEXUS', partitioning='by gene',
                           codon_positions='1st')
         expected = '1578'
         result = dataset.number_chars
         self.assertEqual(expected, result)
 
     def test_extract_number_of_chars_second_codon_positions(self):
-        dataset = Dataset(test_data, format='NEXUS', partitioning='by gene',
+        dataset = Dataset(self.test_data, format='NEXUS', partitioning='by gene',
                           codon_positions='2nd')
         expected = '1577'
         result = dataset.number_chars
         self.assertEqual(expected, result)
 
     def test_extract_number_of_chars_third_codon_positions(self):
-        dataset = Dataset(test_data, format='NEXUS', partitioning='by gene',
+        dataset = Dataset(self.test_data, format='NEXUS', partitioning='by gene',
                           codon_positions='3rd')
         expected = '1573'
         result = dataset.number_chars
         self.assertEqual(expected, result)
 
     def test_extract_number_of_chars_first_and_second_codon_positions(self):
-        dataset = Dataset(test_data, format='NEXUS', partitioning='by gene',
+        dataset = Dataset(self.test_data, format='NEXUS', partitioning='by gene',
                           codon_positions='1st-2nd')
         expected = '3155'
         result = dataset.number_chars
         self.assertEqual(expected, result)
 
     def test_extract_number_of_taxa(self):
-        dataset = Dataset(test_data, format='NEXUS', partitioning='by gene')
+        dataset = Dataset(self.test_data, format='NEXUS', partitioning='by gene')
         expected = '10'
         result = dataset.number_taxa
         self.assertEqual(expected, result)
 
     def test_prepared_data(self):
-        dataset = Dataset(test_data, format='NEXUS', partitioning='by gene')
+        dataset = Dataset(self.test_data, format='NEXUS', partitioning='by gene')
         expected = ['ArgKin', 'COI-begin', 'COI_end', 'ef1a', 'RpS2', 'RpS5', 'wingless']
         result = dataset.data.gene_codes
         self.assertEqual(expected, result)
 
     def test_dataset_nexus(self):
-        dataset = Dataset(test_data, format='NEXUS', partitioning='by gene')
+        dataset = Dataset(self.test_data, format='NEXUS', partitioning='by gene')
         test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
         self.assertEqual(expected.strip(), result)
 
     def test_dataset_nexus_using_default_parameters(self):
-        dataset = Dataset(test_data, format='NEXUS')
+        dataset = Dataset(self.test_data, format='NEXUS')
         test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
         self.assertEqual(expected.strip(), result)
 
     def test_dataset_nexus_wrong_partitioning_parameter(self):
-        self.assertRaises(AttributeError, Dataset, seq_records=test_data, format='NEXUS',
+        self.assertRaises(AttributeError, Dataset, seq_records=self.test_data, format='NEXUS',
                           codon_positions='1st', partitioning='1st-2nd-3rd')
 
     def test_dataset_nexus_1st_codon_position(self):
-        test_data = get_test_data("sample_data_numbers.txt")
-        dataset = Dataset(test_data, format='NEXUS', codon_positions='1st', partitioning='by gene')
+        dataset = Dataset(self.test_data_numbers, format='NEXUS', codon_positions='1st', partitioning='by gene')
         test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset_1st_codon_numbers.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
         self.assertEqual(expected.strip(), result)
 
     def test_dataset_nexus_3rd_codon_position(self):
-        test_data = get_test_data("sample_data_numbers.txt")
-        dataset = Dataset(test_data, format='NEXUS', codon_positions='3rd', partitioning='by codon position')
+        dataset = Dataset(self.test_data_numbers, format='NEXUS', codon_positions='3rd', partitioning='by codon position')
         test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset_3rd_codon_numbers.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
         self.assertEqual(expected, result)
 
     def test_dataset_nexus_3rd_codon_position_partitioned_as_1st2nd_3rd(self):
-        test_data = get_test_data("sample_data_numbers.txt")
-        dataset = Dataset(test_data, format='NEXUS', codon_positions='3rd', partitioning='1st-2nd, 3rd')
+        dataset = Dataset(self.test_data_numbers, format='NEXUS', codon_positions='3rd', partitioning='1st-2nd, 3rd')
         test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset_3rd_codon_numbers.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
         self.assertEqual(expected.strip(), result)
 
     def test_dataset_nexus_all_codon_positions_partitioned_by_codon_positions(self):
-        dataset = Dataset(test_data, format='NEXUS', codon_positions='ALL', partitioning='by codon position')
+        dataset = Dataset(self.test_data, format='NEXUS', codon_positions='ALL', partitioning='by codon position')
         test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset_partitioned_as_each.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
         self.assertEqual(expected.strip(), result)
 
     def test_dataset_nexus_all_codon_positions_partitioned_as_1st2nd_3rd(self):
-        dataset = Dataset(test_data, format='NEXUS', codon_positions='ALL', partitioning='1st-2nd, 3rd')
+        dataset = Dataset(self.test_data, format='NEXUS', codon_positions='ALL', partitioning='1st-2nd, 3rd')
         test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset_partitioned_as_1st2nd_3rd.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
@@ -213,7 +213,7 @@ class TestDataset(unittest.TestCase):
         self.assertEqual(expected, result)
 
     def test_using_outgroup(self):
-        dataset = Dataset(test_data, format='NEXUS', codon_positions='ALL',
+        dataset = Dataset(self.test_data, format='NEXUS', codon_positions='ALL',
                           outgroup='CP100-19')
         expected = 'outgroup CP100_19_Aus_jus;'
         result = dataset.dataset_str
