@@ -8,7 +8,7 @@ test: clean-test
 	nosetests --verbosity=2 --with-coverage -w tests
 
 coverage: test
-	coverage report -m
+	coverage report -m --include=dataset_creator/*
 	coverage html
 
 release:

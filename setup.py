@@ -25,7 +25,7 @@ required_libs = [
 
 setup(
     name='dataset-creator',
-    version='0.3.21',
+    version='0.4.0',
     license='BSD',
     description='Takes SeqRecordExpanded objects and creates datasets for phylogenetic software',
     long_description='%s\n%s' % (read('README.rst'), re.sub(':[a-z]+:`~?(.*?)`', r'``\1``', read('CHANGELOG.rst'))),

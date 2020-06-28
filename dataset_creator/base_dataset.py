@@ -123,8 +123,6 @@ class DatasetBlock(object):
             taxonomy_as_string = self.flatten_taxonomy(seq_record)
             taxon_id = '>{0}{1}'.format(seq_record.voucher_code,
                                         taxonomy_as_string)
-            taxon_id = taxon_id[0:54]
-
             block_1st2nd[seq_record.gene_code].append('{0}\n{1}\n'.format(taxon_id,
                                                                           seq_record.first_and_second_codon_positions()))
             block_1st[seq_record.gene_code].append('{0}\n{1}\n'.format(taxon_id,
@@ -166,13 +164,25 @@ class DatasetBlock(object):
 
     def make_datablock_by_gene(self, block):
         out = None
+        max_taxon_id = 0
+        for seq_record in block:
+            taxon_id = '{0}_{1}_{2}'.format(seq_record.voucher_code,
+                                            seq_record.taxonomy.get('genus', ''),
+                                            seq_record.taxonomy.get('species', ''),
+                                            )
+            if len(taxon_id) > max_taxon_id:
+                max_taxon_id = len(taxon_id)
+
+        pad_number = max_taxon_id + 1
+        if pad_number < 55:
+            pad_number = 55
+
         for seq_record in block:
             if not out:
                 out = '[{0}]\n'.format(seq_record.gene_code)
             taxonomy_as_string = self.flatten_taxonomy(seq_record)
             taxon_id = '{0}{1}'.format(seq_record.voucher_code,
                                        taxonomy_as_string)
-            taxon_id = taxon_id[0:54]
 
             sequence = get_seq(seq_record, self.codon_positions,
                                aminoacids=self.aminoacids,
@@ -181,7 +191,7 @@ class DatasetBlock(object):
             if sequence.warning:
                 self.warnings.append(sequence.warning)
 
-            out += '{0}{1}\n'.format(taxon_id.ljust(55), seq)
+            out += '{0}{1}\n'.format(taxon_id.ljust(pad_number), seq)
         return out
 
     def flatten_taxonomy(self, seq_record):

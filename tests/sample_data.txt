@@ -3,8 +3,8 @@
     "table": 1,
     "gene_code": "ArgKin",
     "taxonomy": {
-      "species": "aus",
-      "genus": "Aus"
+      "species": "aussssssssssssssssssssssssssss",
+      "genus": "Aussssssssssssssssssssssssssss"
     },
     "reading_frame": 1,
     "voucher_code": "CP100-10",
@@ -113,8 +113,8 @@
     "table": 5,
     "gene_code": "COI-begin",
     "taxonomy": {
-      "species": "aus",
-      "genus": "Aus"
+      "species": "aussssssssssssssssssssssssssss",
+      "genus": "Aussssssssssssssssssssssssssss"
     },
     "reading_frame": 2,
     "voucher_code": "CP100-10",
@@ -223,8 +223,8 @@
     "table": 5,
     "gene_code": "COI_end",
     "taxonomy": {
-      "species": "aus",
-      "genus": "Aus"
+      "species": "aussssssssssssssssssssssssssss",
+      "genus": "Aussssssssssssssssssssssssssss"
     },
     "reading_frame": 2,
     "voucher_code": "CP100-10",
@@ -333,8 +333,8 @@
     "table": 1,
     "gene_code": "ef1a",
     "taxonomy": {
-      "species": "aus",
-      "genus": "Aus"
+      "species": "aussssssssssssssssssssssssssss",
+      "genus": "Aussssssssssssssssssssssssssss"
     },
     "reading_frame": 2,
     "voucher_code": "CP100-10",
@@ -443,8 +443,8 @@
     "table": 1,
     "gene_code": "RpS2",
     "taxonomy": {
-      "species": "aus",
-      "genus": "Aus"
+      "species": "aussssssssssssssssssssssssssss",
+      "genus": "Aussssssssssssssssssssssssssss"
     },
     "reading_frame": 3,
     "voucher_code": "CP100-10",
@@ -553,8 +553,8 @@
     "table": 1,
     "gene_code": "RpS5",
     "taxonomy": {
-      "species": "aus",
-      "genus": "Aus"
+      "species": "aussssssssssssssssssssssssssss",
+      "genus": "Aussssssssssssssssssssssssssss"
     },
     "reading_frame": 2,
     "voucher_code": "CP100-10",
@@ -663,8 +663,8 @@
     "table": 1,
     "gene_code": "wingless",
     "taxonomy": {
-      "species": "aus",
-      "genus": "Aus"
+      "species": "aussssssssssssssssssssssssssss",
+      "genus": "Aussssssssssssssssssssssssssss"
     },
     "reading_frame": 2,
     "voucher_code": "CP100-10",

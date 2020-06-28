@@ -23,6 +23,16 @@ class TestFasta(unittest.TestCase):
         expected = open(os.path.join(FASTA_DATA_PATH, 'dataset.fas')).read()
         self.assertEqual(expected, result)
 
+    def test_dataset__with_long_name(self):
+        """Test that we can output fasta files with long names
+
+        Test taht we don't truncate to 54 characters
+        """
+        dataset = Dataset(self.test_data, format='FASTA', partitioning='by gene')
+        result = dataset.dataset_str
+        expected = open(os.path.join(FASTA_DATA_PATH, 'dataset.fas')).read()
+        self.assertEqual(expected, result)
+
     def test_dataset_with_gaps(self):
         seq = self.test_data[0].seq
         seq = list(seq)
