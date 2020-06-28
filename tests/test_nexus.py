@@ -1,4 +1,5 @@
 # -*- coding: UTF-8 -*-
+from copy import copy
 import json
 import os
 
@@ -43,7 +44,7 @@ def get_test_data(type_of_data=None, filename="sample_data.txt"):
 class TestNexus(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
-        self.seq_records = get_test_data('seq_records')
+        self.seq_records = copy(get_test_data('seq_records'))
 
     def tearDown(self):
         del self.seq_records
