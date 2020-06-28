@@ -60,7 +60,7 @@ class TestNexus(unittest.TestCase):
         result = dataset.dataset_str
         with open(os.path.join(NEXUS_DATA_PATH, 'dataset_aa.nex'), 'r') as handle:
             expected = handle.read()
-        self.assertEqual(expected, result)
+        self.assertEqual(expected.strip(), result)
 
     def test_dataset_when_seqrecord_taxonomy_is_none(self):
         raw_data = get_test_data('raw_data')
@@ -154,7 +154,7 @@ set partition = GENES;
         test_data_file = os.path.join(NEXUS_DATA_PATH, 'dataset.nex')
         expected = open(test_data_file, 'r').read()
         result = dataset.dataset_str
-        self.assertEqual(expected, result)
+        self.assertEqual(expected.strip(), result)
 
     def test_dataset_1st_2nd_codon_positions_partitioned_by_gene(self):
         seq_records = get_test_data("seq_records", "sample_data_numbers.txt")
