@@ -7,3 +7,6 @@ coverage
 wheel
 flake8
 coveralls
+
+certifi==2020.6.20
+py==1.9.0
