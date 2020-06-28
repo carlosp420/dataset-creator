@@ -11,7 +11,7 @@ class TestCreator(unittest.TestCase):
         self.maxDiff = None
         self.test_data = copy(test_data)
 
-    def tearDown(self) -> None:
+    def tearDown(self):
         self.test_data = None
 
     def test_nexus_header(self):
