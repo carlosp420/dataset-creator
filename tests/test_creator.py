@@ -1,4 +1,5 @@
 import unittest
+from copy import copy
 
 from .data import test_data
 from dataset_creator.dataset import Dataset
@@ -8,9 +9,10 @@ from dataset_creator.creator import Creator
 class TestCreator(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
+        self.test_data = copy(test_data)
 
     def test_nexus_header(self):
-        dataset = Dataset(test_data, format='NEXUS', partitioning='by gene')
+        dataset = Dataset(self.test_data, format='NEXUS', partitioning='by gene')
         creator = Creator(dataset.data, format='NEXUS')
         expected = """
 #NEXUS
@@ -24,7 +26,7 @@ MATRIX
         self.assertEqual(expected.strip(), result)
 
     def test_nexus_dataset_block(self):
-        dataset = Dataset(test_data, format='NEXUS', partitioning='by gene')
+        dataset = Dataset(self.test_data, format='NEXUS', partitioning='by gene')
         creator = Creator(dataset.data, format='NEXUS')
         expected = """
 [ArgKin]
