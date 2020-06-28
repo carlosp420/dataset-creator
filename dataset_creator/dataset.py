@@ -178,6 +178,7 @@ class Dataset(object):
         self._get_gene_codes_and_seq_lengths()
 
         sum = 0
+        print(self._gene_codes_and_lengths)
         for seq_length in self._gene_codes_and_lengths.values():
             sum += sorted(seq_length, reverse=True)[0]
         self.number_chars = str(sum)

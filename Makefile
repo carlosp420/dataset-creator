@@ -5,11 +5,9 @@ clean-test:
 	rm -rf cover/
 
 test: clean-test
-	nosetests --verbosity=2 -w tests
+	nosetests --verbosity=2 --with-coverage -w tests
 
-coverage: clean-test
-	pip freeze
-	coverage run --source=dataset_creator setup.py test
+coverage: test
 	coverage report -m
 	coverage html
 

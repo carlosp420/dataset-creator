@@ -11,6 +11,9 @@ class TestCreator(unittest.TestCase):
         self.maxDiff = None
         self.test_data = copy(test_data)
 
+    def tearDown(self) -> None:
+        self.test_data = None
+
     def test_nexus_header(self):
         dataset = Dataset(self.test_data, format='NEXUS', partitioning='by gene')
         creator = Creator(dataset.data, format='NEXUS')
