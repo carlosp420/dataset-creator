@@ -13,7 +13,6 @@ Dataset creator for phylogenetic software
 
     * - tests
       - | |travis| |requires| |coveralls|
-        | |quantified-code|
     * - package
       - |version| |wheel| |supported-versions| |supported-implementations|
 
@@ -45,9 +44,6 @@ Dataset creator for phylogenetic software
     :alt: Supported implementations
     :target: https://pypi.python.org/pypi/dataset-creator
 
-.. |quantified-code| image:: https://www.quantifiedcode.com/api/v1/project/f059ab475f2547758722b80ea528c457/badge.svg
-  :target: https://www.quantifiedcode.com/app/project/f059ab475f2547758722b80ea528c457
-  :alt: Code issues
 
 Dataset-Creator - easy way to creat phylogenetic datasets in many formats
 =========================================================================
