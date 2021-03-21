@@ -1,6 +1,10 @@
 Changelog
 =========
 
+0.5.0 (2021-03-20)
+------------------
+* added support for bankit format
+
 0.4.0 (2020-06-28)
 ------------------
 * dropped support for python 2
