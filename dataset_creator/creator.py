@@ -66,7 +66,6 @@ class Creator(object):
                                    aminoacids=self.aminoacids)
 
     def create_dataset_block(self):
-        print('')
         if self.format in ['NEXUS', 'PHYLIP', 'FASTA']:
             dataset_constructor = base_dataset.DatasetBlock(self.data,
                                                             self.codon_positions,
