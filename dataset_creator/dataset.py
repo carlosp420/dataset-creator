@@ -1,5 +1,8 @@
 #! encoding: utf-8
 from collections import namedtuple
+
+from .enums import DatasetFormat
+
 try:
     from collections import OrderedDict
 except ImportError:
@@ -55,13 +58,13 @@ class Dataset(object):
                  codon_positions=None, aminoacids=None, degenerate=None,
                  outgroup=None):
         self.warnings = []
+        self.format = format
         self.seq_records = self.sort_seq_records(seq_records)
         self.gene_codes = None
         self.number_taxa = None
         self.number_chars = None
         self.reading_frames = {}
 
-        self.format = format
         self.partitioning = partitioning
         self.codon_positions = codon_positions
         self.aminoacids = aminoacids
@@ -85,8 +88,9 @@ class Dataset(object):
         dataset will be accepted by Biopython to do format conversions.
 
         """
-        for seq_record in seq_records:
-            seq_record.voucher_code = seq_record.voucher_code.replace("-", "_")
+        if self.format != DatasetFormat.BANKIT.value:
+            for seq_record in seq_records:
+                seq_record.voucher_code = seq_record.voucher_code.replace("-", "_")
 
         unsorted_gene_codes = set([i.gene_code for i in seq_records])
         sorted_gene_codes = list(unsorted_gene_codes)

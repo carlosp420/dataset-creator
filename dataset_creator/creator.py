@@ -1,6 +1,8 @@
+from .enums import DatasetFormat
 from . import base_dataset
 from . import tnt
 from . import mega
+from . import bankit
 from . import genbank_fasta
 from .phylip import PhylipDatasetFooter
 from .utils import convert_nexus_to_format
@@ -64,6 +66,7 @@ class Creator(object):
                                    aminoacids=self.aminoacids)
 
     def create_dataset_block(self):
+        print('')
         if self.format in ['NEXUS', 'PHYLIP', 'FASTA']:
             dataset_constructor = base_dataset.DatasetBlock(self.data,
                                                             self.codon_positions,
@@ -77,6 +80,14 @@ class Creator(object):
                                                                          self.partitioning,
                                                                          aminoacids=self.aminoacids,
                                                                          degenerate=self.degenerate)
+        elif self.format == 'Bankit':
+            dataset_constructor = bankit.BankitDatasetBlock(
+                self.data,
+                self.codon_positions,
+                self.partitioning,
+                aminoacids=self.aminoacids,
+                degenerate=self.degenerate,
+            )
         elif self.format == 'MEGA':
             dataset_constructor = mega.MegaDatasetBlock(self.data,
                                                         self.codon_positions,
@@ -120,7 +131,7 @@ class Creator(object):
         elif self.format == 'FASTA' and self.partitioning == '1st-2nd, 3rd':
             return self.dataset_block.replace(';\nEND;', '')
 
-        elif self.format == 'GenBankFASTA':
+        elif self.format in ['GenBankFASTA', DatasetFormat.BANKIT.value]:
             return self.dataset_block.replace(';\nEND;', '')
 
         elif self.format == 'TNT':

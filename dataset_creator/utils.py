@@ -95,6 +95,7 @@ def make_dataset_header(data, file_format, aminoacids):
         aminoacids (boolean): If ``aminoacids is True`` the header will show
                               ``DATATYPE=PROTEIN`` otherwise it will be ``DNA``.
     """
+    print('')
     if aminoacids:
         datatype = 'PROTEIN'
     else:
