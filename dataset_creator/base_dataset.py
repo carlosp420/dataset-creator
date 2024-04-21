@@ -199,50 +199,16 @@ class DatasetBlock(object):
         if seq_record.taxonomy is None:
             return out
         else:
-            try:
-                out += "_" + seq_record.taxonomy['orden']
-            except KeyError:
-                pass
-            try:
-                out += "_" + seq_record.taxonomy['superfamily']
-            except KeyError:
-                pass
-            try:
-                out += "_" + seq_record.taxonomy['family']
-            except KeyError:
-                pass
-            try:
-                out += "_" + seq_record.taxonomy['subfamily']
-            except KeyError:
-                pass
-            try:
-                out += "_" + seq_record.taxonomy['tribe']
-            except KeyError:
-                pass
-            try:
-                out += "_" + seq_record.taxonomy['subtribe']
-            except KeyError:
-                pass
-            try:
-                out += "_" + seq_record.taxonomy['genus']
-            except KeyError:
-                pass
-            try:
-                out += "_" + seq_record.taxonomy['species']
-            except KeyError:
-                pass
-            try:
-                out += "_" + seq_record.taxonomy['subspecies']
-            except KeyError:
-                pass
-            try:
-                out += "_" + seq_record.taxonomy['author']
-            except KeyError:
-                pass
-            try:
-                out += "_" + seq_record.taxonomy['hostorg']
-            except KeyError:
-                pass
+            keys = [
+                'orden', 'superfamily', 'family', 'subfamily', 'tribe', 'subtribe',
+                'genus', 'species', 'subspecies', 'author', 'hostorg', 'country',
+                'specific_locality'
+            ]
+            for key in keys:
+                try:
+                    out += "_" + seq_record.taxonomy[key]
+                except KeyError:
+                    pass
             out = out.replace(" ", "_")
             out = re.sub("_$", "", out)
             return re.sub('_+', '_', out)

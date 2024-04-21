@@ -38,6 +38,7 @@ class Creator(object):
 
     Example:
 
+        >>> from dataset_creator import Creator
         >>> dataset_creator = Creator(data, format='NEXUS', codon_positions='ALL',
         ...                           partitioning='by gene')
         >>> dataset_creator.dataset_str

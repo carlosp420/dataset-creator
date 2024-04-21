@@ -5,7 +5,7 @@ clean-test:
 	rm -rf cover/
 
 test: clean-test
-	nosetests --verbosity=2 --with-coverage --cover-package dataset_creator -w tests
+	pytest
 
 coverage: test
 	coverage report -m --include=dataset_creator/*
