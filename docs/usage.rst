@@ -5,7 +5,7 @@ User's Guide
 
 .. code-block:: python
 
-    >>> from seqrecord_expanded import SeqRecord
+    >>> from seqrecord_expanded import SeqRecordExpanded as SeqRecord
     >>>
     >>> # `table` is the Translation Table code based on NCBI
     >>> seq_record1 = SeqRecord('ACTACCTA', reading_frame=2, gene_code='RpS5',

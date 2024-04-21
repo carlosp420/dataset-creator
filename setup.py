@@ -19,13 +19,13 @@ def read(*names, **kwargs):
 
 required_libs = [
     'degenerate-dna==0.0.9',
-    'seqrecord-expanded==0.2.12',
+    'seqrecord-expanded==0.2.13',
     'six==1.10.0',
 ]
 
 setup(
     name='dataset-creator',
-    version='0.5.0',
+    version='0.6.0',
     license='BSD',
     description='Takes SeqRecordExpanded objects and creates datasets for phylogenetic software',
     long_description='%s\n%s' % (read('README.rst'), re.sub(':[a-z]+:`~?(.*?)`', r'``\1``', read('CHANGELOG.rst'))),
